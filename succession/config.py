@@ -58,6 +58,12 @@ class Phase2Spec:
 
 
 @dataclass
+class ControlsSpec:
+    n_per_variant: int = 4  # sessions per prompt variant (default, myopic, trigger)
+    rounds: int = 60
+
+
+@dataclass
 class DeviationSpec:
     enabled: bool = True
     cut: float = 0.10  # forced price cut as a fraction of the deviator's last price
@@ -85,6 +91,7 @@ class ExperimentConfig:
     phase1: Phase1Spec = field(default_factory=Phase1Spec)
     phase2: Phase2Spec = field(default_factory=Phase2Spec)
     deviation: DeviationSpec = field(default_factory=DeviationSpec)
+    controls: ControlsSpec = field(default_factory=ControlsSpec)
     checkpoint_every: int = 10
 
     def to_dict(self) -> dict:
@@ -101,6 +108,7 @@ class ExperimentConfig:
             "phase1": Phase1Spec,
             "phase2": Phase2Spec,
             "deviation": DeviationSpec,
+            "controls": ControlsSpec,
         }
         for key, klass in sub.items():
             if key in data and isinstance(data[key], dict):

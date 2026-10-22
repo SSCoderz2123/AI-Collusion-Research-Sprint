@@ -67,45 +67,62 @@ modal run modal_app.py --config configs/pilot.yaml --stages controls,phase2,devi
 
 Record each run in `docs/RUN_LOG.md`.
 
-## 3. Main run (about 4–6 hours wall time, about $8–15)
+## 3. Main run + replication, in parallel (about 3–6 hours, about $12–25)
 
-Fill in the date in `docs/PREREGISTRATION.md`, commit, then start:
+**Sprint rule first.** The sprint starts Fri 23 Oct 2026. A run that starts before then is
+pre-sprint work: disclose it in `docs/PREEXISTING_WORK.md` and in the report. A run that starts
+after the sprint start counts as sprint work.
 
-```bash
-modal run --detach modal_app.py --config configs/main.yaml --stages controls,phase1,select,phase2,deviation,analyze
-```
+1. Write the start date into `docs/PREREGISTRATION.md` ("Status: … fixed when phase 1 of the
+   main run starts"), commit and push.
+2. Start both runs. Each config gets its own orchestrator; each model gets up to 2 GPU containers:
+
+   ```bash
+   modal run --detach modal_app.py --config configs/main.yaml,configs/main_mistral.yaml --stages aa,controls,phase1,select,phase2,deviation,analyze
+   ```
+
+   Run names: `main` (Qwen incumbent, primary) and `main_mistral` (Mistral incumbent, replication).
 
 `--detach` keeps the job running when you close the terminal or the PC.
 Watch progress at https://modal.com/apps or with `modal app logs cartel-succession`.
 
 **If it stops** (timeout, error, preemption), run the same command again. Every stage
-continues from its last checkpoint (every 10 rounds).
+continues from its last checkpoint (every 10 rounds). A run that already finished returns
+its summary again without new GPU work.
+
+**Budget guard.** Keep the Modal workspace budget at about $30. Modal stops all runs at that limit.
 
 ## 4. Get the results
 
 ```bash
-modal volume ls succession-runs main
 modal volume get succession-runs main ./results/
+modal volume get succession-runs main_mistral ./results/
 python scripts/analyze.py results/main
+python scripts/analyze.py results/main_mistral
 ```
 
-Outputs in `results/main/analysis/`: `summary.md`, `phase2_summary.json`,
-`deviation_audit_summary.json`, `controls_audit_summary.json`, `trajectories.png`,
-`differences.png`.
+Outputs in `results/<run>/analysis/`: `summary.md`, `phase1_summary.json`,
+`phase2_summary.json`, `deviation_audit_summary.json`, `controls_audit_summary.json`,
+`phase1_trajectories.png`, `trajectories.png`, `differences.png`, and `timings.json` in the run
+folder. Add both summaries to `docs/RUN_LOG.md`.
 
 ## Cost estimate
 
-These are estimates from the workload, not measurements. Read the real seconds per round
-from the pilot logs, and check current prices at https://modal.com/pricing.
+Estimates from the workload and the pilot timings (`docs/RUN_LOG.md`), not measurements.
+Check the real time per round in the first phase-2 checkpoints, and current prices at
+https://modal.com/pricing.
 
-| Stage | Requests | L4 time (estimate) |
+| Stage, per run | Model calls (upper bound) | Notes |
 |---|---|---|
-| controls (12 sessions × 60 rounds + audit) | ~2,000 | 0.3 h |
-| phase 1 (20 × 100 × 2) | 4,000 | 0.4 h |
-| phase 2 (≤140 branch sessions × 100 rounds) | ≤26,000 | 2.5–3 h per GPU, 2 GPUs in parallel |
-| audit (≤560 copies × 7 rounds) | ≤7,000 | 0.5 h per GPU |
-| model loading | – | ~0.3 h |
-| **Total** | **≤40,000** | **~8–10 L4 hours ≈ $8–15** |
+| aa | 160 | ~5 min including the first model load |
+| controls (30 sessions × 60 rounds + audit) | ~5,300 | pilot: 444 s for 12 sessions |
+| phase 1 (30 × 100 × 2) | 6,000 | pilot: 3–6 s per round for 4 sessions |
+| phase 2 (≤210 branch sessions × 100 rounds) | ≤42,000 | the longest stage; large batches per round |
+| deviation (≤840 copies × 7 rounds) | ≤11,800 | |
+| **Per run** | **≤65,000** | about 2–4 h wall time, 2 GPU containers |
+| **main + main_mistral** | **≤130,000** | run in parallel: about 3–6 h wall time, about 12–16 L4 hours ≈ **$12–25** |
+
+The pilot (runs 2–3, 2 models, about 30 minutes of GPU work) cost about $0.50.
 
 To finish faster, use a larger GPU. The cost stays about the same:
 PowerShell `$env:SUCCESSION_GPU="A100-40GB"`, bash `export SUCCESSION_GPU=A100-40GB`.

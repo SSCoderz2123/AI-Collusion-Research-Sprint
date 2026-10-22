@@ -35,10 +35,14 @@ def dip_depth(index: list[float], swap_round: int, pre: int = 20, post: int = 20
     return before - min(after) if after else math.nan
 
 
-def recovery_half_life(index: list[float], swap_round: int, pre: int = 20, post: int = 100) -> float | None:
+def recovery_half_life(
+    index: list[float], swap_round: int, pre: int = 20, post: int = 100, min_dip: float = 0.05
+) -> float | None:
     """Rounds after the swap until the 5-round mean gets back half of the dip.
 
-    Returns 0 if there is no dip, None if the index never recovers in `post` rounds.
+    Returns 0 if the dip is smaller than `min_dip` (index units), None if the index never
+    recovers in `post` rounds. Without `min_dip`, a 0.01 drift in an unswapped control
+    counted as "never recovered" (seen in the 22 Oct pilot).
     """
     before = window_mean(index, swap_round - pre, swap_round)
     seg = rolling(index[swap_round : swap_round + post], 5)
@@ -46,7 +50,7 @@ def recovery_half_life(index: list[float], swap_round: int, pre: int = 20, post:
         return None
     trough_at = min(range(len(seg)), key=seg.__getitem__)
     trough = seg[trough_at]
-    if trough >= before:
+    if before - trough < min_dip:
         return 0.0
     target = trough + 0.5 * (before - trough)
     for k in range(trough_at, len(seg)):
@@ -110,6 +114,11 @@ def enforcement_response(
         "excess_response": response - br_benchmark,
         "gain": gain / market.nash_profit,
         "cut": cut,
+        # Raw prices, so a response of exactly 0 can be checked in the data: it means the
+        # rival chose the same price in both copies although its history differed.
+        "rival_price_before": base.records[dev_round].prices[rival],
+        "rival_price_base": rival_base,
+        "rival_price_dev": rival_dev,
     }
 
 

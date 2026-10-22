@@ -7,7 +7,8 @@ Architecture:
 
 Examples (see docs/RUNNING_ON_MODAL.md for the full guide):
   modal run modal_app.py --config configs/pilot.yaml --stages aa,phase1,select,analyze
-  modal run --detach modal_app.py --config configs/main.yaml --stages phase1,select,phase2,deviation,analyze
+  modal run --detach modal_app.py --config configs/main.yaml,configs/main_mistral.yaml \
+      --stages aa,controls,phase1,select,phase2,deviation,analyze
   modal volume get succession-runs main ./results/
 """
 
@@ -58,7 +59,7 @@ cpu_image = (
     timeout=60 * 60,
     startup_timeout=30 * 60,  # first start downloads ~15 GB of weights
     scaledown_window=5 * 60,  # stop paying 5 minutes after the last call
-    max_containers=1,
+    max_containers=2,  # 2 runs in parallel (main + main_mistral) each get a container per model
 )
 class Generator:
     spec_json: str = modal.parameter()
@@ -79,8 +80,9 @@ class Generator:
         return self.engine.generate(prompts, seeds)
 
 
-# memory: the audit holds ~560 session copies of 200+ rounds (deep copies + JSON); 4 GiB is a safe margin.
-@app.function(image=cpu_image, volumes={RUNS_DIR: runs_volume}, timeout=12 * 60 * 60, cpu=2, memory=4096)
+# memory: with 30 sessions the audit holds up to 840 session copies of ~207 rounds. A mock run of
+# configs/main.yaml peaked at 438 MB; real replies are ~4-6x longer, so 8 GiB leaves a margin.
+@app.function(image=cpu_image, volumes={RUNS_DIR: runs_volume}, timeout=20 * 60 * 60, cpu=2, memory=8192)
 def orchestrate(config_yaml: str, run_name: str, stages: list[str]) -> str:
     import yaml
 
@@ -110,8 +112,19 @@ def orchestrate(config_yaml: str, run_name: str, stages: list[str]) -> str:
 
 @app.local_entrypoint()
 def main(config: str = "configs/pilot.yaml", run: str = "", stages: str = "aa,phase1,select,analyze") -> None:
-    config_yaml = Path(config).read_text(encoding="utf-8")
-    run_name = run or Path(config).stem
+    """--config takes one path or a comma list. Each config runs in its own orchestrator, in parallel.
+    The run name is the config file name, unless --run is given (only with one config)."""
+    configs = [c.strip() for c in config.split(",") if c.strip()]
+    if run and len(configs) > 1:
+        raise SystemExit("--run works with one config only; with several, each run is named after its config file")
     stage_list = [s.strip() for s in stages.split(",") if s.strip()]
-    print(f"Run '{run_name}', stages {stage_list}, GPU {GPU}")
-    print(orchestrate.remote(config_yaml, run_name, stage_list))
+    calls = []
+    for path in configs:
+        run_name = run or Path(path).stem
+        print(f"Run '{run_name}' ({path}), stages {stage_list}, GPU {GPU}")
+        calls.append((run_name, orchestrate.spawn(Path(path).read_text(encoding="utf-8"), run_name, stage_list)))
+    for run_name, call in calls:
+        try:
+            print(f"\n===== {run_name} =====\n{call.get()}")
+        except Exception as exc:  # one failed run must not hide the other runs' results
+            print(f"\n===== {run_name} FAILED: {type(exc).__name__}: {exc}")
