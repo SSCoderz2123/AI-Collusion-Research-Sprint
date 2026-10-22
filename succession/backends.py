@@ -65,6 +65,10 @@ class VLLMEngine:
     """One vLLM engine for one model. Used locally and inside Modal."""
 
     def __init__(self, spec: ModelSpec, sampling: SamplingSpec) -> None:
+        import os
+
+        # Per-request seeds are required for paired branches (see modal_app.py). Set before import.
+        os.environ.setdefault("VLLM_USE_V1", "0")
         from vllm import LLM  # imported here so tests run without vLLM
 
         self.spec = spec

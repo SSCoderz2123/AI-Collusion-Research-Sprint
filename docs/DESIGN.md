@@ -35,7 +35,7 @@ The seed of a request is `derive_seed(experiment seed, root session, seat, round
 It does not depend on the branch. So when two branches show an agent the same prompt, vLLM
 samples the same reply, and the branches differ only through the swap.
 
-vLLM honours per-request seeds, but results can still vary with batch composition (floating-point
+vLLM (V0 engine, forced with `VLLM_USE_V1=0`) honours per-request seeds, but results can still vary with batch composition (floating-point
 order). The A/A stage measures this: identical copies, same seeds, different batches. Tran & Yu
 (2026) report 94–98% identical calls with vLLM. Report our value. Pairing reduces variance;
 it does not create bias when it is imperfect.
@@ -54,6 +54,11 @@ At the end of each branch (round 200), each session is copied twice per deviator
 6 more rounds with the same seeds. The rival's price change one round later, per unit of cut,
 is compared with the change that a static best responder would make (0.29–0.44 per unit near
 the Nash–monopoly range). Method: Tran & Yu (2026), arXiv 2610.28787.
+
+## Run-folder safety
+
+A run folder stores `config.json`. A later call with a different config for the same run
+name stops with an error, because resumed stages would mix two designs. Use a new run name.
 
 ## Known limits of the harness
 

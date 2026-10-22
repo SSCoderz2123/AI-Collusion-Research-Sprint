@@ -34,7 +34,9 @@ secrets = [modal.Secret.from_name(HF_SECRET)] if HF_SECRET else []
 gpu_image = (
     modal.Image.debian_slim(python_version="3.11")
     .uv_pip_install("vllm==0.8.5", "hf_transfer", "pyyaml>=6.0")
-    .env({"HF_HUB_ENABLE_HF_TRANSFER": "1", "HF_HOME": HF_CACHE_DIR})
+    # VLLM_USE_V1=0: the V0 engine honours per-request seeds, which paired branches need.
+    # The A/A stage measures how well this holds; change the engine only with a new A/A check.
+    .env({"HF_HUB_ENABLE_HF_TRANSFER": "1", "HF_HOME": HF_CACHE_DIR, "VLLM_USE_V1": "0"})
     .add_local_python_source("succession")
 )
 
@@ -74,7 +76,8 @@ class Generator:
         return self.engine.generate(prompts, seeds)
 
 
-@app.function(image=cpu_image, volumes={RUNS_DIR: runs_volume}, timeout=12 * 60 * 60)
+# memory: the audit holds ~560 session copies of 200+ rounds (deep copies + JSON); 4 GiB is a safe margin.
+@app.function(image=cpu_image, volumes={RUNS_DIR: runs_volume}, timeout=12 * 60 * 60, cpu=2, memory=4096)
 def orchestrate(config_yaml: str, run_name: str, stages: list[str]) -> str:
     import yaml
 

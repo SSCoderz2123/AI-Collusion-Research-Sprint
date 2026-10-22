@@ -5,7 +5,7 @@ The sprint allows AI tools. The team is responsible for everything in the report
 | Date | Tool | Use | Human check |
 |---|---|---|---|
 | 18 Oct 2026 | Claude (research agents) | Literature scan and idea list | Author to open cited papers before use |
-| 22 Oct 2026 | Claude Code | Wrote the experiment harness, tests, docs and this repository structure | Author reviews code; test suite (32 tests) passes |
+| 22 Oct 2026 | Claude Code | Wrote the experiment harness, tests, docs and this repository structure | Author reviews code; test suite (36 tests) passes; code review and debug pass on 22 Oct fixed 5 issues |
 | | | | |
 
 Rules for the report:

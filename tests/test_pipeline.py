@@ -1,5 +1,7 @@
 """End-to-end run of every stage with the mock backend."""
 
+import pytest
+
 from succession.analysis import analyze
 from succession.backends import MockBackend
 from succession.config import ExperimentConfig
@@ -36,6 +38,16 @@ def test_all_stages_and_analysis(tmp_path):
     assert "Phase 2" in text and "same_inherit" in text
     assert (tmp_path / "run/analysis/trajectories.png").exists()
     assert (tmp_path / "run/analysis/differences.png").exists()
+
+
+def test_changed_config_is_refused(tmp_path):
+    store = RunStore(tmp_path / "run")
+    run_stages(tiny_cfg(), MockBackend(), store, ["phase1"])
+    changed = tiny_cfg()
+    changed.history_window = 3
+    with pytest.raises(ValueError, match="history_window"):
+        run_stages(changed, MockBackend(), store, ["phase1"])
+    run_stages(tiny_cfg(), MockBackend(), store, ["phase1"])  # same config resumes
 
 
 def test_resume_gives_same_result(tmp_path):

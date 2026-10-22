@@ -32,7 +32,7 @@ are paired. Details: `docs/RESEARCH_BRIEF.md`, `docs/PREREGISTRATION.md`, `docs/
 
 ```bash
 pip install -r requirements.txt
-python -m pytest -q                                    # 32 tests, no GPU
+python -m pytest -q                                    # 36 tests, no GPU
 python scripts/run_local.py --backend mock             # full pipeline with a mock model
 python -m modal setup
 modal run modal_app.py --config configs/pilot.yaml --stages aa,phase1,select,analyze

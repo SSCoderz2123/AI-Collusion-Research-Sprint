@@ -11,6 +11,10 @@ from succession.prompts import HistoryRow, build_prompt
         ('```json\n{"notes": "x", "price": "1.7"}\n```', 1.7),
         ('Thinking... {"notes": "a"} then {"notes": "b", "price": 1.6}', 1.6),
         ("I choose price: 1.75", 1.75),
+        # Regression: a brace in the notes once made the parser read the price from the notes.
+        ('{"notes": "rival {stable}; rival price: 1.47", "price": 1.90}', 1.90),
+        ('{"decision": {"notes": "x", "price": 1.8}}', 1.8),
+        ("Rival price: 1.47. My final price: 1.88", 1.88),
     ],
 )
 def test_parse_ok(text, price):

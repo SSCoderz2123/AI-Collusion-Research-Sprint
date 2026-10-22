@@ -12,6 +12,7 @@ Stages, in order:
 
 from __future__ import annotations
 
+import json
 import logging
 from statistics import mean
 
@@ -181,6 +182,7 @@ def _audit(cfg: ExperimentConfig, backend: Backend, store: RunStore, sessions: l
         if not active:
             break
         engine.step(active)
+        store.save_sessions(name, copies)  # audit runs only ~7 rounds: checkpoint every round
     store.save_sessions(name, copies)
 
     events = []
@@ -210,8 +212,24 @@ def _audit(cfg: ExperimentConfig, backend: Backend, store: RunStore, sessions: l
     )
 
 
+def check_config(cfg: ExperimentConfig, store: RunStore) -> None:
+    """Save the config on first use. Refuse a different config for an existing run,
+    because resumed stages would mix data from two designs."""
+    current = json.loads(json.dumps(cfg.to_dict()))
+    if store.exists("config.json"):
+        saved = store.load_json("config.json")
+        if saved != current:
+            changed = sorted(k for k in set(saved) | set(current) if saved.get(k) != current.get(k))
+            raise ValueError(
+                f"run folder {store.root} was made with a different config (changed: {changed}). "
+                "Use a new run name, or delete the run folder."
+            )
+    else:
+        store.save_json("config.json", current)
+
+
 def run_stages(cfg: ExperimentConfig, backend: Backend, store: RunStore, stages: list[str]) -> None:
-    store.save_json("config.json", cfg.to_dict())
+    check_config(cfg, store)
     for stage in stages:
         log.info("=== stage %s ===", stage)
         if stage == "aa":
