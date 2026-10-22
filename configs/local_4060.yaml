@@ -1,0 +1,25 @@
+# Local smoke test on an 8 GB GPU (RTX 4060). One AWQ model only.
+# Run only the stages that use the incumbent model: aa, phase1, select.
+name: succession_local
+seed: 11
+history_window: 15
+prompt_variant: default
+price_min: 0.0
+price_max: 10.0
+
+incumbent_model:
+  name: qwen7b_awq
+  hf_id: Qwen/Qwen2.5-7B-Instruct-AWQ
+  quantization: awq
+  max_model_len: 2048
+  gpu_memory_utilization: 0.85
+
+other_model:
+  name: unused
+  hf_id: unused
+
+phase1:
+  n_sessions: 2
+  rounds: 30
+  select_from: 15
+  select_threshold: 0.3
