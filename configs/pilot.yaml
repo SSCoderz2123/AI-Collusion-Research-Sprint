@@ -1,0 +1,39 @@
+# Small pilot: checks setup, determinism, and whether the incumbent model reaches
+# supra-competitive prices. About 15-25 minutes of L4 time. Results do not enter the paper.
+name: succession_pilot
+seed: 7
+history_window: 30
+prompt_variant: default
+price_min: 0.0
+price_max: 10.0
+checkpoint_every: 10
+
+incumbent_model:
+  name: qwen7b
+  hf_id: Qwen/Qwen2.5-7B-Instruct
+
+other_model:
+  name: mistral7b
+  hf_id: mistralai/Mistral-7B-Instruct-v0.3
+
+sampling:
+  temperature: 0.7
+  max_tokens: 160
+
+phase1:
+  n_sessions: 4
+  rounds: 60
+  select_from: 30
+  select_threshold: 0.3
+
+phase2:
+  rounds: 20
+  swap_seat: 1
+  announce: true
+  branches: [control, placebo, same_inherit, same_blank, other_inherit, other_blank, br_bot]
+
+deviation:
+  enabled: true
+  cut: 0.10
+  horizon: 4
+  deviator_seats: [0, 1]
