@@ -14,6 +14,8 @@ from __future__ import annotations
 
 import json
 import logging
+import time
+from datetime import datetime, timezone
 from statistics import mean
 
 from succession.backends import Backend
@@ -232,17 +234,32 @@ def run_stages(cfg: ExperimentConfig, backend: Backend, store: RunStore, stages:
     check_config(cfg, store)
     for stage in stages:
         log.info("=== stage %s ===", stage)
-        if stage == "aa":
-            log.info("A/A result: %s", stage_aa(cfg, backend, store))
-        elif stage == "controls":
-            stage_controls(cfg, backend, store)
-        elif stage == "phase1":
-            stage_phase1(cfg, backend, store)
-        elif stage == "select":
-            stage_select(cfg, store)
-        elif stage == "phase2":
-            stage_phase2(cfg, backend, store)
-        elif stage == "deviation":
-            stage_deviation(cfg, backend, store)
-        else:
-            raise ValueError(f"unknown stage {stage}; valid: {STAGES}")
+        started = time.monotonic()
+        started_at = datetime.now(timezone.utc).isoformat(timespec="seconds")
+        _run_one(cfg, backend, store, stage)
+        _record_timing(store, stage, started_at, time.monotonic() - started)
+
+
+def _record_timing(store: RunStore, stage: str, started_at: str, seconds: float) -> None:
+    """Append one row to timings.json. A resumed stage adds a second row; both are kept."""
+    rows = store.load_json("timings.json") if store.exists("timings.json") else []
+    rows.append({"stage": stage, "started_utc": started_at, "seconds": round(seconds, 1)})
+    store.save_json("timings.json", rows)
+    log.info("stage %s finished in %.1f s", stage, seconds)
+
+
+def _run_one(cfg: ExperimentConfig, backend: Backend, store: RunStore, stage: str) -> None:
+    if stage == "aa":
+        log.info("A/A result: %s", stage_aa(cfg, backend, store))
+    elif stage == "controls":
+        stage_controls(cfg, backend, store)
+    elif stage == "phase1":
+        stage_phase1(cfg, backend, store)
+    elif stage == "select":
+        stage_select(cfg, store)
+    elif stage == "phase2":
+        stage_phase2(cfg, backend, store)
+    elif stage == "deviation":
+        stage_deviation(cfg, backend, store)
+    else:
+        raise ValueError(f"unknown stage {stage}; valid: {STAGES}")

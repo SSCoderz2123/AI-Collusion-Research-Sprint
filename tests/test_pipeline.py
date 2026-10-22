@@ -64,3 +64,14 @@ def test_resume_gives_same_result(tmp_path):
     a = [s.to_dict() for s in full.load_sessions("phase1/sessions.json")]
     b = [s.to_dict() for s in part.load_sessions("phase1/sessions.json")]
     assert a == b
+
+
+def test_pilot_summary_has_phase1_table_and_timings(tmp_path):
+    """Regression: the first Modal pilot summary showed no phase-1 numbers and no timings."""
+    store = RunStore(tmp_path / "run")
+    run_stages(tiny_cfg(), MockBackend(), store, ["aa", "phase1", "select"])
+    text = analyze(store)
+    assert "## Phase 1" in text and "index_select_window" in text
+    assert "## Stage timings" in text
+    assert [r["stage"] for r in store.load_json("timings.json")] == ["aa", "phase1", "select"]
+    assert (tmp_path / "run/analysis/phase1_trajectories.png").exists()
