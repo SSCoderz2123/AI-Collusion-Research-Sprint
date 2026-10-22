@@ -81,9 +81,8 @@ def stage_aa(
     return result
 
 
-def stage_controls(
-    cfg: ExperimentConfig, backend: Backend, store: RunStore, n_per_variant: int = 4, rounds: int = 60
-) -> None:
+def stage_controls(cfg: ExperimentConfig, backend: Backend, store: RunStore) -> None:
+    n_per_variant, rounds = cfg.controls.n_per_variant, cfg.controls.rounds
     engine = Engine(cfg, backend)
     name = "controls/sessions.json"
 
@@ -219,7 +218,9 @@ def check_config(cfg: ExperimentConfig, store: RunStore) -> None:
     because resumed stages would mix data from two designs."""
     current = json.loads(json.dumps(cfg.to_dict()))
     if store.exists("config.json"):
-        saved = store.load_json("config.json")
+        # Fill fields that did not exist when the run started with their defaults, so a field
+        # added later (at its default value) does not count as a design change.
+        saved = json.loads(json.dumps(ExperimentConfig.from_dict(store.load_json("config.json")).to_dict()))
         if saved != current:
             changed = sorted(k for k in set(saved) | set(current) if saved.get(k) != current.get(k))
             raise ValueError(

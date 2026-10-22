@@ -28,7 +28,7 @@ sampling:
   max_tokens: 160
 
 phase1:
-  n_sessions: 20
+  n_sessions: 30
   rounds: 100
   select_from: 50
   select_threshold: 0.3
@@ -38,6 +38,10 @@ phase2:
   swap_seat: 1
   announce: true
   branches: [control, placebo, same_inherit, same_blank, other_inherit, other_blank, br_bot]
+
+controls:
+  n_per_variant: 10   # pilot used 4; the trigger positive control needs more sessions
+  rounds: 60
 
 deviation:
   enabled: true

@@ -75,3 +75,13 @@ def test_pilot_summary_has_phase1_table_and_timings(tmp_path):
     assert "## Stage timings" in text
     assert [r["stage"] for r in store.load_json("timings.json")] == ["aa", "phase1", "select"]
     assert (tmp_path / "run/analysis/phase1_trajectories.png").exists()
+
+
+def test_run_made_before_a_new_config_field_still_resumes(tmp_path):
+    """A field added later at its default value is not a design change."""
+    store = RunStore(tmp_path / "run")
+    run_stages(tiny_cfg(), MockBackend(), store, ["phase1"])
+    old = store.load_json("config.json")
+    del old["controls"]  # simulate a run folder written before ControlsSpec existed
+    store.save_json("config.json", old)
+    run_stages(tiny_cfg(), MockBackend(), store, ["phase1"])  # must not raise

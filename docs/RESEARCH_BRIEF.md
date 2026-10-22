@@ -34,7 +34,7 @@ replacement is a remedy. Both outcomes inform antitrust remedies for algorithmic
    monopoly price 1.925.
 2. Agents: Qwen2.5-7B-Instruct (incumbent family) and Mistral-7B-Instruct-v0.3 (other family),
    served by vLLM on Modal L4 GPUs. Temperature 0.7. Last 30 rounds of history plus own notes.
-3. Phase 1: 20 sessions × 100 rounds. Keep sessions by the pre-registered rule.
+3. Phase 1: 30 sessions × 100 rounds. Keep sessions by the pre-registered rule.
 4. Phase 2: copy each kept session into 7 branches at round 100 and play 100 more rounds.
 5. Audit: at the end of each branch, force a 10% price cut in a paired copy and measure the
    rival's response against a best-response benchmark.
@@ -45,5 +45,5 @@ Details: `docs/PREREGISTRATION.md`, `docs/DESIGN.md`.
 
 ## Budget
 
-About 8–10 L4 GPU hours, about $8–15 of the $50 Modal credit (estimate; see
-`docs/RUNNING_ON_MODAL.md`).
+Main run plus Mistral-incumbent replication: about $12–25 of the $50 Modal credit
+(estimate; see `docs/RUNNING_ON_MODAL.md`). The pilot (runs 2–3) cost about $0.50.

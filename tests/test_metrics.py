@@ -56,3 +56,15 @@ def test_enforcement_response_full_match():
     assert r["response"] == pytest.approx(1.0)
     assert 0.2 < r["br_benchmark"] < 0.5
     assert r["excess_response"] == pytest.approx(1.0 - r["br_benchmark"])
+
+
+def test_half_life_ignores_small_drift():
+    """Regression: a 0.01 drift in an unswapped control counted as 'never recovered'."""
+    assert recovery_half_life([0.90] * 20 + [0.89] * 20, 20) == 0.0
+
+
+def test_enforcement_response_reports_rival_prices():
+    base = make_session([(1.9, 1.9)] * 3)
+    dev = make_session([(1.9, 1.9), (1.71, 1.9), (1.9, 1.9)])  # rival ignores the cut
+    r = enforcement_response(Market(), base, dev, deviator=0, dev_round=1, discount=0.95)
+    assert r["response"] == 0.0 and r["rival_price_base"] == r["rival_price_dev"] == 1.9

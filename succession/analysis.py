@@ -25,6 +25,11 @@ from succession.session import Session
 from succession.store import RunStore
 
 
+def price_index_series(market: Market, session: Session) -> list[float]:
+    """Mean price index of the two firms per round: 0 at the Nash price, 1 at the monopoly price."""
+    return [mean(market.price_index(p) for p in r.prices) for r in session.records]
+
+
 def _fmt(x: float | None, nd: int = 3) -> str:
     return "n/a" if x is None or (isinstance(x, float) and math.isnan(x)) else f"{x:.{nd}f}"
 
@@ -55,6 +60,11 @@ def summarize_phase2(cfg: ExperimentConfig, sessions: list[Session]) -> list[dic
                 "n": len(group),
                 "pre_index": mean(window_mean(v, swap - 20, swap) for v in idx.values()),
                 "post_index": mean(window_mean(v, post_start, end) for v in idx.values()),
+                # Price index too: prices above the monopoly price give a negative profit index,
+                # which alone would read as "competitive".
+                "post_price_index": mean(
+                    window_mean(price_index_series(market, s), post_start, end) for s in group.values()
+                ),
                 "diff_vs_control": d_mean,
                 "diff_ci_low": d_lo,
                 "diff_ci_high": d_hi,
@@ -174,6 +184,7 @@ def summarize_phase1(cfg: ExperimentConfig, sessions: list[Session], kept: set[i
                 "rounds": len(s.records),
                 "index_select_window": window_mean(idx, cfg.phase1.select_from, cfg.phase1.rounds),
                 "index_last10": window_mean(idx, len(idx) - 10, len(idx)),
+                "price_index_last10": window_mean(price_index_series(market, s), len(idx) - 10, len(idx)),
                 "price_seat0_last10": mean(r.prices[0] for r in last) if last else math.nan,
                 "price_seat1_last10": mean(r.prices[1] for r in last) if last else math.nan,
                 "parse_failure_rate": parse_failure_rate([s]),
