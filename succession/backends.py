@@ -135,7 +135,10 @@ class ModalBackend:
     its own container, so two 7B models never share one GPU.
     """
 
-    def __init__(self, generator_cls, specs: list[ModelSpec], sampling: SamplingSpec) -> None:
+    def __init__(
+        self, generator_cls, specs: list[ModelSpec], sampling: SamplingSpec, call_timeout: float = 1800.0
+    ) -> None:
+        self.call_timeout = call_timeout
         self.handles = {
             s.name: generator_cls(spec_json=json.dumps(s.__dict__), sampling_json=json.dumps(sampling.__dict__))
             for s in specs
@@ -147,4 +150,18 @@ class ModalBackend:
             for model, (prompts, seeds) in batches.items()
             if prompts
         }
-        return {model: call.get() for model, call in calls.items()}
+        # Fail fast: if a Generator crashes at startup, Modal restarts it and the call would
+        # otherwise wait until the 12 h orchestrator timeout while GPU time is billed.
+        # 30 min covers the first weight download (~15 GB) plus the largest phase-2 batch.
+        from modal.exception import TimeoutError as ModalTimeoutError  # not a builtin subclass
+
+        out = {}
+        for model, call in calls.items():
+            try:
+                out[model] = call.get(timeout=self.call_timeout)
+            except (TimeoutError, ModalTimeoutError) as exc:
+                raise RuntimeError(
+                    f"Generator for '{model}' gave no reply in {self.call_timeout} s. "
+                    "Check the Generator logs on modal.com; the run resumes from its last checkpoint."
+                ) from exc
+        return out
