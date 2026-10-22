@@ -12,9 +12,11 @@ under the author's direction:
 - `CLAUDE.md`, `.claude/rules/`, `docs/`, `paper/OUTLINE.md`
 
 Commit hash of the preexisting state: see `git log` for the commit dated 22 Oct 2026
-("Add cartel-succession experiment harness"). Record it here after merge: `________`.
+("Add cartel-succession experiment harness"). Recorded: `d86d384` and `b01d10f` (merged in PR #1), `d34181c` (PR #2).
 
-No experiment was run and no result was produced before the sprint.
+Pre-sprint setup runs on Modal (22 Oct 2026): the pilot config only (`configs/pilot.yaml`,
+4 sessions × 60 rounds), to check the GPU image, determinism and the inclusion rule. See
+`docs/RUN_LOG.md`. No main-run result and no report finding come from these runs.
 
 ## Sprint work (23–25 Oct 2026)
 

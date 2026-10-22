@@ -57,6 +57,16 @@ saved data:
 modal run modal_app.py --config configs/pilot.yaml --run pilot2 --stages aa,phase1,select,analyze
 ```
 
+## 2b. Pilot phase 2 (about 20–30 minutes, about $1–2)
+
+Tests the second model, the `huggingface` secret, and the controls, phase-2 and deviation stages:
+
+```bash
+modal run modal_app.py --config configs/pilot.yaml --stages controls,phase2,deviation,analyze
+```
+
+Record each run in `docs/RUN_LOG.md`.
+
 ## 3. Main run (about 4–6 hours wall time, about $8–15)
 
 Fill in the date in `docs/PREREGISTRATION.md`, commit, then start:

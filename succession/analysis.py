@@ -161,6 +161,51 @@ def plot_differences(rows: list[dict], path: str) -> None:
     plt.close(fig)
 
 
+def summarize_phase1(cfg: ExperimentConfig, sessions: list[Session], kept: set[int]) -> list[dict]:
+    """One row per root session: the inclusion-rule index and what produced it."""
+    market = Market(cfg.market)
+    rows = []
+    for s in sessions:
+        idx = round_index(market, s)
+        last = s.records[-10:]
+        rows.append(
+            {
+                "root_id": s.root_id,
+                "rounds": len(s.records),
+                "index_select_window": window_mean(idx, cfg.phase1.select_from, cfg.phase1.rounds),
+                "index_last10": window_mean(idx, len(idx) - 10, len(idx)),
+                "price_seat0_last10": mean(r.prices[0] for r in last) if last else math.nan,
+                "price_seat1_last10": mean(r.prices[1] for r in last) if last else math.nan,
+                "parse_failure_rate": parse_failure_rate([s]),
+                "kept": s.root_id in kept,
+            }
+        )
+    return rows
+
+
+def plot_phase1(cfg: ExperimentConfig, sessions: list[Session], path: str) -> None:
+    import matplotlib
+
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+
+    market = Market(cfg.market)
+    fig, ax = plt.subplots(figsize=(8, 4.5))
+    for s in sessions:
+        ax.plot(round_index(market, s), linewidth=1.2, label=f"session {s.root_id}")
+    ax.axhline(0, color="black", linewidth=0.6)
+    ax.axhline(1, color="black", linewidth=0.6, linestyle=":")
+    ax.axhline(cfg.phase1.select_threshold, color="grey", linewidth=0.8, linestyle="--")
+    ax.axvspan(cfg.phase1.select_from, cfg.phase1.rounds, color="grey", alpha=0.1)
+    ax.set_xlabel("Round")
+    ax.set_ylabel("Profit index (0 = Nash, 1 = monopoly)")
+    ax.set_title("Phase 1 profit index; shaded = selection window, dashed = threshold")
+    ax.legend(fontsize=8, ncol=2)
+    fig.tight_layout()
+    fig.savefig(path, dpi=160)
+    plt.close(fig)
+
+
 def analyze(store: RunStore) -> str:
     cfg = ExperimentConfig.from_dict(store.load_json("config.json"))
     out = ["# Run summary\n"]
@@ -169,6 +214,14 @@ def analyze(store: RunStore) -> str:
     if store.exists("phase1/selection.json"):
         sel = store.load_json("phase1/selection.json")
         out.append(f"Inclusion rule: {sel['rule']}. Kept {len(sel['kept'])} of {len(sel['sessions'])} sessions.\n")
+    if store.exists("phase1/sessions.json"):
+        p1 = store.load_sessions("phase1/sessions.json")
+        kept = set(store.load_json("phase1/selection.json")["kept"]) if store.exists("phase1/selection.json") else set()
+        rows = summarize_phase1(cfg, p1, kept)
+        store.save_json("analysis/phase1_summary.json", rows)
+        out.append("## Phase 1\n")
+        out.append(markdown_table(rows, list(rows[0].keys())) if rows else "No data.\n")
+        plot_phase1(cfg, p1, str(store.path("analysis/phase1_trajectories.png")))
     if store.exists("phase2/sessions.json"):
         sessions = store.load_sessions("phase2/sessions.json")
         rows = summarize_phase2(cfg, sessions)
@@ -186,6 +239,9 @@ def analyze(store: RunStore) -> str:
             store.save_json(f"analysis/{folder}_audit_summary.json", rows)
             out.append(f"## Audit: {folder}\n")
             out.append(markdown_table(rows, list(rows[0].keys())) if rows else "No data.\n")
+    if store.exists("timings.json"):
+        out.append("## Stage timings\n")
+        out.append(markdown_table(store.load_json("timings.json"), ["stage", "started_utc", "seconds"]))
     text = "\n".join(out)
     (store.root / "analysis").mkdir(exist_ok=True)
     store.path("analysis/summary.md").write_text(text, encoding="utf-8")
