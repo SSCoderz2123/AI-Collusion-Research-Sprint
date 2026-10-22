@@ -33,7 +33,10 @@ secrets = [modal.Secret.from_name(HF_SECRET)] if HF_SECRET else []
 
 gpu_image = (
     modal.Image.debian_slim(python_version="3.11")
-    .uv_pip_install("vllm==0.8.5", "hf_transfer", "pyyaml>=6.0")
+    # vLLM 0.8.5 declares only transformers>=4.51.1. Newer transformers releases removed
+    # tokenizer attributes it reads (all_special_tokens_extended), so the Generator crashed
+    # at startup. 4.51.3 matches vLLM 0.8.5 and also caps huggingface_hub<1.0, tokenizers<0.22.
+    .uv_pip_install("vllm==0.8.5", "transformers==4.51.3", "hf_transfer", "pyyaml>=6.0")
     # VLLM_USE_V1=0: the V0 engine honours per-request seeds, which paired branches need.
     # The A/A stage measures how well this holds; change the engine only with a new A/A check.
     .env({"HF_HUB_ENABLE_HF_TRANSFER": "1", "HF_HOME": HF_CACHE_DIR, "VLLM_USE_V1": "0"})

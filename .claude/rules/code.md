@@ -11,4 +11,6 @@
    and must run in under 30 seconds without a GPU or network.
 7. Before a commit: `python -m pytest -q`, `ruff check .`, `ruff format --check .` all pass.
 8. Do not commit run data, model weights, tokens or `.env` files. `results/` is git-ignored.
-9. Pin the vLLM version in `modal_app.py`. Change it only together with a new A/A check.
+9. Pin the vLLM version in `modal_app.py`, together with `transformers` (vLLM declares only a
+   lower bound; an unpinned newer release broke the tokenizer on 22 Oct). Change either only
+   together with a new A/A check.
