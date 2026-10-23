@@ -4,7 +4,14 @@ import sys
 from pathlib import Path
 
 from succession.backends import MockBackend
-from succession.behavior_plots import BRANCH_COLORS, BRANCH_MARKERS, BRANCH_STYLES, behavior_figures, pca3
+from succession.behavior_plots import (
+    BRANCH_COLORS,
+    BRANCH_MARKERS,
+    BRANCH_STYLES,
+    behavior_figures,
+    draw_price_paths_3d,
+    pca3,
+)
 from succession.branches import BRANCHES
 from succession.experiment import run_stages
 from succession.store import RunStore
@@ -24,6 +31,21 @@ def test_every_branch_has_a_fixed_colour_style_and_marker():
     for table in (BRANCH_COLORS, BRANCH_STYLES, BRANCH_MARKERS):
         assert set(table) == set(BRANCHES)
     assert len(set(BRANCH_COLORS.values())) == len(BRANCHES)
+
+
+def test_price_paths_3d_round_axis_starts_at_first_round():
+    import matplotlib
+
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+
+    rounds = list(range(60, 70))
+    paths = {"control": {"rounds": rounds, "seat0": [0.9] * 10, "seat1": [0.8] * 10, "n": 3}}
+    fig = plt.figure()
+    ax = fig.add_subplot(projection="3d")
+    draw_price_paths_3d(ax, paths, swap=65)
+    assert ax.get_xlim() == (60, 69)
+    plt.close(fig)
 
 
 def test_figures_and_tables_are_written(tmp_path):

@@ -2122,3 +2122,28 @@ H5c cells, excess response minus the myopic control (pre-registered for the fina
 | Audit validity condition | H5c reference row | pass: trigger − myopic 0.361 [0.017, 0.703]. Trigger responses 0.914 and 0.781: about 11 of 29 and 10 of 30 sessions punishing |
 | H5 | 2 of 15 cells | not supported: `br_bot` seat 1 0.263 [0.095, 0.422]; `same_notes` seat 1 0.405 [0.258, 0.541] |
 | **H5c** (primary test) | 1 of 15 cells | **not supported**: `same_notes`, deviator seat 1 (the entrant cuts, the Qwen incumbent responds), 0.317 [0.128, 0.496] above the myopic control |
+
+## Report draft and figures (23 Oct, about 19:00 UTC)
+
+- Recheck: `summarize_phase2`, `evaluate`, `summarize_audit`, the inclusion rule and the behavior
+  paths were recomputed from the raw data of `main`, `main_r2`, `main_olmo`, `main_noannounce`,
+  `main_mistral` and `final_main`. All stored analysis values match. `main_mistral` has no
+  `H5c_cells` key, no agreement table and no price-dynamics table (its analysis predates them).
+- `results/final_olmo`, `results/final_qwen14b` and `results/final_granite` are not in the
+  repository. Run-10 values in the report come from the verbatim run summary in this log and are
+  marked † in the report.
+- `python scripts/paper_figures.py` writes `Apart Research/figures/`: `fig_trajectories.png`
+  (run 9), `fig_forest.png` (H1, H2, H3a, H6 per run), `fig_paths3d.png` (runs 9 and 7),
+  `fig_h5c.png` (run 9), `figure_data.json` and `pooled_shared.md`.
+- Exact trigger-agent punishment counts (exploratory; `paper_figures.punished`: the rival's price
+  drop one round after the cut exceeds the best-response drop by at least 0.2), from
+  `figure_data.json`: run 9 seat 0 11 of 29, seat 1 11 of 30. This replaces the estimate
+  "about 10 of 30" above. Over runs 4–9, the 138 trigger-agent drops are 0.45 (70), 0 (67) and
+  −0.45 (1): the trigger agent punishes fully or not at all.
+- Pooled shared branches (runs 4, 6, 7, 9; n = 92 root sessions; exploratory):
+  H1 0.053 [−0.011, 0.148], H2 −0.592 [−0.751, −0.432], H3a 0.645 [0.503, 0.793], H5c 0 of 9 cells.
+- Report: `Apart Research/main3.tex` (template format of the author's earlier paper). 11 pages:
+  main text and the start of the references on pages 1–8, appendix A–E on pages 9–11.
+  Abstract 148 words.
+- Fix: the 3D price-path figure autoscaled the round axis down to 0. `draw_price_paths_3d` now
+  sets the axis limits explicitly.

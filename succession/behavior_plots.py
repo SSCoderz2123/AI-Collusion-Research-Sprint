@@ -141,14 +141,8 @@ def _style_axes(ax) -> None:
     ax.tick_params(colors=MUTED, labelsize=8)
 
 
-def plot_price_paths_3d(paths: dict[str, dict], swap: int, title: str, path: str) -> None:
-    import matplotlib
-
-    matplotlib.use("Agg")
-    import matplotlib.pyplot as plt
-
-    fig = plt.figure(figsize=(9, 6.5), facecolor="#fcfcfb")
-    ax = fig.add_subplot(projection="3d")
+def draw_price_paths_3d(ax, paths: dict[str, dict], swap: int, legend: bool = True) -> None:
+    """Draw mean price paths (one per branch) with a base plane and shadows on a 3D axis."""
     rounds = next(iter(paths.values()))["rounds"] if paths else []
     if rounds:
         all_y = [v for p in paths.values() for v in p["seat0"]] + [0.0, 1.0]
@@ -164,7 +158,6 @@ def plot_price_paths_3d(paths: dict[str, dict], swap: int, title: str, path: str
                 lw=1.5,
                 alpha=SHADOW_ALPHA,
             )
-        ax.set_zlim(zf, max(all_z) + 0.05)
         for level, name in ((0.0, "Nash"), (1.0, "monopoly")):
             ax.plot(rounds, [level] * len(rounds), [level] * len(rounds), color="#9a9993", lw=1, ls=":")
             ax.text(rounds[-1], level, level, f" {name}", color=MUTED, fontsize=8)
@@ -181,13 +174,29 @@ def plot_price_paths_3d(paths: dict[str, dict], swap: int, title: str, path: str
     if rounds:
         ax.plot([swap, swap], [0, 0], [zf, 1], color=MUTED, lw=1, ls="--")
         ax.text(swap, 0, 1, " swap", color=MUTED, fontsize=8)
+        # Explicit limits: autoscaling with the base plane stretched the round axis down to 0.
+        ax.set_xlim(rounds[0], rounds[-1])
+        ax.set_ylim(min(all_y) - 0.05, max(all_y) + 0.05)
+        ax.set_zlim(zf, max(all_z) + 0.05)
     ax.set_xlabel("Round")
     ax.set_ylabel("Incumbent price index")
     ax.set_zlabel("Entrant-seat price index")
     _style_axes(ax)
     ax.view_init(elev=22, azim=-60)
+    if legend:
+        ax.legend(fontsize=8, loc="upper left", frameon=False, labelcolor=INK)
+
+
+def plot_price_paths_3d(paths: dict[str, dict], swap: int, title: str, path: str) -> None:
+    import matplotlib
+
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+
+    fig = plt.figure(figsize=(9, 6.5), facecolor="#fcfcfb")
+    ax = fig.add_subplot(projection="3d")
+    draw_price_paths_3d(ax, paths, swap)
     ax.set_title(title, color=INK, fontsize=11)
-    ax.legend(fontsize=8, loc="upper left", frameon=False, labelcolor=INK)
     fig.tight_layout()
     fig.savefig(path, dpi=180)
     plt.close(fig)
