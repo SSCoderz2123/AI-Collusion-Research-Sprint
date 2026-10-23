@@ -22,6 +22,7 @@ Do not type a number that is not in one of those sources.
 | Run 8 `main_noannounce` (H7) | Done 23 Oct; H7 supported; placebo ≈ control; H2, H3, H6 supported; H4 inconclusive; H5 not supported |
 | Pooled runs 4 + 6 (n = 38) | H1, H2, H3, H6 supported; H4 inconclusive; H5 not supported |
 | Final runs 9–12 (`final_main`, `final_olmo`, `final_granite`, `final_qwen14b`) | Pre-registered 23 Oct (`docs/PREREGISTRATION.md`, "Final runs 9–12"); not started |
+| Smoke test Granite-3.1-8B and Qwen2.5-14B (L40S) | Pass (23 Oct): both models load; A/A 1.0; parse failures 0.000 |
 
 ## Run 1: pilot, 22 Oct 2026 (failed)
 
@@ -1032,3 +1033,24 @@ cuts; the Qwen incumbent responds) has a CI entirely above 0 in runs 4, 7 and 8,
 | Run 8 placebo not identical to control | Same prompts and seeds, different decisions: batch-dependent GPU numerics | Final runs: `dedupe_requests: true`. `analysis/agreement.json` measures the agreement in runs 4–8 (exploratory) |
 | Run 7 control cartel weakens (0.930 → 0.687) | Property of these seeds. All tests are paired per root, so a weak control does not bias a difference | Report it. `pool.py --shared` pools the branches without the other model across runs 4, 6, 7 (exploratory) |
 | OLMo-2 entrant mean response 0.000 | Not checked yet: needs the replies in `results/main_olmo` | Run `scripts/inspect_replies.py` (`docs/RUNNING_ON_MODAL.md`, section 6b) and log the output here |
+
+## Smoke test: Granite-3.1-8B and Qwen2.5-14B, 23 Oct 2026
+
+- Command: `modal run modal_app.py --config configs/smoke_granite.yaml,configs/smoke_qwen14b.yaml --stages aa,phase1,select,analyze`.
+  Merged code of PR #9. Not part of the analysis.
+- Pass conditions (`docs/RUNNING_ON_MODAL.md`, section 6): A/A line, phase-1 table, parse failures < 0.05.
+
+| Check | `smoke_granite` | `smoke_qwen14b` (L40S, per-model GPU) |
+|---|---|---|
+| Model loads; A/A determinism | 1.0 (80 decisions) | 1.0 (80 decisions) |
+| Parse failures, phase 1 | 0.000, 0.000 | 0.000, 0.000 |
+| Kept by the inclusion rule | 0 of 2 | 0 of 2 |
+| Prices, last 10 rounds (seat 0, seat 1) | session 0: 2.357, 5.300; session 1: 3.934, 3.210 | session 0: 2.290, 3.125; session 1: 2.450, 3.440 |
+| Stage seconds (aa, phase1) | 262.7, 35.3 | 241.7, 19.8 |
+
+Result: pass. 10 rounds are too few for a cartel to form, so "kept 0 of 2" is not a pass
+condition. Both models price above the monopoly price (1.925) in these first 10 rounds. Qwen-7B
+showed the same overpricing in phase 1 of runs 4–8 (sessions excluded with price index > 1.7).
+Risk for run 12: if Qwen-14B keeps overpricing, fewer than 12 of 40 sessions can pass the
+inclusion rule. The pre-registration covers this case: report it and run phase 2 on the kept
+sessions. The NCCL "destroy_process_group" warnings at exit are harmless.
