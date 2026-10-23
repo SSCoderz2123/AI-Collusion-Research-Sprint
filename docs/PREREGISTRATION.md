@@ -1,6 +1,7 @@
 # Pre-registration
 
-Status: **draft, fixed when phase 1 of the main run starts.** Record that date here: `____`.
+Status: **fixed on 22 Oct 2026 at 18:38:51 UTC** (merge `5d8c2fe` of commit `8cf75a6` into `main`).
+Main-run phase 1 started at 19:05:21 UTC (`main`) and 19:22:00 UTC (`main_mistral`).
 After that date, record every change under "Deviations".
 
 ## Hypotheses
@@ -77,4 +78,4 @@ These changes were made before phase 1 of the main run, based on the pilot (`doc
 
 | Date | Change | Reason |
 |---|---|---|
-| | | |
+| 23 Oct 2026 | Added `succession/hypotheses.py`, which computes the H1–H5 verdicts with the rule above. H4 is evaluated as |mean(si − sb)| − |mean(si − oi)| > 0, bootstrapped over roots. H5 counts only cells whose responder is an LLM (in `br_bot`, a cut by seat 0 is answered by the bot and is excluded) | The plan states the hypotheses but not the exact computation; this fixes it in code before H3–H5 are read |

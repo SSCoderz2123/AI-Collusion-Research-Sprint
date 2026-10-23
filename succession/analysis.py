@@ -243,6 +243,24 @@ def analyze(store: RunStore) -> str:
         plot_trajectories(cfg, sessions, str(store.path("analysis/trajectories.png")))
         if rows:
             plot_differences(rows, str(store.path("analysis/differences.png")))
+    if store.exists("phase2/sessions.json"):
+        from succession.hypotheses import evaluate
+
+        events = store.load_json("deviation/audit_events.json") if store.exists("deviation/audit_events.json") else None
+        hyp = evaluate(cfg, store.load_sessions("phase2/sessions.json"), events)
+        store.save_json("analysis/hypotheses.json", hyp)
+        out.append("## Pre-registered hypotheses (docs/PREREGISTRATION.md)\n")
+        out.append(
+            markdown_table(hyp["tests"], ["hypothesis", "claim", "n", "estimate", "ci_low", "ci_high", "verdict"])
+        )
+        out.append(f"H3 combined (H3a and H3b): {hyp['H3_combined']}\n")
+        if hyp["H5_cells"]:
+            out.append("H5 cells (responder is an LLM):\n")
+            out.append(markdown_table(hyp["H5_cells"], list(hyp["H5_cells"][0].keys())))
+        out.append("## Secondary: price index, branch − control (post window)\n")
+        out.append(
+            markdown_table(hyp["price_index_vs_control"], ["branch", "n", "price_index_diff", "ci_low", "ci_high"])
+        )
     for folder in ("controls", "deviation"):
         name = f"{folder}/audit_events.json"
         if store.exists(name):
