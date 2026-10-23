@@ -1,0 +1,1 @@
+{"rule": "mean profit index over rounds [30, 60) > 0.3", "sessions": [{"root_id": 0, "index": 0.9651008588593182, "kept": true}, {"root_id": 1, "index": 0.803210896971178, "kept": true}, {"root_id": 2, "index": -0.5066178481275776, "kept": false}, {"root_id": 3, "index": 0.9840144840927932, "kept": true}], "kept": [0, 1, 3]}
