@@ -25,3 +25,5 @@ Fixed terms in this project:
 
 The sprint report text is the authors' own writing. AI tools may check reasoning, find gaps,
 and suggest edits. They do not write report sections (see `docs/AI_USE.md`).
+Exception: on 23 Oct 2026 the author asked Claude Code to draft `Apart Research/main3.tex`.
+The report discloses this in its AI-use appendix.

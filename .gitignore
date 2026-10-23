@@ -9,3 +9,9 @@ venv/
 *.egg-info/
 # Run data comes from the Modal Volume. Commit only the final analysis tables you cite.
 
+# LaTeX build files of the report (keep main3.tex, main3.pdf, references.bib, figures/)
+Apart Research/*.aux
+Apart Research/*.bbl
+Apart Research/*.blg
+Apart Research/*.log
+Apart Research/*.out

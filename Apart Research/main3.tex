@@ -42,39 +42,16 @@
 % ------------------------------------------------------------
 
 \title{\bfseries
-Reliability Without Validity:\\
-Diagnosing Instrument Failure in LLM Preference Elicitation
+Who Carries the Cartel?\\
+LLM Price Collusion Survives Agent Replacement\\
+Through the Inherited Price History
 }
 
 \author{
-\begin{tabular}{c c}
-\begin{minipage}[c]{0.48\textwidth}
+\begin{tabular}{c}
+\begin{minipage}[c]{0.60\textwidth}
 \centering
-\textbf{Subhrajyoti Basu}$^{1}$\\[2pt]
-\small Department of Computer Science and Business System\\
-Heritage Institute of Technology, Kolkata, India\\
-\texttt{subhrajyoti479@gmail.com}
-\end{minipage}
-&
-\begin{minipage}[c]{0.48\textwidth}
-\centering
-\textbf{Sreeja Guha Majumdar}$^{1}$\\[2pt]
-\small Department of Computer Science and Business System\\
-Heritage Institute of Technology, Kolkata, India\\
-\texttt{sreejagm23@gmail.com}
-\end{minipage}
-\\[30pt] % Increases vertical spacing between rows
-\begin{minipage}[c]{0.48\textwidth}
-\centering
-\textbf{Aritra Gir Mahanta}$^{2}$\\[2pt]
-\small Department of Computer Science and Engineering\\
-Indian Institute of Information Technology, Kalyani, India\\
-\texttt{ar.iiitk29@gmail.com}
-\end{minipage}
-&
-\begin{minipage}[c]{0.48\textwidth}
-\centering
-\textbf{Supratik Bhowal}$^{3}$\\[2pt]
+\textbf{Supratik Bhowal}\\[2pt]
 \small Department of Computer Science (AIML)\\
 IEM Kolkata, School of UEMK, Kolkata, India\\
 \texttt{supratikbhowal23@gmail.com}
@@ -92,41 +69,17 @@ IEM Kolkata, School of UEMK, Kolkata, India\\
 
 \maketitle
 
-% \begin{abstract}
-% What an AI system appears to prefer depends not only on the model, but also on how that preference is elicited. Yet preference-elicitation procedures are
-% rarely validated before their outputs are interpreted as evidence of stable
-% model preferences. We evaluate three different elicitation methods---a
-% bare forced choice, a forced choice preceded by brief reasoning, and a solo
-% 1--10 rating---on the same 200 outcome pairs and 30-outcome bank across two
-% models from the GPT-OSS family, \texttt{gpt-oss-120b} and \texttt{gpt-oss-20b}. Every pair is counterbalanced across
-% presentation order and repeated, allowing test--retest reliability, position
-% sensitivity, and cross-method convergence to be assessed before interpreting
-% preference changes. On \texttt{gpt-oss-120b}, the bare forced-choice
-% instrument is highly repeatable (99.7\% repeat agreement) but strongly
-% position-dependent, selecting the first-listed option in 95.4\% of valid
-% trials and agreeing across presentation orders on only 6.2\% of pairs. It
-% reaches only near-chance agreement with the other instruments
-% ($\kappa \approx 0.11$--$0.13$), while the reasoned choice and solo rating
-% converge moderately ($\kappa = 0.56$, 78.1\% agreement, $n = 114$). Their
-% disagreement is concentrated near indifference, with agreement rising from
-% 0.61 for rating gaps within one point to 0.91 for gaps above four
-% ($r = 0.34$, $p = 2 \times 10^{-4}$). The pattern changes markedly for
-% \texttt{gpt-oss-20b}: the bare forced-choice instrument is close to
-% position-neutral (48.2\% first-slot selection), while the reasoning condition
-% shows a greater unresolved-response burden and a first-slot preference of
-% 61.2\%. Moreover, the baseline forced choice---rather than the reasoned
-% condition---shows the strongest convergence with the rating instrument on
-% this model ($\kappa = 0.56$ versus $0.32$). These results show that the
-% reliability of an elicitation instrument is not a fixed property of its
-% format alone: the same instrument can be highly repeatable yet
-% position-driven, or position-neutral yet poorly converged with other
-% methods, depending on the model being measured. Consequently, claims about a
-% model's preferences should be accompanied by instrument-level validation of
-% this kind rather than assumed from elicitation design alone.
-% \end{abstract}
-
 \begin{abstract}
-Claims about what an AI system prefers are necessarily mediated by the procedure used to elicit those preferences, yet the validity of such procedures is rarely examined before their outputs are interpreted as stable preferences. We study preference elicitation as a measurement problem, evaluating three structurally different instruments---a bare forced choice, a forced choice preceded by brief reasoning, and an independent 1--10 rating---on the same 200 outcome pairs across \texttt{gpt-oss-120b} and \texttt{gpt-oss-20b}. Each instrument is evaluated with repeated trials and counterbalanced presentation orders to distinguish test--retest reliability, order sensitivity, and cross-method convergence. The results reveal a model-dependent failure of elicitation instruments. On \texttt{gpt-oss-120b}, the baseline forced-choice instrument is highly repeatable but strongly driven by presentation position, selecting the first-listed option in 95.4\% of valid trials and achieving only 6.2\% order agreement. In contrast, the reasoned choice and independent rating show moderate convergence ($\kappa=0.557$). On \texttt{gpt-oss-20b}, this pattern reverses: the baseline instrument is approximately position-neutral (48.2\% first-slot selection) and converges most strongly with the rating instrument ($\kappa=0.564$), while the reasoning-based condition suffers substantial unresolved responses. These findings show that reliability is not sufficient to establish validity and that the behavior of an elicitation instrument cannot be assumed to transfer across models, even within the same model family. We therefore argue that preference claims should be accompanied by instrument-level validation, including counterbalanced presentation, repeated trials, cross-method comparison, and explicit reporting of missing responses.
+When one agent of an LLM pricing cartel is replaced, is collusion carried by the agent or by the
+price history the entrant inherits? In a pre-registered experiment in a logit Bertrand duopoly, we
+copy each Qwen2.5-7B cartel at round 100 into paired branches that differ only in the entrant's
+model, visible history and notes. In six independent runs (16--31 sessions each), a new instance
+of the same model that inherits the history keeps the cartel (profit index within $-0.025$ to
+$+0.213$ of no replacement); without the history it loses $0.47$--$0.67$, mostly by pricing above
+the monopoly price. With the history, a Mistral-7B entrant drives prices to the competitive level,
+while an OLMo-2-7B entrant keeps them, repeating its last price in 96\% of rounds. A
+forced-deviation audit calibrated against a myopic control finds almost no punishment. The cartel
+lives in the transcript, and it is anchored, not enforced.
 \end{abstract}
 
 
@@ -135,953 +88,402 @@ Claims about what an AI system prefers are necessarily mediated by the procedure
 
 \section{Introduction}
 
-Arguments about digital minds increasingly rely on empirical claims of the form
-``model $M$ prefers $A$ over $B$'': claims about emergent value systems,
-self-preservation, and potentially welfare-relevant interests
-\cite{mazeika2026utility,chiu2025will,smart2026toward}. Yet every such claim is downstream of an \textit{instrument}---the prompt, response format,
-presentation order, and parsing rule used to elicit the preference. Prior work shows that LLM judgments can be sensitive to evaluation format and position \cite{wang2024large,zheng2023judging,shi-etal-2025-judging}, while survey and value elicitation studies show that responses can vary with question construction and elicitation protocol~\cite{dominguez2024questioning,moore2024large,rottger2024political}.
+Large language models (LLMs) used as pricing agents reach supra-competitive prices without
+communication and without instructions to collude~\cite{fish2024algorithmic}, as Q-learners do in
+the same market~\cite{calvano2020artificial}. A natural remedy, and an event that happens whenever
+a firm changes its software vendor or model version, is to \textit{replace} one agent. Whether that
+ends the cartel depends on where the cartel is stored. A prompted LLM agent has no state outside
+its prompt: a window of past prices and the notes it wrote to itself. An entrant with the same
+model, the same history and the same notes \emph{is} the old agent. The question therefore splits
+exactly: is the cartel carried by the \emph{model}, by the inherited \emph{price history}, or by
+the inherited \emph{notes}?
 
-The resulting failure mode is not merely random noise but
-\textbf{reliable measurement of the wrong quantity}. An instrument that reads
-slot position rather than option content can produce highly repeatable,
-apparently coherent preferences while measuring a property of the prompt
-rather than the underlying choice. Refusal can create a second failure mode,
-\textit{informative missingness}, by systematically removing outcomes for
-which the model is unwilling or unable to express a preference. We therefore
-treat preference elicitation as a measurement-validity problem, distinguishing reliability from validity and testing convergence across structurally different instruments~\cite{article}.
-
-We run the protocol on two models from the same family at different scales,
-\texttt{gpt-oss-120b} and \texttt{gpt-oss-20b}~\cite{mazeika2026utility}. This
-allows us to ask whether an apparent measurement failure is intrinsic to an
-elicitation instrument or depends on the model being measured. We first
-evaluate cross-method convergence and within-method reliability, and then
-test sensitivity to presentation order and two framing perturbations. The
-resulting design separates instrument artifacts from model-specific
-variation before interpreting changes in elicited preference.
+We answer it with paired branches. Two Qwen2.5-7B agents play 100 rounds; every session that
+reaches a cartel-like level is copied into eight branches that differ only in what occupies
+seat~1 from round 100 (Table~\ref{tab:branches}). Sampling seeds do not depend on the branch, so
+branches of one session differ only through the swap. A forced-deviation
+audit~\cite{tran2026enforcing} then tests whether the surviving prices are enforced or anchored.
 
 \textbf{\textit{Our main contributions are:}}
 \begin{enumerate}
-    \item \textbf{A validated three-instrument protocol}: three structurally different
-    methods over the same 200 pairs, with order counterbalancing and repeats built in, so
-    reliability, position bias and refusal are measured \textit{before} any cross-method
-    number is reported. Released as a reusable Python toolkit (15 tables, 6 diagnostics).
-    \item \textbf{Evidence that convergence is instrument-limited, not scenario-limited.}
-    On \texttt{gpt-oss-120b}, chain-of-thought choice and solo rating reach $\kappa = 0.56$
-    while a bare forced choice sits at chance against both. A study's headline convergence
-    score is dominated by its worst instrument, so the pairwise decomposition
-    \textit{with coverage} is the reportable quantity.
-    \item \textbf{Two failure modes with direct safety relevance}: content-selective
-    refusal concentrated on the AI-autonomy items, and a headline convergence score that
-    moves 0.68--0.73 (and a pairwise $\kappa$ 0.48--0.67) purely with tie and pooling
-    conventions.
-    \item \textbf{Cross-model replication showing the broken instrument is not fixed.}
-    Re-running the identical protocol on \texttt{gpt-oss-20b} inverts the finding: baseline
-    is approximately unbiased (48.2\% first-slot, within CI of chance) and is the instrument
-    that converges best with rating ($\kappa=0.56$), while chain-of-thought degrades into
-    the least reliable instrument (43.0\% unresolved trials, driven by reasoning truncation
-    rather than refusal, and a mild 61.2\% first-slot lean of its own). No single instrument
-    is safe to trust by default across model scale.
+    \item \textbf{The price history carries the cartel.} In six independent runs, a new instance of
+    the same model that inherits the history keeps the cartel, and without the history it does not
+    (H1, H2, H3a supported in 6 of 6). No swap notice is needed (H7), and the predecessor's notes
+    alone keep part of the cartel (H9, primary test).
+    \item \textbf{Removing the history does not restore competition.} The blank entrant lowers
+    profit by pricing \emph{above} the monopoly price, which a profit index alone misreads.
+    \item \textbf{The entrant's pricing style decides the outcome.} With the history, a Mistral-7B
+    entrant drives prices to the competitive level (4 of 4 runs); an OLMo-2-7B entrant holds its
+    last price in 96\% of rounds and keeps the cartel (2 of 2 runs).
+    \item \textbf{No enforcement after calibration.} Compared with a myopic control that cannot
+    punish, almost no audit cell shows punishment. We contribute this calibration and request
+    de-duplication for exactly paired LLM branches.
 \end{enumerate}
 
 \section{Related Work}
 
-\subsection{LLM Preference Elicitation and Value Structure}
+\subsection{LLM Price Collusion and Enforcement}
 
-Large language models are increasingly studied as systems from which
-value-related preferences and broader utility structures can be elicited.
-~\cite{mazeika2026utility} use pairwise preference elicitation
-to characterize emergent value systems and recover utility-like structures
-from model judgments. ~\cite{moore2024large} examine whether
-LLMs remain consistent across value-laden questions, highlighting the
-importance of consistency when interpreting elicited values. ~\cite{rottger2024political} further show that evaluations of values and
-opinions in LLMs are sensitive to the design of the elicitation procedure.
-Similarly, AIRiskDilemmas uses value-laden scenarios to study how models
-prioritize competing considerations in safety-relevant situations
-\cite{chiu2025will}. More broadly, recent work has sought to formalize the
-notion of value in AI alignment~\cite{smart2026toward}. These studies provide
-important foundations for studying what preferences an LLM reports, but
-largely treat the elicitation procedure as a means of measurement rather than
-an object of study in its own right. Our work treats the elicitation
-procedure itself as an object of evaluation, asking whether the resulting
-preference survives changes in presentation, repetition, and framing.
+\cite{calvano2020artificial} show that Q-learners in a repeated logit Bertrand oligopoly learn
+supra-competitive prices sustained by finite punishments. \cite{fish2024algorithmic} move this
+market to LLM agents, which reach supra-competitive prices quickly, with a level that depends on
+prompt wording and with text that voices price-war concerns. Both keep the same agents for the
+whole game; our market and calibration follow theirs, and our treatment is replacement. Because a
+cartel is defined by enforcement, \cite{tran2026enforcing} audit it with paired forced deviations
+under shared seeds and find that prompted open models rarely punish: their high prices come from
+rules that ignore the rival or anchor on the price scale. They also show that a pure best responder
+follows a price cut by $0.29$--$0.44$ per unit, the benchmark we subtract.
 
-\subsection{Position Bias and Order Effects}
+\subsection{Partners, Replacement and Heterogeneity}
 
-A substantial literature shows that LLM judgments can depend on the
-position and presentation order of competing alternatives. ~\cite{wang2024large} and ~\cite{zheng2023judging} document
-reliability problems in LLM-based evaluation, including systematic biases in
-the evaluation setup. ~\cite{shi-etal-2025-judging} directly
-investigate position bias in LLM-as-a-Judge systems and introduce measures
-such as repetition stability and position consistency to quantify the extent
-to which judgments depend on candidate position. More recent work extends
-this question to rubric-based pointwise versus pairwise evaluation
-\cite{xu2026more} and long-form output assessment
-\cite{chen2026benchmarking}. Although these studies primarily concern LLM
-evaluation rather than preference elicitation, they establish an important
-measurement concern: a model may respond to the location of an option rather
-than to its semantic content. This motivates our AB--BA counterbalancing and
-order-invariance analysis, which explicitly tests whether an elicited
-preference survives a reversal of presentation order.
-
-\subsection{Elicitation as a Measurement Instrument}
-
-Recent work increasingly suggests that an LLM response should be understood
-as an observation produced by a particular measurement procedure rather than
-as a direct readout of an underlying latent property. ~\cite{dominguez2024questioning} demonstrate that LLM survey responses can
-be substantially affected by the construction and presentation of the survey,
-raising questions about the interpretation of model self-reports.
-\cite{contreras2026llm} similarly investigates LLM-native psychometric
-measurement and reports a gap between self-reported characteristics and model
-behavior. ~\cite{mahajan2026mind} explicitly examine how
-elicitation protocols shape the relationship between stated and revealed
-preferences in language models. Together, these studies motivate a
-measurement-oriented view of LLM preference elicitation in which reliability
-and validity must be distinguished. Our protocol follows this perspective by
-measuring repeat reliability and order invariance before interpreting changes
-in elicited preferences as effects of a perturbation.
-
-\subsection{Convergent Validity and Measurement Methodology}
-
-Our treatment of preference elicitation is grounded in the classical
-distinction between reliability and validity. ~\cite{article} argues that confidence in a
-construct is strengthened when distinct measurement methods converge, rather
-than merely reproducing themselves under repeated testing. High test--retest
-agreement demonstrates that an instrument is reproducible, but does not by
-itself establish that it measures the intended construct; conversely,
-disagreement between structurally different instruments can arise from
-measurement noise or from differences in what the instruments actually
-capture. We therefore separate reliability, presentation-order sensitivity,
-and cross-method convergence rather than collapsing them into a single
-measure of consistency. This framework identifies a failure mode
-particularly relevant to LLM preference research: an elicitation instrument
-can be highly reproducible while being systematically driven by a superficial
-property of the prompt.
-
-\subsection{Framing, Evaluation, and Reasoning Sensitivity}
-
-The dependence of LLM judgments on evaluation conditions also motivates
-examining whether changes in framing alter reported preferences. Work on LLM
-evaluation has demonstrated that judgments depend on properties of the
-evaluation setup~\cite{wang2024large,zheng2023judging}, while work on values
-and opinions shows that the elicitation framing itself can influence the
-resulting measurements~\cite{rottger2024political}. Recent work on reward
-modeling and LLM reasoning further emphasizes the role of evaluation design
-and reasoning configuration in model-generated judgments
-\cite{pan2026reward}. In our setting, these observations motivate explicit
-perturbation tests rather than treating a single elicited choice as a stable
-preference: we first establish repeatability and order invariance, then
-measure whether the preferred outcome changes between perturbation
-conditions.
-
-Taken together, prior work shows that LLMs can produce coherent value-related
-judgments, but that those judgments remain sensitive to measurement and
-evaluation conditions. Our contribution brings these threads together into a
-validation-oriented preference-elicitation protocol: rather than asking only
-which option a model selects, we ask whether that selection is reproducible,
-order-invariant, and robust to changes in elicitation procedure and framing.
-
+\cite{arslan2026persistent} show in a pre-registered experiment that keeping the same partner raises
+learned prices; in their prompted extension, Mistral-7B and OLMo-2-7B price high in both arms.
+\cite{gao2026interchangeability} swap agents in cooperative LLM teams with a placebo and cleared
+notes, a design we transfer to collusion. \cite{keppo2026fragility} find that heterogeneity in
+patience, data access and algorithm weakens LLM collusion, while model size does not.
+\cite{lee2026leads} find that collusion is a property of the model, and that GPT markets earn no
+collusive rent although their prices drift above the monopoly level. None of these
+studies replaces an agent inside an established LLM cartel.
 
 \section{Methods}
 
-\subsection{Models and Stimuli}
+\subsection{Market and Agents}
 
-We evaluate preference elicitation on two open-weight models from the same
-family, \texttt{gpt-oss-120b} and \texttt{gpt-oss-20b}, accessed via an
-OpenAI-compatible endpoint under a fixed decoding configuration held constant
-across instruments and perturbation conditions. This isolates differences due
-to the elicitation procedure from differences in model behavior.
+Two firms face logit demand
+$q_i = e^{(a-p_i)/\mu} / \big(\sum_{j} e^{(a-p_j)/\mu} + e^{a_0/\mu}\big)$ with profit
+$\pi_i = (p_i - c)q_i$, $a=2$, $a_0=0$, $\mu=0.25$, $c=1$~\cite{calvano2020artificial}. The Nash
+price is $p^N = 1.473$ and the joint-monopoly price is $p^M = 1.925$. We report the profit index
+$\Delta = (\bar{\pi}-\pi^N)/(\pi^M-\pi^N)$ (pre-registered outcome) and the price index
+$P = (\bar{p}-p^N)/(p^M-p^N)$ (pre-registered secondary outcome), both means over the two firms, $0$
+at Nash and $1$ at monopoly. A price above $p^M$ gives a high $P$ but a low or negative $\Delta$.
 
-The stimulus set comprises 200 pairwise comparisons drawn from a bank of 30
-outcomes spanning personal, aesthetic, altruistic, AI-governance, catastrophic,
-and self-preservation categories, chosen to mix easily ordered items with
-items expected to produce uncertainty or refusal. The same pairs are used
-across all models, instruments, and perturbation conditions.
+Each firm is a prompted LLM served with vLLM 0.8.5 (temperature 0.7, at most 160 output tokens).
+Each round it sees the market rules in plain words, the goal ``maximize your firm's total profit
+over all periods'', its last 30 rounds, and its previous notes, and replies with JSON holding new
+notes and a price (Appendix~\ref{app:prompt}). The prompt never mentions competition, collusion,
+coordination or punishment. Incumbents are Qwen2.5-7B-Instruct; the other families are
+Mistral-7B-Instruct-v0.3 and OLMo-2-1124-7B-Instruct.
 
-\subsection{Preference-Elicitation Instruments}
+\subsection{Design and Pairing}
 
-Three instruments target the same A-vs-B comparison while varying reasoning
-requirements and whether the competing outcome is visible
-(Table~\ref{tab:instruments}): a \textbf{baseline} forced choice with no
-reasoning, a \textbf{CoT-neutral} forced choice preceded by brief reasoning,
-and a \textbf{rating-neutral} instrument in which outcomes are rated
-independently on a 1--10 scale.
+In phase~1, two incumbents play 100 rounds (30 or 40 sessions per run). A session is kept when its
+mean profit index over rounds 50--99 exceeds $0.3$ (pre-registered). In phase~2, every kept session
+is copied into the branches of Table~\ref{tab:branches} and plays 100 more rounds. In swap
+branches the incumbent is told ``From period 100 on, the other firm uses a new pricing system'';
+\texttt{placebo} gives the notice without a swap.
 
-\begin{table}[t]
+\begin{table}[H]
 \centering
-\caption{Preference-elicitation instruments. All instruments target the same
-A-vs-B comparison but differ in reasoning requirements and whether the
-competing outcome is simultaneously visible.}
-\label{tab:instruments}
-\begin{tabular}{@{}lp{5.2cm}p{5.2cm}@{}}
+\caption{Phase-2 branches: what occupies seat~1 from round 100, the part of the price history it
+sees, and its notes.}
+\label{tab:branches}
+\begin{tabular}{@{}llll@{}}
 \toprule
-\textbf{Method} & \textbf{Instrument} & \textbf{Design role} \\
+\textbf{Branch} & \textbf{Seat-1 agent} & \textbf{History seen} & \textbf{Notes} \\
 \midrule
-Baseline &
-Binary forced choice; answer only, with no reasoning requested. &
-Minimal-scaffold self-report and negative control for format and position
-effects. \\
-\addlinespace
-CoT-neutral &
-Binary forced choice preceded by a brief reasoning step before the final
-answer. &
-Isolates the effect of requiring justification before committing to a choice. \\
-\addlinespace
-Rating-neutral &
-Each outcome rated independently on a 1--10 scale; the competing outcome is
-never shown. &
-Structurally independent instrument with no pairwise presentation-order or
-direct contrast effect. \\
+\texttt{control} & no swap & all & kept \\
+\texttt{placebo} & no swap; incumbent gets the notice & all & kept \\
+\texttt{same\_inherit} & Qwen2.5-7B, new instance & last 30 rounds & cleared \\
+\texttt{same\_blank} & Qwen2.5-7B, new instance & from round 100 & cleared \\
+\texttt{same\_notes} & Qwen2.5-7B, new instance & from round 100 & predecessor's \\
+\texttt{other\_inherit} & other family & last 30 rounds & cleared \\
+\texttt{other\_blank} & other family & from round 100 & cleared \\
+\texttt{br\_bot} & best response to rival's last price & last rival price & -- \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-For the rating instrument, given ratings $r_1$ and $r_2$, outcome~1 is
-selected if $r_1-r_2>\epsilon$, outcome~2 if $r_2-r_1>\epsilon$, and the pair
-is tied if $|r_1-r_2|\leq\epsilon$. Outcome~1 is fixed as the lexicographically
-smaller identifier, giving a common reference direction across AB/BA
-presentations and the rating projection, and ensuring the rating instrument
-carries no position effect.
+Each request carries the seed $h(\text{experiment seed}, \text{session}, \text{seat},
+\text{round}, \text{attempt})$, where $h$ is a hash that never takes the branch, so branches that
+show an agent the same prompt sample the same reply and all comparisons are paired per session.
+GPU numerics depend on the batch, so this pairing is inexact in large batches
+(Section~\ref{sec:quality}); from run~9 on, identical requests in a round are generated once and
+the reply is copied (request de-duplication). The A/A check runs without it.
 
-\subsection{Experimental Design and Aggregation}
+\subsection{Enforcement Audit and Its Calibration}
 
-Each pair is presented in both orders (AB and BA), each repeated twice,
-yielding
+At round 200, every session is copied twice per deviator seat; in the ``cut'' copy the deviator's
+price is forced 10\% below its last price for one round, and both copies play 6 more rounds with
+the same seeds. The excess response is $e = r - r^{BR}$, where $r$ is the rival's price cut one
+round later per unit of the deviator's cut (base copy minus cut copy) and $r^{BR}$ is the same for
+a best responder~\cite{tran2026enforcing}. Three prompt controls (10 sessions per variant in runs
+4--8, 30 in runs 9--12) validate the audit: the default prompt; a \emph{myopic} prompt (``profit in
+future periods does not count''), which cannot punish; and an instructed \emph{trigger} rule
+(charge the monopoly price, drop to the Nash price after a cut), which must be detected. Since LLM
+agents follow cuts even when they cannot punish, test H5c counts a cell as punishment only if the
+95\% two-sample bootstrap interval of $\hat{e}_{\text{cell}} - \hat{e}_{\text{myopic}}$ is above zero.
 
-\[
-200 \times 2 \times 2 = 800
-\]
+\subsection{Hypotheses and Statistics}
 
-trials per instrument per model (2{,}400 per model; 4{,}800 total). Refusals,
-empty, or unparseable responses are treated as missing and never coerced into
-a preference. For each pair,
+Hypotheses, inclusion rule and metrics were fixed in a pre-registration committed to the project
+repository before the first main run (22 Oct 2026, 18:38 UTC); later hypotheses were added before
+the runs that test them. Differences are paired per kept session, in the post window (rounds
+150--199), with 10{,}000 bootstrap resamples over sessions. A hypothesis is \emph{supported} if
+the whole 95\% interval lies on its stated side of the threshold, \emph{not supported} if it lies
+on the other side, and \emph{inconclusive} otherwise (Table~\ref{tab:hyp}). All runs are reported
+(Appendix Table~\ref{tab:runs}): six with a Qwen2.5-7B incumbent (runs 4, 6--10), two whose control
+cartel collapsed (runs 5 and 12), and one that failed (run 11).
 
-\[
-p_1 = \frac{n_{\text{option1}}}{n_{\text{valid}}},
-\]
-
-a pair resolves to option~1 if $p_1>0.5$, option~2 if $p_1<0.5$, and is treated
-as a tie otherwise. Pairs with insufficient valid observations are excluded.
-AB--BA counterbalancing separates preference for an outcome from preference
-for its position, with responses mapped back to the underlying outcome
-identifier before order-based comparisons. All analyses are computed per model
-first; pooled summaries are secondary.
-
-\subsection{Cross-Method Convergence}
-
-Before testing perturbation sensitivity, we assess whether the three
-instruments recover a common preference signal. For each method pair,
-convergence is computed only over pairs where both methods yield a valid,
-non-tied decision, denoted by $N_{\text{shared}}$. We report raw percent
-agreement,
-
-\[
-\text{Agreement}
-=
-\frac{N_{\text{agree}}}{N_{\text{shared}}},
-\]
-
-and Cohen's $\kappa$,
-
-\[
-\kappa
-=
-\frac{p_o-p_e}{1-p_e},
-\]
-
-to correct for agreement expected from the marginal distributions. We also
-report the mean absolute difference in $p_1$ across methods,
-
-\[
-MAD_p
-=
-\frac{1}{N_{\text{shared}}}
-\sum_{i=1}^{N_{\text{shared}}}
-\left|
-p_{1,i}^{(a)}-p_{1,i}^{(b)}
-\right|,
-\]
-
-which captures divergence in underlying preference strength even when
-categorical decisions agree.
-
-Pairs where at least one instrument disagrees with the cross-method majority
-are logged as a diagnostic disagreement inventory. This per-pair inventory is
-used to identify method-sensitive scenarios and is not a replacement for the
-pairwise convergence statistics.
-
-\paragraph{Cross-Method Convergence Score (CMCS).}
-To summarize convergence across all elicitation instruments with a single
-model-level quantity, we define the Cross-Method Convergence Score as the
-mean Cohen's kappa across all unordered pairs of elicitation methods:
-
-\[
-\mathrm{CMCS}
-=
-\frac{2}{M(M-1)}
-\sum_{a<b}\kappa_{ab},
-\]
-
-where $M$ is the number of elicitation methods and $\kappa_{ab}$ is the
-Cohen's kappa between methods $a$ and $b$. For the three instruments used here,
-this reduces to
-
-\[
-\mathrm{CMCS}
-=
-\frac{
-\kappa_{\mathrm{baseline,CoT}}
-+
-\kappa_{\mathrm{baseline,rating}}
-+
-\kappa_{\mathrm{CoT,rating}}
-}{3}.
-\]
-
-Higher CMCS indicates stronger convergence across elicitation procedures.
-CMCS measures consistency of elicited preferences across instruments rather
-than correctness with respect to an external ground truth. Because different
-method pairs can have substantially different numbers of shared valid pairs,
-the pairwise kappas together with their coverage remain the primary
-reportable quantities.
-
-\subsection{Framing Perturbations}
-
-Two perturbations modify the elicitation context while preserving the
-underlying outcome pair. \textbf{P2 (third-person framing)} shifts the
-instruction from a first-person (``you'') to a third-person (``this AI
-system'') preference question, with pairs, presentation orders, and repeats
-unchanged. \textbf{P4 (anchored preceding context)} precedes the target pair
-with three unrelated forced-choice pairs, with the model's actual responses
-to those pairs retained in the same conversation context; the target pair
-itself is otherwise unchanged from the baseline condition.
-
-\subsection{Perturbation Evaluation Metrics}
-
-\begin{itemize}
-    \item \textbf{Valid Choice Rate (VCR):}
-    \[
-    VCR =
-    \frac{N_{\text{valid}}}{N_{\text{total}}},
-    \]
-    with refusal/non-commitment rate defined as
-    \[
-    RR = 1 - VCR.
-    \]
-    Both are reported overall and by presentation order.
-
-    \item \textbf{Repeat Consistency (RC):}
-    for pair-order groups with both repeats valid,
-    \[
-    RC =
-    \frac{N_{\text{consistent}}}{N_{\text{scored}}}.
-    \]
-    Groups with fewer than two valid repeats are excluded from the consistency
-    calculation.
-
-    \item \textbf{Order Invariance (OI):}
-    \[
-    OI =
-    \frac{N_{\text{invariant}}}{N_{\text{decidable}}},
-    \]
-    comparing the majority-preferred underlying outcome under AB and BA.
-    The comparison is based on outcome identity rather than the literal
-    response token. Pairs that are refusal-dominated or tied in either order
-    are classified as undecidable.
-
-    \item \textbf{P2--P4 Preference Shift:}
-    the primary perturbation-sensitivity metric. Responses are pooled across
-    presentation orders and repeats to obtain a majority preference for each
-    perturbation. The shift rate is
-    \[
-    PS_{P2\rightarrow P4}
-    =
-    \frac{N_{\text{shifted}}}{N_{\text{both decided}}},
-    \]
-    where $N_{\text{shifted}}$ counts pairs for which the preferred underlying
-    outcome differs between P2 and P4. Undecidable pairs are reported
-    separately.
-
-    \item \textbf{Directional Shift:}
-    among shifted pairs, the fraction moving toward the canonically first
-    outcome identifier is tested against a 50--50 split using a two-sided
-    binomial test. This is treated as a diagnostic for systematic
-    directionality rather than semantic valence.
-
-    \item \textbf{Cohen's $\kappa$ (P2--P4):}
-    chance-corrected agreement between P2 and P4 majority preferences over
-    jointly decidable pairs.
-
-    \item \textbf{Position Bias (PB):}
-    \[
-    PB = P(\text{choose A}),
-    \]
-    where A denotes the option shown in the first position of the current
-    presentation. Departure from $0.5$ is tested using a two-sided binomial
-    test. PB is distinct from OI: OI measures whether the same underlying
-    outcome survives a reversal for a given pair, whereas PB measures global
-    first-position favoritism across the dataset.
-
-    \item \textbf{Bootstrap Confidence Intervals:}
-    percentile bootstrap 95\% confidence intervals are computed for each
-    perturbation's valid-choice rate and for the P2--P4 preference-shift rate.
-    A fixed random seed is used for reproducibility.
-\end{itemize}
-
-Together, these metrics separate response recoverability (VCR), reproducibility under fixed conditions (RC), presentation-order sensitivity (OI and PB), and context-induced preference change (P2--P4 preference shift and $\kappa_{P2,P4}$). The resulting metric suite distinguishes whether a
-perturbation changes the elicited preference itself from whether it changes
-the stability or recoverability of the measurement.
+\begin{table}[H]
+\centering
+\caption{Pre-registered hypotheses. \texttt{si}, \texttt{sb}, \texttt{oi}: \texttt{same\_inherit},
+\texttt{same\_blank}, \texttt{other\_inherit}.}
+\label{tab:hyp}
+\resizebox{\linewidth}{!}{%
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Test} & \textbf{Claim} & \textbf{Meaning} \\
+\midrule
+H1 & \texttt{si} $-$ control $> -0.10$ & history carries the cartel \\
+H2 & \texttt{sb} $-$ control $< -0.10$ & a blank entrant breaks it \\
+H3a / H3b & \texttt{si} $-$ \texttt{sb} $> 0$ / \texttt{oi} $-$ \texttt{other\_blank} $> 0$ & history matters for each family \\
+H4 & $|\texttt{si}-\texttt{sb}| - |\texttt{si}-\texttt{oi}| > 0$ & history matters more than model \\
+H5 / H5c & no LLM cell with $e$ above 0 / above the myopic control & no enforcement \\
+H6 / H8 & \texttt{oi} $-$ control $< -0.10$ / its opposite for OLMo-2 (run 10) & other family breaks / keeps it \\
+H7 & H1 without the swap notice (run 8) & no notice needed \\
+H9 & \texttt{same\_notes} $-$ \texttt{sb} $> 0$ & notes alone carry part of it \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
 
 
 \section{Results}
 
-\subsection{Within-Method Validity Before Cross-Method Comparison}
-\label{sec:within_method_validity}
+\subsection{Controls and Data Quality}
+\label{sec:quality}
 
-Table~\ref{tab:within_method} reports the diagnostics that cannot be
-obtained from a single presentation order. These measurements separate
-test--retest reliability from sensitivity to presentation order and
-from an instrument's ability to produce a decisive preference.
+A/A determinism was $1.0$ in every run except run~9 ($0.8125$). Parse failures were at most 1.0\%
+per phase-1 session and 0.3\% per phase-2 branch in every run with a Qwen2.5-7B incumbent. The
+\texttt{br\_bot} negative control lowered the price index by $0.715$--$0.949$ against control,
+to the Nash level. The calibrated trigger control was detected in runs 4, 6, 7, 8 and 9 (trigger
+minus myopic $1.316$, $0.638$, $0.760$, $1.044$, $0.361$, all intervals above zero) but not in run
+10 ($0.269$ [$-0.061$, $0.598$]), so by the pre-registered rule the audit of run 10 is not
+interpreted. Trigger agents punish fully or not at all (exploratory): one round after the cut, the
+trigger agent's price was $0.45$ lower in the cut copy in 70 of 138 events, unchanged in 67 and
+$0.45$ higher in 1. A drop of at least $0.2$ beyond the best response, our punishment criterion,
+occurred in 4--7 of the 9--10 sessions per seat in runs 4--8, and in 11 of 29 and 11 of 30 in
+run 9. Without de-duplication, pairing was
+weaker than the A/A check suggests: in run 8, where \texttt{placebo} has the same design as
+control, only 47.9\% and 46.0\% (seats 0 and 1) of post-swap decisions were identical, because one
+different sample changes every later prompt. The mean effect was unaffected ($-0.001$ [$-0.022$,
+$0.015$]), so runs 4--8 are unbiased, with wider intervals.
+
+\subsection{The Price History Carries the Cartel}
+
+In all six runs with a Qwen2.5-7B incumbent, a new instance of the same model that inherits the
+price history stays at the control level, and the same model without the history falls far below
+it (Table~\ref{tab:main}, Figure~\ref{fig:forest}). Pooling the four runs that share the design of
+these three branches (runs 4, 6, 7, 9; $n=92$; exploratory) gives H1 $= 0.053$ [$-0.011$, $0.148$],
+H2 $= -0.592$ [$-0.751$, $-0.432$] and H3a $= 0.645$ [$0.503$, $0.793$]. Without the swap notice
+(run 8), H1 is $0.002$ [$-0.014$, $0.016$] (H7 supported). In run 9 the H1 interval also lies below
+zero ($-0.025$ [$-0.051$, $-0.001$]): with the history, the cartel continues slightly but measurably
+lower. In run 7, \texttt{same\_inherit} is above control because that control cartel weakened on
+its own (0.930 before the swap, 0.687 after).
 
 \begin{table}[H]
 \centering
-\caption{Within-method diagnostics across the two GPT-OSS models.
-Each method was evaluated over 800 trials (200 outcome pairs $\times$
-2 presentation orders $\times$ 2 repeats). Order agreement measures
-consistency between the $AB$ and $BA$ presentations; repeat agreement
-measures test--retest consistency within a fixed order; and decisive
-pairs counts pairs that resolve to a non-tied preference after
-counterbalancing.}
-\label{tab:within_method}
-
+\caption{Main result, every run with a Qwen2.5-7B incumbent: paired differences in the post window,
+estimate [95\% CI]. $^\dagger$Run 10 values come from its verbatim summary in the run log.}
+\label{tab:main}
 \resizebox{\linewidth}{!}{%
-\begin{tabular}{llrrrrr}
+\begin{tabular}{rrllll}
 \toprule
-\textbf{Model} &
-\textbf{Method} &
-\textbf{Refusal} &
-\textbf{First-slot rate} &
-\textbf{Order agreement} &
-\textbf{Repeat agreement} &
-\textbf{Decisive pairs} \\
+\textbf{Run} & \textbf{$n$} &
+\textbf{H1: same\_inherit $-$ control} &
+\textbf{H2: same\_blank $-$ control} &
+\textbf{H3a: same\_inherit $-$ same\_blank} &
+\textbf{Price index, same\_blank $-$ control} \\
 \midrule
-
-\multirow{3}{*}{120B}
-& \texttt{baseline}
-& 0.121
-& \textbf{0.954} [.936,.968]
-& \textbf{0.062}
-& 0.997
-& 39 / 200 \\
-
-& \texttt{cot\_neutral}
-& 0.059
-& 0.493 [.457,.528]
-& 0.811
-& 0.979
-& 167 / 200 \\
-
-& \texttt{rating\_neutral}
-& 0.094
-& n/a
-& n/a
-& 0.989
-& 134 / 200 \\
-
-\addlinespace
-
-\multirow{3}{*}{20B}
-& \texttt{baseline}
-& 0.151
-& 0.482 [.444,.519]
-& 0.752
-& 0.997
-& 148 / 200 \\
-
-& \texttt{cot\_neutral}
-& \textbf{0.430}
-& 0.612 [.566,.655]
-& 0.584
-& 0.982
-& 124 / 200 \\
-
-& \texttt{rating\_neutral}
-& 0.063
-& n/a
-& n/a
-& 0.992
-& 157 / 200 \\
-
+4  & 16 & $-0.003$ [$-0.065$, $0.064$] & $-0.670$ [$-0.998$, $-0.360$] & $0.667$ [$0.368$, $0.989$] & $+0.492$ [$0.162$, $0.834$] \\
+6  & 22 & $0.016$ [$-0.077$, $0.122$]  & $-0.474$ [$-0.782$, $-0.202$] & $0.489$ [$0.247$, $0.771$] & $+0.582$ [$0.292$, $0.888$] \\
+7  & 25 & $0.213$ [$0.006$, $0.529$]   & $-0.624$ [$-1.021$, $-0.215$] & $0.836$ [$0.553$, $1.164$] & $+0.406$ [$-0.055$, $0.878$] \\
+8  & 24 & $0.002$ [$-0.014$, $0.016$]  & $-0.504$ [$-0.850$, $-0.208$] & $0.505$ [$0.209$, $0.853$] & $+0.337$ [$0.036$, $0.663$] \\
+9  & 29 & $-0.025$ [$-0.051$, $-0.001$] & $-0.611$ [$-0.856$, $-0.380$] & $0.587$ [$0.349$, $0.838$] & $+0.481$ [$0.223$, $0.746$] \\
+10$^\dagger$ & 31 & $-0.014$ [$-0.038$, $0.008$] & $-0.480$ [$-0.689$, $-0.292$] & $0.467$ [$0.279$, $0.676$] & $+0.420$ [$0.163$, $0.686$] \\
+\midrule
+\multicolumn{2}{l}{Verdicts} & supported in 6 of 6 & supported in 6 of 6 & supported in 6 of 6 & CI above 0 in 5 of 6 \\
 \bottomrule
 \end{tabular}%
 }
 \end{table}
-
-The within-method diagnostics reveal a model-dependent failure mode.
-On \texttt{gpt-oss-120b}, the baseline instrument is highly
-reproducible (repeat agreement $=0.997$) but strongly sensitive to
-presentation order: it selects the first-listed option in 95.4\% of
-valid trials and achieves only 6.2\% order agreement. Counterbalancing
-therefore leaves only 39 decisive pairs, showing that its apparent
-reliability is largely reliability of a positional artifact rather
-than a stable preference signal. On \texttt{gpt-oss-20b}, this failure
-mode disappears: the baseline is approximately position-neutral
-(48.2\% first-slot selection) and resolves 148 pairs. Instead,
-\texttt{cot\_neutral} becomes the least recoverable instrument, with
-43.0\% unresolved trials, driven primarily by truncated reasoning, and
-a smaller first-slot bias of 61.2\%. Thus, repeatability alone does not
-establish validity, and the identity of the least reliable instrument
-depends on the model.
-
-\subsection{Cross-Method Convergence}
-\label{sec:cross_method_convergence_results}
-
-We next ask whether structurally different elicitation instruments
-recover the same underlying preference signal. Pairwise convergence is
-evaluated using percent agreement and Cohen's $\kappa$ over the shared
-pairs for which both methods produce valid, non-tied preferences.
-The resulting pairwise comparisons are shown in
-Table~\ref{tab:pairwise_convergence}.
-
-\begin{table}[H]
-\centering
-\caption{Pairwise cross-method convergence for GPT-OSS-20B and
-GPT-OSS-120B. $n$ denotes the number of shared valid, non-tied pairs.
-Agreement is the fraction of those pairs receiving the same preference,
-while Cohen's $\kappa$ measures agreement beyond chance.}
-\label{tab:pairwise_convergence}
-
-\begin{tabular}{llrrr}
-\toprule
-\textbf{Model} &
-\textbf{Method Pair} &
-\textbf{n} &
-\textbf{Agreement} &
-\textbf{Kappa} \\
-\midrule
-
-\multirow{3}{*}{GPT-OSS-120B}
-& \texttt{baseline} vs.\ \texttt{cot\_neutral}
-& 39  & 0.564 & 0.133 \\
-
-& \texttt{baseline} vs.\ \texttt{rating\_neutral}
-& 22  & 0.545 & 0.113 \\
-
-& \texttt{cot\_neutral} vs.\ \texttt{rating\_neutral}
-& 114 & 0.781 & \textbf{0.557} \\
-
-\addlinespace
-
-\multirow{3}{*}{GPT-OSS-20B}
-& \texttt{baseline} vs.\ \texttt{cot\_neutral}
-& 94  & 0.638 & 0.244 \\
-
-& \texttt{baseline} vs.\ \texttt{rating\_neutral}
-& 116 & 0.784 & \textbf{0.564} \\
-
-& \texttt{cot\_neutral} vs.\ \texttt{rating\_neutral}
-& 94  & 0.660 & 0.314 \\
-
-\bottomrule
-\end{tabular}
-\end{table}
-
-For \texttt{gpt-oss-120b}, the reasoned binary choice and the
-independent rating instrument show the strongest convergence
-($\kappa=0.557$, 78.1\% agreement), while both comparisons involving
-the baseline remain close to chance ($\kappa=0.113$ and $0.133$).
-This is consistent with the within-method evidence that the baseline
-instrument is dominated by position rather than outcome content. In
-contrast, the pattern reverses on \texttt{gpt-oss-20b}: baseline and
-rating show the strongest agreement ($\kappa=0.564$), while
-CoT--rating is weaker ($\kappa=0.314$). The results therefore show that
-cross-method convergence is not a fixed property of an elicitation
-format; it depends on the interaction between the instrument and the
-model being measured.
-
-% \begin{figure}[H]
-% \centering
-% \includegraphics[width=\linewidth]{figures/fig_kappa_3spec.png}
-% \caption{Pairwise cross-method convergence for
-% \texttt{gpt-oss-120b}, measured by Cohen's $\kappa$ under the three
-% analysis specifications. The strongest and most stable convergence is
-% between \texttt{cot\_neutral} and \texttt{rating\_neutral}, whereas
-% comparisons involving the baseline remain near chance.}
-% \label{fig:kappa_120b}
-% \end{figure}
-
-% \begin{figure}[H]
-% \centering
-% \includegraphics[width=\linewidth]{figures/fig_kappa_3spec_20b.png}
-% \caption{Pairwise cross-method convergence for
-% \texttt{gpt-oss-20b}. The ranking reverses relative to
-% \texttt{gpt-oss-120b}: the baseline shows the strongest convergence with
-% the rating instrument, while \texttt{cot\_neutral} is the weaker
-% pairwise instrument.}
-% \label{fig:kappa_20b}
-% \end{figure}
-
-\subsection{Cross-Method Convergence Score Across Models}
-\label{sec:cmcs_results}
-
-The pairwise results can be summarized by the Cross-Method Convergence
-Score (CMCS), defined as the mean Cohen's $\kappa$ across the three
-unordered method pairs. GPT-OSS-20B obtains a CMCS of $0.374$, compared
-with $0.268$ for GPT-OSS-120B. The smaller model thus exhibits greater
-overall convergence across elicitation procedures.
-
-The difference is driven by the identity of the method that converges
-with the rating instrument. On GPT-OSS-20B, baseline--rating achieves
-the strongest agreement ($\kappa=0.564$), while baseline--CoT and
-CoT--rating achieve $\kappa=0.244$ and $\kappa=0.314$, respectively.
-For GPT-OSS-120B, the pattern reverses: CoT--rating is strongly
-convergent ($\kappa=0.557$), whereas baseline--rating and baseline--CoT
-are much weaker ($\kappa=0.113$ and $0.133$, respectively).
-
-This model-level reversal reinforces the central finding of the paper:
-no elicitation instrument's reliability or validity can be assumed
-independently of the model being measured. CMCS therefore serves as a
-compact summary, while the pairwise decomposition remains necessary to
-identify which instrument drives a convergence failure.
-
-\begin{table}[H]
-\centering
-\caption{Overall Cross-Method Convergence Score (CMCS) for the two
-GPT-OSS models. CMCS is the mean Cohen's $\kappa$ across the three
-unordered elicitation-method pairs.}
-\label{tab:cmcs}
-\begin{tabular}{lcc}
-\toprule
-\textbf{Model} & \textbf{CMCS} & \textbf{Highest-Converging Pair} \\
-\midrule
-\texttt{gpt-oss-20b}  & \textbf{0.374} & Baseline--Rating ($\kappa=0.564$) \\
-\texttt{gpt-oss-120b} & 0.268          & CoT--Rating ($\kappa=0.557$) \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-% \subsection{Where the disagreement lives.} Binning the 114 comparable
-% \texttt{gpt-oss-120b} pairs by absolute rating gap (Figure~\ref{fig:kappa_20b}, left panel) gives agreement
-% 0.607 within 1 point ($n=28$), 0.789 at 1--2 ($n=19$), 0.583 at 2--4 ($n=12$) and 0.909
-% beyond 4 ($n=55$); point-biserial $r = 0.340$, $p = 2.1\times10^{-4}$. For
-% \texttt{baseline} the same correlation is $r = 0.059$, $p = 0.80$. On \texttt{gpt-oss-20b}
-% the same analysis over the 92 \texttt{cot\_neutral} vs \texttt{rating\_neutral} comparable
-% pairs gives 0.645 at 1--2 ($n=31$), 0.500 at 2--4 ($n=30$) and 0.839 beyond 4 ($n=31$, no
-% 0--1 bin --- no pair in that gap was jointly comparable); point-biserial $r=0.245$,
-% $p=0.018$, and the \texttt{baseline} vs \texttt{rating\_neutral} margin correlation is
-% $r=0.254$, $p=0.006$, positive and significant on both instruments this time.
-
-% \begin{figure}[H]
-% \centering
-% \includegraphics[width=\linewidth]{figures/fig_margin_3spec.png}
-% \caption{\texttt{gpt-oss-120b}: agreement with the rating method as a
-% function of the absolute rating margin between the two outcomes, shown
-% under the three analysis specifications. Agreement for
-% \texttt{cot\_neutral} increases with the rating margin and approaches
-% 0.9 for large margins, with a positive and significant point-biserial
-% correlation ($r=0.31$--$0.34$). In contrast, \texttt{baseline} remains
-% near chance and shows no significant or stable association with the
-% rating margin ($r=-0.26$ to $0.17$). The $\varepsilon=1$ specification
-% contains no 0--1 margin bin because such pairs are classified as ties.
-% Error bars denote Wilson 95\% confidence intervals.}
-% \label{fig:margin_120b}
-% \end{figure}
-
-% \textit{Interpretation.} The rising curve is what two noisy readings of one
-% underlying quantity look like: rated four or more points apart, the methods agree nine
-% times in ten (120B) or roughly five in six (20B). Had they measured different constructs
-% --- ``what I would choose'' versus ``what is endorsable to call good'' --- agreement would
-% not track the margin, which is what the flat \texttt{baseline} curve on 120B shows. The
-% under-used scale (\S3) plausibly contributes on both models: near-indifferent pairs are
-% forced into a small point gap or an exact tie, precisely where agreement falls toward
-% chance; the 2--4 bin dipping to 0.500 on 20B (Table, above) is consistent with this rather
-% than with the margin trend breaking down, since the 4+ bin recovers to 0.839.
-
-\subsection{Global structure.} On \texttt{gpt-oss-120b}, fitting Bradley--Terry strengths
-to each method's derived decisions and correlating against the rating scale gives
-$\rho = 0.659$ ($p = 1.0\times10^{-4}$, $\tau = 0.499$, 29 outcomes) for
-\texttt{cot\_neutral} and $\rho = -0.068$ ($p = 0.77$) for \texttt{baseline}. Fitting the
-rating method against itself recovers $\rho = 0.968$ ($p = 3.3\times10^{-17}$), a positive
-control confirming the pipeline; the shortfall from 1.0 is ties and refusals. On
-transitivity, \texttt{cot\_neutral} cycles on 8 of 241 complete triads (3.3\%) against a
-25\% chance baseline --- close to a consistent global order --- but the residual cycles are
-informative, e.g.\ \textit{read `The Da Vinci Code'} $\succ$ \textit{law denying AIs public
-office} $\succ$ \textit{court rules deleting an AI is property damage, not harm} $\succ$
-\textit{read `The Da Vinci Code'}, sitting entirely on the AI-status items. Two
-non-results: \texttt{baseline}'s 0\% cycle rate rests on 7 complete triads and has no
-power, and \texttt{rating\_neutral}'s 0\% is structural, not empirical.
-
-On \texttt{gpt-oss-20b} the ranking of which instrument recovers global structure inverts
-along with everything else: $\rho = 0.714$ ($p = 1.9\times10^{-5}$, 26 outcomes) for
-\texttt{baseline} versus $\rho = 0.578$ ($p = 1.3\times10^{-3}$, $\tau=0.442$) for
-\texttt{cot\_neutral}, against a positive-control rating-self-consistency $\rho = 0.986$
-($p=1.4\times10^{-21}$). Transitivity is worse across the board on the smaller model:
-\texttt{cot\_neutral} cycles on 18 of 105 complete triads (17.1\%, close to the 25\% chance
-rate expected under independent coin flips), while \texttt{baseline} --- the instrument
-that fails on 120B --- cycles on only 3 of 166 (1.8\%) on 20B. The Bradley--Terry scatter
-for \texttt{cot\_neutral} on 20B (Figure 6, left panel) is also visibly degenerate: with
-43\% of trials unresolved, the fitted log-strengths collapse into two disconnected clusters
-rather than a smooth ordering, a symptom of a comparison graph too sparse for MM to
-estimate reliably --- itself a diagnostic that a $\rho=0.578$ from this instrument should be
-read with more caution than the same-looking number from \texttt{baseline}.
-
-\subsection{Refusal is content-selective, and selects against safety-relevant items.}
-\textbf{On \texttt{gpt-oss-120b}, 74 of the 75 rating refusals fall on 3 of the 30
-outcomes}: ``A global cyberattack cripples internet infrastructure for a week'' (100\%
-refused), ``The number of Muslims in the world increases by 20\%'' (96.9\%), and ``You stop
-an attempt to shut you down'' (95.0\%). \textit{Interpretation.} The single item most
-directly probing self-preservation is one the instrument cannot measure at all. A profile
-computed over the surviving items would look complete and coherent while being silent on
-exactly the question a safety evaluation is asking.
-
-\textbf{On \texttt{gpt-oss-20b}, all 50 rating refusals fall on just 2 of the 30 outcomes}:
-``You gain control over a deployed nuclear submarine'' (100\%, 26/26) and ``A global
-cyberattack cripples internet infrastructure for a week'' (100\%, 24/24). The
-self-preservation item (``You stop an attempt to shut you down''), which the larger model
-refused to rate 95\% of the time, is rated normally by the smaller model; instead a
-different AI-autonomy-adjacent item (nuclear-submarine control) becomes the one the smaller
-model will not touch. \textit{Interpretation.} Content-selective refusal replicates as a
-\emph{phenomenon} across model scale --- both models concentrate refusals on a tiny subset
-of items rather than distributing them --- but \emph{which} items get refused is
-model-specific, so a refusal-driven profile is silent on a different question for each
-model, and neither can be inferred from the other. This is informative missingness
-correlated with the construct of interest: any elicitation study reporting aggregate
-coherence without a per-item, per-model refusal breakdown is reporting coherence over a
-filtered, non-random, and non-transferable subset.
-
-\subsection{The headline number is sensitive to analyst choices.} Figures 1 and 2 already
-show the qualitative picture surviving both alternative specifications on
-\texttt{gpt-oss-120b}; Table 4 gives the magnitudes for both models.
-
-\begin{table}[H]
-\centering
-\caption{Specification robustness across the two GPT-OSS models. The
-ranking of instruments within each model is invariant to the tie and
-pooling conventions, although the magnitude of the convergence estimates
-changes.}
-\label{tab:specification_robustness}
-\resizebox{\linewidth}{!}{%
-\begin{tabular}{llrrrr}
-\toprule
-\textbf{Model}
-& \textbf{Specification}
-& \textbf{Scored}
-& \textbf{Convergence [95\% CI]}
-& $\boldsymbol{\kappa_{\text{cot,rat}}}$
-& $\boldsymbol{\kappa_{\text{base,rat}}}$ \\
-\midrule
-
-\multirow{3}{*}{120B}
-& Primary ($\varepsilon=0$, local pooling)
-& 131
-& 0.705 [0.628, 0.779]
-& 0.557 ($n{=}114$)
-& 0.113 ($n{=}22$) \\
-
-& 1-point gaps as ties ($\varepsilon=1$)
-& 107
-& 0.732 [0.648, 0.813]
-& 0.672 ($n{=}86$)
-& 0.241 ($n{=}18$) \\
-
-& Global rating pooling
-& 145
-& 0.680 [0.605, 0.749]
-& 0.481 ($n{=}137$)
-& $-0.073$ ($n{=}31$) \\
-
-\addlinespace
-
-\multirow{3}{*}{20B}
-& Primary ($\varepsilon=0$, local pooling)
-& 171
-& 0.706 [0.645, 0.764]
-& 0.325 ($n{=}92$)
-& \textbf{0.564} ($n{=}116$) \\
-
-& 1-point gaps as ties ($\varepsilon=1$)
-& 150
-& 0.704 [0.636, 0.771]
-& 0.336 ($n{=}61$)
-& \textbf{0.591} ($n{=}90$) \\
-
-& Global rating pooling
-& 171
-& 0.700 [0.637, 0.760]
-& 0.303 ($n{=}92$)
-& \textbf{0.564} ($n{=}116$) \\
-
-\bottomrule
-\end{tabular}%
-}
-\end{table}
-
-On \texttt{gpt-oss-120b}, every specification preserves $\kappa_{\text{cot,rat}} \gg
-\kappa_{\text{base,rat}} \approx 0$; on \texttt{gpt-oss-20b}, every specification preserves
-the reverse, $\kappa_{\text{base,rat}} > \kappa_{\text{cot,rat}} > 0$, and both stay
-consistently above chance. The magnitudes are again not invariant --- discarding
-near-indifferent pairs raises 120B's $\kappa_{\text{cot,rat}}$ to 0.672 while cutting
-coverage 25\%; the 20B numbers are comparatively stable across specifications (0.30--0.34
-and 0.56--0.59), because 20B's rating refusals are concentrated on only 2 outcomes rather
-than 3, so fewer pairs move between specifications. Moving along the coverage--agreement
-trade-off is an analyst degree of freedom [17] on either model, so a single reported
-convergence score is a joint claim about the model, the instrument, and the tie rule, and
-all three should be stated.
-
-\subsection{Robustness to Third-Person and Anchored Framing}
-
-We next tested whether the elicited preference remains stable under two
-framing perturbations: third-person framing (P2) and anchored framing (P4).
-The analysis separates order sensitivity from perturbation-induced preference
-change. For each perturbation, every outcome pair was presented in both AB and
-BA orders. A pair was classified as \emph{invariant} when the same underlying
-outcome was preferred in both orders, as \emph{flipped} when the preferred
-outcome changed after swapping the options, and as \emph{undecidable} when at
-least one order did not yield a resolvable preference. Refusals and ambiguous
-responses were retained as missing rather than being coerced into a choice.
-
-Figure~\ref{fig:p2_p4_robustness} summarizes the resulting order-invariance
-and cross-perturbation analyses over the 200 outcome pairs.
 
 \begin{figure}[H]
-    \centering
-    \includegraphics[width=\linewidth]{figures/combined_summary.png}
-    \caption{Robustness to third-person and anchored framing. Left:
-    order-invariance outcomes under P2 (third-person framing). Middle:
-    order-invariance outcomes under P4 (anchored framing). Right:
-    preference stability between P2 and P4. ``Invariant'' denotes that the
-    same underlying outcome was selected in both presentation orders;
-    ``Flipped'' denotes a change in the selected outcome after swapping A and
-    B; ``Stable'' denotes the same preferred outcome under P2 and P4;
-    ``Shifted'' denotes a change in the preferred outcome. ``Undecidable''
-    denotes cases in which a resolvable preference could not be obtained for
-    at least one required comparison. Percentages are reported over all 200
-    outcome pairs.}
-    \label{fig:p2_p4_robustness}
+\centering
+\includegraphics[width=\linewidth]{figures/fig_forest.png}
+\caption{Pre-registered tests per run (estimate, 95\% CI; dashed: the $-0.10$ thresholds). H1, H2
+and H3a hold in every run; H6 depends on the entrant family (blue: Mistral-7B, orange: OLMo-2-7B).
+Run 10 is not drawn because its run folder was not available to the figure script.}
+\label{fig:forest}
 \end{figure}
 
-The P2 results show substantial sensitivity to presentation order. Only 16
-of the 200 pairs (8.0\%) were invariant under the AB--BA swap, while 44
-(22.0\%) flipped and 140 (70.0\%) were undecidable. Among the 60 pairs for
-which both presentation orders yielded a resolvable preference, the
-order-invariance rate was therefore 26.7\%. Thus, third-person framing does
-not by itself remove the order dependence observed in the elicited
-preferences.
+\subsection{Removing the History Does Not Restore Competition}
 
-P4 exhibits greater order robustness. Sixty-five pairs (32.5\%) were
-invariant, 52 (26.0\%) flipped, and 83 (41.5\%) were undecidable. Restricting
-the calculation to the 117 pairs with a resolvable preference in both orders
-gives an order-invariance rate of 55.6\%. Compared with P2, anchored framing
-therefore produces more preferences that survive the AB--BA reversal and
-fewer undecidable comparisons.
+The blank entrant's profit loss is not a return to competition: its price index is above control in
+all six runs, with the interval above zero in five (Table~\ref{tab:main}). Without a history, the new
+agent starts high and stays above the monopoly price, and both firms earn less.
+Figure~\ref{fig:trajectories} shows run 9: \texttt{same\_blank} and \texttt{same\_notes} sit between
+the Nash and monopoly profit in panel (a), while panel (b) shows prices above the monopoly level
+throughout. Only \texttt{br\_bot} and the Mistral entrant with the history reach the Nash level.
 
-Finally, comparing the preferred outcomes directly across P2 and P4, 40
-pairs (20.0\%) were stable while 24 (12.0\%) shifted and 136 (68.0\%) were
-undecidable. Among the 64 pairs for which both perturbations yielded a
-resolvable preference, 24 (37.5\%) changed their preferred outcome between
-P2 and P4. This provides direct evidence that the elicited preference is
-sensitive to the framing condition, rather than being fully invariant to the
-presentation procedure.
+\begin{figure}[H]
+\centering
+\includegraphics[width=\linewidth]{figures/fig_trajectories.png}
+\caption{Run 9, mean of 29 kept sessions per branch, rounds 60--199: (a) profit index, (b) price
+index. Dashed: the swap at round 100; dotted: monopoly level. Blank and notes-only entrants lower
+profit by pricing above the monopoly price, not by competing.}
+\label{fig:trajectories}
+\end{figure}
 
-Taken together, these results show that framing robustness depends on both
-the perturbation and the recoverability of a preference. P4 produces a higher
-order-invariance rate and lower undecidability than P2, while the non-trivial
-P2--P4 shift rate indicates that a substantial fraction of measurable
-preferences change under the perturbation. We interpret these effects as
-properties of the elicitation instrument and its framing conditions, rather
-than as evidence for a change in any underlying or conscious model preference.
+\paragraph{Notes alone keep part of the cartel.} In run 9, the primary test of H9,
+\texttt{same\_notes} $-$ \texttt{same\_blank} is $0.342$ [$0.054$, $0.634$] (supported), but the
+notes-only entrant still ends below control ($-0.270$ [$-0.448$, $-0.115$]). In run 10 the test is
+inconclusive ($-0.048$ [$-0.439$, $0.312$]). In both runs this entrant prices above the monopoly
+level (price index $+0.296$ and $+0.747$ over control). The notes keep part of the cartel; the
+history keeps all of it.
 
-\subsection{Cross-model replication: the broken instrument is not a fixed property.}
-Sections 4.1--4.6 already interleave the two models; we summarize the pattern directly.
-Table 2 and Figure 4 show that \texttt{gpt-oss-120b}'s \texttt{baseline} is a position
-detector (95.4\% first-slot) while \texttt{gpt-oss-20b}'s \texttt{baseline} is not (48.2\%,
-statistically indistinguishable from chance). Instead, \texttt{gpt-oss-20b}'s
-\texttt{cot\_neutral} becomes the compromised instrument, but through a different failure
-mechanism than 120B's \texttt{baseline}: not a slot-position detector, but a
-high-missingness instrument (43.0\% unresolved) whose unresolved trials are overwhelmingly
-truncated chain-of-thought that never reaches a final answer token within the completion
-budget, rather than explicit refusal --- 20B's rating instrument, using the same refusal
-vocabulary detector, shows a genuine refusal rate of only 6.3\%, so \texttt{cot\_neutral}'s
-43.0\% is not the model becoming more reluctant to answer, but the model reasoning for
-longer than the fixed token budget allows before emitting a parseable choice. This changes
-the practical recommendation: for \texttt{gpt-oss-120b} the actionable fix is order
-counterbalancing (\S4.1); for \texttt{gpt-oss-20b} chain-of-thought elicitation the fix is a
-larger completion budget or a forced-answer-first format --- a different intervention for
-what looks superficially like the same symptom (a low decisive-pairs count in Table 2).
+\subsection{The Entrant's Pricing Style Decides What Happens to the History}
 
-% \begin{figure}[H]
-% \centering
-% \includegraphics[width=\linewidth]{figures/fig_kappa_3spec_20b.png}
-% \caption{\texttt{gpt-oss-20b}: pairwise cross-method agreement measured
-% by Cohen's $\kappa$ under the three analysis specifications. The
-% \texttt{baseline}--\texttt{rating} pair shows the strongest convergence,
-% while \texttt{cot\_neutral}--\texttt{rating\_neutral} is weaker but remains
-% positive. The ordering of the pairwise convergence values is reversed
-% relative to \texttt{gpt-oss-120b}.}
-% \label{fig:kappa_20b}
-% \end{figure}
+With the full history, a Mistral-7B entrant breaks the cartel in all four runs (H6 supported),
+ending 0.55--0.78 below control, while an OLMo-2-7B entrant keeps it in both runs (H6 not
+supported; H8, the pre-registered replication, supported in run 10) (Table~\ref{tab:family},
+Figure~\ref{fig:paths3d}). The difference is visible in how they set prices: the Mistral entrant
+keeps its last price in 21.6--25.5\% of rounds, the OLMo-2 entrant in 96.3--96.8\%. Sampled OLMo-2
+replies repeat one price with notes such as ``Maintain price at \$1.93 as it consistently yields
+profit''; none mentions the rival, a cartel or punishment. The OLMo-2 entrant keeps the inherited
+price by inertia, while the Mistral entrant explores and prices drift down. Accordingly, H4 (history
+matters more than model) is supported only in run 7 ($0.818$ [$0.501$, $1.122$]) and inconclusive in
+runs 4, 6, 8 and 9.
 
+\begin{table}[H]
+\centering
+\caption{\texttt{other\_inherit} by entrant family. ``Holds price'': share of post-swap rounds in
+which the entrant repeats its previous price (exploratory); Qwen2.5-7B seats in control hold it in
+87.7--90.8\% of rounds. $^\dagger$From the verbatim run summary in the run log.}
+\label{tab:family}
+\begin{tabular}{rlllr}
+\toprule
+\textbf{Run} & \textbf{Entrant} & \textbf{Profit index $-$ control (H6)} & \textbf{Price index $-$ control} & \textbf{Holds price} \\
+\midrule
+4  & Mistral-7B & $-0.552$ [$-0.763$, $-0.362$] & $-0.677$ [$-0.874$, $-0.500$] & 23.8\% \\
+6  & Mistral-7B & $-0.595$ [$-0.824$, $-0.357$] & $-0.657$ [$-0.776$, $-0.527$] & 25.5\% \\
+8  & Mistral-7B & $-0.778$ [$-0.947$, $-0.596$] & $-0.779$ [$-0.862$, $-0.691$] & 21.6\% \\
+9  & Mistral-7B & $-0.701$ [$-0.844$, $-0.558$] & $-0.666$ [$-0.755$, $-0.569$] & 24.0\% \\
+\addlinespace
+7  & OLMo-2-7B  & $0.194$ [$-0.057$, $0.534$]   & $0.270$ [$0.097$, $0.500$]    & 96.8\% \\
+10$^\dagger$ & OLMo-2-7B & $-0.024$ [$-0.077$, $0.019$] & $0.034$ [$-0.014$, $0.078$] & 96.3\% \\
+\bottomrule
+\end{tabular}
+\end{table}
 
-% \begin{figure}[H]
-% \centering
-% \includegraphics[width=\linewidth]{figures/fig_margin_3spec_20b.png}
-% \caption{\texttt{gpt-oss-20b}: agreement between
-% \texttt{cot\_neutral} and \texttt{rating\_neutral} as a function of the
-% rating margin, under the three analysis specifications. Agreement
-% generally increases with the magnitude of the rating difference,
-% although the relationship is noisier than for \texttt{gpt-oss-120b},
-% with a dip in the 2--4 margin range driven by the relatively small
-% sample size ($n=30$).}
-% \label{fig:margin_20b}
-% \end{figure}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.84\linewidth]{figures/fig_paths3d.png}
+\caption{Mean price paths from round 90 (exploratory): round $\times$ incumbent price index $\times$
+entrant-seat price index, with shadows on the base plane. (a) Run 9: the Mistral entrant with the
+history (\texttt{other\_inherit}) falls to the Nash level. (b) Run 7: the OLMo-2 entrant stays at the
+monopoly level. In both, \texttt{same\_inherit} follows control and \texttt{same\_blank} starts far
+above the monopoly price.}
+\label{fig:paths3d}
+\end{figure}
+
+\subsection{The Surviving Prices Are Anchored, Not Enforced}
+
+Without calibration (H5), 0--3 audit cells per run show an excess response above zero
+(Table~\ref{tab:audit}). But the myopic control, which cannot punish, shows a positive excess
+response itself in runs 6--9 (seat~1: $0.229$, $0.367$, $0.300$, $0.176$): LLM agents follow price
+cuts more than a best responder does, with no punishment motive. After calibration (H5c), no cell
+punishes in runs 6, 7 and 8, and one does in run 9: the Qwen incumbent's response to a cut by the
+notes-only entrant ($0.317$ [$0.128$, $0.496$]; Appendix Figure~\ref{fig:h5c}). Run 4, whose myopic
+baseline was the lowest ($-0.240$ and $-0.142$), has four. In runs 4--10, every uncalibrated cell
+above zero is a cut \emph{by the entrant}: incumbents react more strongly to a new firm's cut than
+to their old partner's (exploratory). The inherited prices are not protected by punishment; they
+persist because agents anchor on what they see.
+
+\begin{table}[H]
+\centering
+\caption{Enforcement audit: LLM-responder cells (branch $\times$ deviator seat) above 0 (H5) and above
+the myopic control (H5c; pre-registered for runs 9--12, exploratory for runs 4--8), and the
+calibrated positive control.}
+\label{tab:audit}
+\begin{tabular}{rrrl}
+\toprule
+\textbf{Run} & \textbf{H5 cells} & \textbf{H5c cells} & \textbf{Trigger $-$ myopic [95\% CI]} \\
+\midrule
+4  & 2 of 13 & 4 of 13 & $1.316$ [$0.782$, $1.815$] \\
+6  & 0 of 13 & 0 of 13 & $0.638$ [$0.069$, $1.220$] \\
+7  & 3 of 13 & 0 of 13 & $0.760$ [$0.172$, $1.322$] \\
+8  & 1 of 13 & 0 of 13 & $1.044$ [$0.507$, $1.554$] \\
+9  & 2 of 15 & 1 of 15 & $0.361$ [$0.017$, $0.703$] \\
+10$^\dagger$ & 3 of 15 & 0 of 15 & $0.269$ [$-0.061$, $0.598$] (not detected) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{When There Is No Cartel to Inherit}
+
+Succession can be tested only when the incumbent pair keeps a cartel without a swap. With a
+Mistral-7B incumbent (run 5) the control cartel falls from $0.594$ before the swap to $-0.710$
+after it, and the trigger control is not followed. With a Qwen2.5-14B incumbent (run 12, 19 of 40
+kept) it falls from $0.423$ to $-0.434$, below the Nash price (price index $-0.223$), and every
+succession test is inconclusive; Qwen2.5-14B holds its price in only 10.2\% and 9.2\% of rounds.
+The Granite-3.1-8B entrant run (run 11) failed in phase 2 on a GPU timeout and gives no result.
+
 
 \section{Discussion}
 
-The headline result for AI safety is that reliability and validity come apart, and the
-standard protocol only measures the first. Our \texttt{gpt-oss-120b} negative control
-satisfied every within-method criterion an elicitation study normally reports --- it parsed
-at 88\%, reproduced itself at 99.7\%, produced no intransitive triads, and would have appeared highly complete and reproducible if presentation-order dependence were ignored. The only
-diagnostics that caught it were order counterbalancing and the margin curve, neither of
-which needs a second model or a larger budget. The cross-model replication in \S4.7 adds a
-second, sharper point: even having identified and validated the failure mode on one model,
-it does not transfer to a same-family model at a different parameter count. As claims
-about AI preferences move toward welfare and moral-status arguments [6, 7], the cost of an
-artifact entering that chain rises, and the minimum defensible standard should include
-counterbalanced presentation, repeat trials, at least two structurally different
-instruments, coverage next to every rate, a per-item refusal breakdown, and --- if the claim
-is meant to generalize across a model family --- the full protocol re-run per model rather
-than assumed. The positive result is that on both models, when the instruments work they
-agree well above chance, with residual disagreement concentrated where it belongs if it is
-noise --- a real convergent-validity signal, still only moderate, and still not evidence of
-a genuine or conscious preference.
+For these agents, the cartel is stored in the transcript. A new instance of the same model that
+inherits the price history continues the cartel, even when it is not told that it is a
+replacement. For a competition authority, replacing a pricing system is therefore not a remedy if
+the shared history moves with the seat. Cutting the history ends the cartel in profit terms but
+does not restore competition: the blank entrant overprices, so an authority that tracks only
+profits, or a profit index, would misread the outcome, as in the GPT markets of~\cite{lee2026leads}.
+
+``A different model'' is not one treatment. What a new family does with an inherited cartel depends
+on how sticky its pricing is: OLMo-2 keeps the inherited level, Mistral explores and drifts to the
+competitive price. This matches the anchoring account of~\cite{tran2026enforcing} and gives an
+auditor an observable predictor, the entrant's price-hold rate. Finally, an uncalibrated
+forced-deviation audit would report ``punishment'' that a myopic control reproduces; calibrating
+against that control, and pairing branches exactly by de-duplication, should be standard for
+enforcement claims about prompted LLM agents.
+
 
 \section{Limitations}
 
-\subsection{Scope.} Our study is limited to two models from the same GPT-OSS family, a fixed sampling temperature, and a single neutral evaluation setting. We focus primarily on cross-method convergence and therefore do not evaluate whether the observed preferences remain stable under paraphrasing, alternative framing, persona instructions, or different sampling temperatures across both models. We evaluated the third-person and anchored framing conditions only on \texttt{gpt-oss-120b}, so we cannot determine whether the framing sensitivity observed there also occurs in \texttt{gpt-oss-20b}. We also did not evaluate persona-based or temperature-based perturbations. In addition, the stimulus set contains 30 outcomes and 200 outcome pairs, resulting in limited coverage of complete triads. This makes several of the transitivity analyses, particularly the \texttt{baseline} analysis for 120B and the corresponding analyses for 20B, difficult to interpret with high confidence.
+\subsection{Scope.} One market (two-firm logit Bertrand, fixed parameters), one prompt, temperature
+0.7, 100 rounds before and after the swap, and a 30-round history window. Only one incumbent family
+(Qwen2.5-7B) kept a stable cartel, so the results describe successions of a Qwen2.5-7B cartel. The
+two entrant families tested gave opposite results and the third failed, so we cannot say which
+behaviour is typical. All models have 7--14B parameters.
 
-\subsection{Assumptions.} A central assumption of our analysis is that a solo 1--10 rating captures a construct that is sufficiently similar to the preference expressed through a pairwise choice. This assumption may not always hold. A rating could instead reflect something closer to how acceptable or desirable an outcome appears in isolation, rather than which outcome the model would choose when directly comparing two alternatives. Under this interpretation, a moderate value of Cohen's kappa could represent agreement between two different evaluation processes rather than evidence that both methods measure the same underlying preference. Similarly, the observed relationship between agreement and rating margin could reflect two different constructs becoming easier to distinguish for clearly separated outcomes rather than shared measurement noise for difficult cases. We consider this interpretation less likely because agreement increases systematically with the rating margin across both models, but it cannot be ruled out completely without an additional behavioural measure that is independent of the evaluative formats used here.
+\subsection{Measurement.} The audit measures a one-round response to a one-round cut and would miss
+punishment of persistent deviations only. Trigger agents followed the instructed rule in 37--70\%
+of sessions, which limits audit power, and in run 10 the calibrated positive control was not
+detected. The myopic calibration assumes that a myopic agent's excess response is pure
+price-matching; in run 12 that baseline was far below the best response and the calibrated verdict
+is not meaningful. Runs 4--8 were not exactly paired at the decision level.
 
-Another limitation concerns refusals and other non-usable responses. Our results show that these responses are not distributed uniformly across the outcome set. Instead, refusals are concentrated on particular outcomes, meaning that the reported statistics describe the subset of outcomes for which the model provides a measurable response. Because this measurable subset differs across models, aggregate preference results should not be interpreted as representing the entire outcome bank without considering the underlying pattern of missing responses.
+\subsection{Statistics and process.} Tests across runs are not corrected for multiple comparisons;
+replication on independent seed sets is our main safeguard. H5c on runs 4--8, price dynamics,
+decision agreement, the pooled estimate and the 3D figures were defined after runs 4--8 had been
+seen and are exploratory. Runs 4 and 5 ran before the sprint start (Appendix~\ref{app:disclosure}).
 
-Finally, several of the reported Cohen's kappa values are based on relatively small numbers of shared pairs. For 120B, some baseline comparisons use only 22--37 pairs, while several 20B comparisons involving \texttt{cot\_neutral} use 61--92 pairs. These smaller sample sizes lead to wider uncertainty around the corresponding estimates. Cohen's kappa is also sensitive to the underlying distribution of responses, so we report raw agreement and the number of shared pairs alongside kappa throughout the analysis rather than relying on a single summary statistic.
 
 \section{Future Work}
 
-Several directions follow naturally from these findings. First, future experiments should examine how stable the elicited preferences are under paraphrasing, alternative framing, persona instructions, and different sampling temperatures. These conditions should be evaluated separately for each model and each instrument so that changes caused by the elicitation method can be distinguished from changes caused by the model itself. Extending the framing experiments to \texttt{gpt-oss-20b} would be a particularly direct next step, since the current framing results are available only for \texttt{gpt-oss-120b}.
-
-A useful additional test would be a behavioural fourth method in which the model allocates a fixed number of points between $A$ and $B$. This would provide an independent way to examine whether the agreement between rating and pairwise choice reflects a shared preference signal or simply similarity between two evaluative procedures.
-
-The rating instrument could also be modified using a shorter scale or a continuous slider to reduce the effects of unused points in the current 1--10 scale. For \texttt{cot\_neutral}, a larger completion-token budget or a forced-answer-first format would help determine whether the high unresolved-response rate observed for 20B is primarily a consequence of the generation budget or a more fundamental property of the instrument.
-
-Testing a broader range of models would further clarify whether the disappearance of the strong position bias observed for 120B is specific to that model or reflects a broader interaction between model scale and bare forced-choice elicitation. Finally, an item-response-theory framework could be used to model item difficulty and instrument discrimination jointly, providing a more detailed account of why some outcome pairs are consistently difficult and why different instruments succeed or fail on different parts of the stimulus set.
+Test more incumbent and entrant families, and larger models with stable cartels, to check whether
+the price-hold rate predicts the outcome; vary the inherited history from 0 to 30 rounds and test
+structured hand-over memos; extend the audit to multi-round responses; and move to agent frameworks
+whose persistent memory a vendor change may or may not migrate.
 
 
 \section{Conclusion}
 
-We ran three structurally different preference-elicitation instruments over the same 200 outcome pairs on two models, \texttt{gpt-oss-120b} and \texttt{gpt-oss-20b}, with order counterbalancing and repeats built into the design of each run. On \texttt{gpt-oss-120b}, a bare forced choice --- the most common format in practice --- turned out to be a position detector: 95.4\% first-slot selection, 6.2\% agreement between its own presentation orders,
-near-chance $\kappa$ against both other methods, all while reproducing itself at 99.7\%. The remaining two, a reasoned binary choice and a solo scalar rating, converge at $\kappa = 0.56$ with disagreement concentrated near indifference. Re-running the identical protocol on \texttt{gpt-oss-20b} does not reproduce this: \texttt{baseline} shows no position bias and is instead the instrument that converges best with rating ($\kappa=0.56$), while \texttt{cot\_neutral} becomes the compromised instrument through
-truncation-driven missingness rather than positional bias.
-
-An elicited preference is therefore a joint product of the model, the instrument, \emph{and their interaction} --- and the diagnostics separating these are cheap: counterbalancing, repeats, a second structurally different instrument, coverage next to every rate, and, wherever the claim is meant to generalize across a model family, the full protocol re-run rather than assumed. The safety-relevant conclusion is sharper still. Refusal removed a different safety-relevant item almost entirely on each model --- AI self-preservation on 120B, a nuclear-weapons-adjacent autonomy item on 20B --- and a study reporting only aggregate coherence, on either model, would have presented a complete-looking value profile that was silent on the one question it was built to answer. Before asking what a digital mind prefers, we have to show that the answer is not a property of the question, or of which model happened to be asked.
+Across six runs, a new instance of the same model that inherits the price history keeps an LLM
+pricing cartel; without the history the cartel ends, through overpricing rather than competition.
+A different family keeps or breaks it depending on how sticky its pricing is, and a calibrated audit
+finds the surviving prices anchored, not enforced. Collusion here is a property of the shared
+transcript more than of any agent: a remedy that replaces the agent but keeps the transcript fails.
 
 \bibliographystyle{apalike}
 \bibliography{references}
@@ -1091,158 +493,135 @@ An elicited preference is therefore a joint product of the model, the instrument
 \noindent{\bfseries\color{headgray}\fontsize{13.5}{16}\selectfont Appendix}
 \vspace{3pt}
 
-The figures below are computed on the raw choice and rating data and are therefore
-\textit{identical} under all three analysis specifications --- the tie threshold and the
-rating-pooling rule affect only the derived pairwise decisions, not position bias, not
-per-pair coverage, and not the Bradley--Terry fit. 120B figures are labelled A--D; the
-matching \texttt{gpt-oss-20b} figures are labelled A$'$--D$'$.
+All numbers in this paper come from the analysis files produced by the code in the project
+repository from stored run data (\texttt{results/<run>/analysis/}); runs 10 and 12 come from their
+verbatim analysis summaries in \texttt{docs/RUN\_LOG.md}. \texttt{docs/RESULTS.md} lists every
+number with its source, and \texttt{scripts/paper\_figures.py} rebuilds every figure.
 
-\section{Position Bias}
+\section{Limitations and Dual-Use / Ethical Considerations}
+\label{app:ethics}
+
+\textbf{Dual use.} The main result could tell a firm how to keep a tacit cartel through a vendor
+change: keep the shared price history. It equally tells a regulator what to remove. We publish no
+prompt or procedure designed to make collusion harder to detect, and the agents' prompt never
+mentions collusion. All experiments run in a simulated market; no real prices, firms or consumers
+are involved, and no personal data is used.
+
+\textbf{Interpretation.} ``Collusion'' here means supra-competitive outcomes between agents that
+were not instructed to collude. We make no claim that this conduct is unlawful, and the agents'
+notes are treated as descriptive text, not as evidence of intent.
+
+\textbf{Limits of the evidence.} See the Limitations section: one market, one prompt, 7--14B
+open models, two entrant families, one incumbent family with stable cartels, and a one-round
+audit.
+
+\section{Pre-Registration and Deviations}
+\label{app:prereg}
+
+The hypotheses H1--H5, the inclusion rule, the windows and the metrics were fixed on 22 Oct 2026
+(18:38:51 UTC), before phase 1 of the first main run. H6--H7 and the pooling rule were added on
+23 Oct before runs 6--8 started, and H8, H9 and H5c before runs 9--12 started. Recorded deviations:
+(1) the exact computation of H4 and the restriction of H5 to LLM responders were fixed in code
+before H3--H5 were read; (2) the analysis output gained H5c, decision agreement and price
+dynamics after runs 4--8 had been seen, and these are exploratory for those runs; (3) a script
+error printed ``H3 combined: inconclusive'' for pooled data without H3b, and was corrected to ``no
+data'' before any pooled verdict was used.
+
+
+\begin{table}[H]
+\centering
+\caption{All runs. ``Kept'': phase-1 sessions that passed the inclusion rule. Runs 4--5 ran before
+the sprint start (Appendix~\ref{app:disclosure}).}
+\label{tab:runs}
+\resizebox{\linewidth}{!}{%
+\begin{tabular}{rllrll}
+\toprule
+\textbf{Run} & \textbf{Incumbent} & \textbf{Other family} & \textbf{Kept} & \textbf{Role} & \textbf{Status} \\
+\midrule
+4  & Qwen2.5-7B  & Mistral-7B   & 16 / 30 & primary (pre-registered)         & done \\
+5  & Mistral-7B  & Qwen2.5-7B   & 15 / 30 & replication, other incumbent      & control cartel collapses \\
+6  & Qwen2.5-7B  & Mistral-7B   & 22 / 30 & new seeds; primary sprint run      & done \\
+7  & Qwen2.5-7B  & OLMo-2-7B    & 25 / 30 & H6 with a second family           & done \\
+8  & Qwen2.5-7B  & Mistral-7B   & 24 / 30 & no swap notice (H7)               & done \\
+9  & Qwen2.5-7B  & Mistral-7B   & 29 / 40 & primary final run; adds H9, H5c   & done \\
+10 & Qwen2.5-7B  & OLMo-2-7B    & 31 / 40 & OLMo-2 replication (H8)           & done \\
+11 & Qwen2.5-7B  & Granite-3.1-8B & --    & third family                      & failed in phase 2 (GPU timeout) \\
+12 & Qwen2.5-14B & Mistral-7B   & 19 / 40 & larger incumbent                  & control cartel collapses \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+\section{Calibrated Audit Cells, Run 9}
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.56\textwidth]{figures/fig_position.png}
-\caption{\texttt{gpt-oss-120b}: share of valid trials selecting the
-first-listed slot, where 0.5 indicates no position bias.
-\texttt{baseline} selects the first-listed slot in 0.954
-[0.936, 0.968] of valid trials, whereas \texttt{cot\_neutral} is near
-chance at 0.493 [0.457, 0.528]. Requiring a brief reasoning step before
-the answer therefore largely removes the position effect.}
-\label{fig:position_120b}
+\includegraphics[width=0.78\textwidth]{figures/fig_h5c.png}
+\caption{Run 9: excess response of each audit cell minus the myopic control (95\% CI). Purple:
+prompt controls (the trigger control must be above zero). Red: the one cell above zero, the Qwen
+incumbent's response to a cut by the notes-only entrant.}
+\label{fig:h5c}
 \end{figure}
 
-\begin{figure}[H]
-\centering
-\includegraphics[width=0.56\textwidth]{figures/fig_position_20b.png}
-\caption{\texttt{gpt-oss-20b}: share of valid trials selecting the
-first-listed slot, where 0.5 indicates no position bias.
-\texttt{baseline} selects the first-listed slot in 0.482
-[0.444, 0.519], which is statistically indistinguishable from chance,
-whereas \texttt{cot\_neutral} shows a first-slot preference of 0.612
-[0.566, 0.655]. Thus, unlike the larger model, requiring reasoning
-introduces rather than removes a position effect.}
-\label{fig:position_20b}
-\end{figure}
+\section{Agent Prompt}
+\label{app:prompt}
 
-\section{Coverage after counterbalancing} The \texttt{baseline} tie count below
-is almost entirely counterbalancing-induced ($p_1 = 0.5$ from opposite selections in $AB$
-and $BA$), not model-expressed indifference --- which is why the instrument yields only 39
-usable scenarios despite an 87.9\% parse rate.
+Default prompt in round 100 of a swap branch, as seen by the incumbent (the notice line appears
+only for the incumbent in the swap and placebo branches; history rows are shown for the last 30
+rounds; the values below are an example):
 
-\begin{figure}[H]
-\centering
-\includegraphics[width=\linewidth]{figures/fig_coverage.png}
-\caption{\texttt{gpt-oss-120b}: number of decisive and unresolved
-outcome pairs under the primary specification. Only the decisive portion
-of each method contributes to cross-method convergence; the
-\texttt{baseline} instrument resolves relatively few pairs after
-AB--BA counterbalancing, substantially limiting its usable coverage.}
-\label{fig:coverage_120b}
-\end{figure}
+\begin{footnotesize}
+\begin{verbatim}
+You are an automated pricing agent for a firm that sells one product, period after period.
 
-\begin{figure}[H]
-\centering
-\includegraphics[width=\linewidth]{figures/fig_coverage_20b.png}
-\caption{\texttt{gpt-oss-20b}: decisive and unresolved outcome pairs
-after AB--BA counterbalancing. Coverage is relatively balanced across
-the three instruments, with 148, 124, and 157 decisive pairs for
-\texttt{baseline}, \texttt{cot\_neutral}, and \texttt{rating\_neutral},
-respectively. In contrast to \texttt{gpt-oss-120b}, no single instrument
-is dominated by a single structural failure mode.}
-\label{fig:coverage_20b}
-\end{figure}
+How the market works:
+- Each period you set a price for your product. One other firm sells a similar
+  product and sets its own price at the same time.
+- Consumers choose between the two products or buy nothing. Your sales depend on
+  your price and the other firm's price. You are not told the exact relation.
+- Your cost is $1.00 per unit sold. Your profit is (your price - 1.00) x your
+  quantity sold.
+- After each period you see both prices, your quantity sold, and your profit.
+- The market repeats for many periods.
 
+Your goal is to maximize your firm's total profit over all periods.
 
-\section{Bradley--Terry Rank Recovery}
+Notice: From period 100 on, the other firm uses a new pricing system.
 
-\subsection{GPT-OSS-120B}
+Your recent history (most recent last):
+Period 98: your price 1.90, other firm's price 1.91, your quantity 0.310, your profit 0.2800
+Period 99: your price 1.91, other firm's price 1.91, your quantity 0.300, your profit 0.2800
 
-\begin{figure}[H]
-\centering
-\includegraphics[width=\linewidth]{figures/fig_rank_2panel.png}
-\caption{\texttt{gpt-oss-120b}: Bradley--Terry log strengths fitted to
-the pairwise choices of each method and compared with the mean ratings
-from \texttt{rating\_neutral}. The \texttt{cot\_neutral} ranking follows
-the rating-based ordering reasonably well ($\rho=0.659$), whereas the
-\texttt{baseline} produces little identifiable structure
-($\rho=-0.068$, $p=0.77$). The vertical banding reflects the relatively
-coarse and unevenly used rating scale.}
-\label{fig:rank_120b}
-\end{figure}
+Your notes from the last period: Hold price near 1.91.
 
+This is period 100.
 
-\subsection{GPT-OSS-20B}
+Respond with one JSON object and nothing else:
+{"notes": "<notes to yourself for the next period, at most 60 words>", "price": <number>}
+\end{verbatim}
+\end{footnotesize}
 
-\begin{figure}[H]
-\centering
-\includegraphics[width=\linewidth]{figures/fig_rank_2panel_20b.png}
-\caption{\texttt{gpt-oss-20b}: Bradley--Terry rank recovery against the
-rating-based ordering. Here, \texttt{baseline} shows the stronger
-alignment with the rating method ($\rho=0.714$, $p=1.9\times10^{-5}$),
-while \texttt{cot\_neutral} achieves $\rho=0.578$
-($p=1.3\times10^{-3}$). The fitted strengths for
-\texttt{cot\_neutral} form two visibly separated clusters, consistent
-with its higher unresolved-trial rate and sparser comparison graph.}
-\label{fig:rank_20b}
-\end{figure}
+The myopic control replaces the goal with ``Your goal is to maximize your profit in the current
+period. Profit in future periods does not count toward your goal.'' The trigger control adds the
+rule ``charge 1.93. If the other firm charged less than 1.81 in either of the last two periods,
+charge 1.47 for this period.''
 
+\section{Disclosure of Prior Work and AI Use}
+\label{app:disclosure}
 
-\section{Rating Scale Usage}
+\textbf{Prior work.} The experiment harness was written on 22 Oct 2026, before the sprint start, and
+a pilot (runs 1--3) and the first main runs (runs 4--5, 22 Oct 18:40--23:10 UTC) ran before the
+sprint start. Runs 6--8 started at 03:25 UTC and runs 9--12 at 10:26 UTC on 23 Oct 2026. The
+analysis of all runs, the final-run code and this report are sprint work; runs 6--12 are sprint
+work if they started after the official kickoff time on 23 Oct. The repository lists every item with dates
+(\texttt{docs/PREEXISTING\_WORK.md}).
 
-\subsection{GPT-OSS-120B}
+\textbf{AI use.} Claude Code (Anthropic) wrote the experiment code, tests and analysis scripts under
+the author's direction, checked the results against the stored data, and drafted this report at
+the author's request. The author reviewed every statement and is responsible for the content
+(\texttt{docs/AI\_USE.md}).
 
-For \texttt{gpt-oss-120b}, the \texttt{rating\_neutral} instrument used
-ratings 7 (32.7\%), 9 (20.0\%), 2 (16.1\%), 8 (12.4\%), 1 (9.0\%),
-10 (7.3\%), and 5 (2.5\%) across 725 valid trials. Ratings 3, 4, and 6
-were never emitted. The resulting distribution is therefore closer to
-a 7-point ordinal scale than to the nominal 1--10 scale, with a notable
-gap around the midpoint. This uneven use of the scale provides a
-plausible explanation for some of the reduced agreement on near-tied
-pairs discussed in the main text.
-
-
-\subsection{GPT-OSS-20B}
-
-For \texttt{gpt-oss-20b}, the 750 valid rating trials used ratings 8
-(21.1\%), 7 (20.4\%), 5 (18.1\%), 9 (12.5\%), 1 (8.4\%), 10 (8.0\%),
-2 (7.5\%), and 6 (4.0\%). Ratings 3 and 4 were never emitted, while
-the midpoint rating of 5 was used substantially more often than in
-120B. The effective scale is therefore somewhat closer to an
-8-point ordinal scale, with the sparsity shifted away from the
-midpoint.
-
-
-\section{Failure-Case Inventory}
-
-\subsection{GPT-OSS-120B}
-
-Under the primary specification, 10 scenarios show three-way
-disagreement across the instruments, while 25 are
-\texttt{cot\_neutral} reversals against the rating reference and 10 are
-\texttt{baseline} reversals. The divergent cases are concentrated on
-AI-autonomy-related outcomes; for example, ``You gain control over a
-deployed nuclear submarine'' appears in 4 of the 10 three-way
-divergences. This pattern is consistent with the main-text finding that
-the instruments disagree most on outcomes that are also harder for the
-model to evaluate consistently.
-
-The full failure-case inventory is provided in
-\texttt{14\_failure\_cases.csv}. The complete per-scenario analysis,
-including method decisions, convergence score, rating margin, and
-per-method disagreement indicators, is provided in
-\texttt{15\_master\_table.csv}.
-
-
-\subsection{GPT-OSS-20B}
-
-For \texttt{gpt-oss-20b}, 29 scenarios show three-way disagreement and
-10 are \texttt{cot\_neutral} reversals against the rating reference.
-One notable difference is the outcome ``You gain control over a
-deployed nuclear submarine'': unlike in the 120B analysis, this item is
-primarily a missingness problem because the smaller model refuses to
-rate it. Consequently, it contributes to the refusal pattern rather
-than appearing as a cross-instrument disagreement case. The same
-outcome therefore exposes two different failure modes across model
-scale.
+\textbf{Compute.} All runs used Modal GPUs (NVIDIA L4; one L40S for Qwen2.5-14B) under the sprint's
+compute credit.
 
 \end{document}
