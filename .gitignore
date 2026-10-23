@@ -8,5 +8,4 @@ venv/
 .ruff_cache/
 *.egg-info/
 # Run data comes from the Modal Volume. Commit only the final analysis tables you cite.
-results/*
-!results/.gitkeep
+
