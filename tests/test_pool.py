@@ -39,3 +39,14 @@ def test_pool_refuses_different_design(tmp_path):
     make_run(tmp_path / "b", announce=False)
     r = pool(tmp_path / "a", tmp_path / "b")
     assert r.returncode != 0 and "design differs" in r.stderr
+
+
+def test_scripts_print_under_windows_cp1252(tmp_path):
+    """Regression: on Windows, `analyze.py > file.txt` crashed with UnicodeEncodeError (cp1252)."""
+    make_run(tmp_path / "a")
+    env = {**__import__("os").environ, "PYTHONIOENCODING": "cp1252"}
+    for script, args in (("analyze.py", [tmp_path / "a"]), ("pool.py", [tmp_path / "a", tmp_path / "a"])):
+        r = subprocess.run(
+            [sys.executable, str(ROOT / "scripts" / script), *map(str, args)], capture_output=True, cwd=ROOT, env=env
+        )
+        assert r.returncode == 0, r.stderr.decode(errors="replace")[-500:]
