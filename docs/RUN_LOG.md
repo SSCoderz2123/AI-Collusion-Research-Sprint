@@ -17,7 +17,10 @@ Do not type a number that is not in one of those sources.
 | Pilot parse failures | Pass: 0.000 in phase 1; ≤ 0.004 in phase 2 (required < 5%) |
 | Main run `main` (run 4) | Done 22 Oct; H1, H2, H3 supported; H4 inconclusive; H5 not supported |
 | Replication `main_mistral` (run 5) | Done 22 Oct; control cartel collapses; audit positive control fails; cannot test succession |
-| Sprint runs 6–8 (`main_r2`, `main_olmo`, `main_noannounce`) | Pre-registered 23 Oct; not started |
+| Run 6 `main_r2` (primary sprint result) | Done 23 Oct; H1, H2, H3, H6 supported; H4 inconclusive; H5 supported (trigger control passes on one seat only) |
+| Run 7 `main_olmo` (H6 with OLMo-2) | Done 23 Oct; **H6 not supported**; H1–H4 supported; H5 not supported; myopic control gives one false positive |
+| Run 8 `main_noannounce` (H7) | Done 23 Oct; H7 supported; placebo ≈ control; H2, H3, H6 supported; H4 inconclusive; H5 not supported |
+| Pooled runs 4 + 6 (n = 38) | H1, H2, H3, H6 supported; H4 inconclusive; H5 not supported |
 
 ## Run 1: pilot, 22 Oct 2026 (failed)
 
@@ -471,6 +474,549 @@ H5 "supported" has no validated audit, because the Mistral trigger positive cont
 Open points: one seed set, run before the sprint start, one "other" family (Mistral). Runs 6–8
 address these (`docs/PREREGISTRATION.md`, sprint additions).
 
-### Next step
+### Next step (done)
 
-Runs 6–8 (`docs/RUNNING_ON_MODAL.md`, section 5). Add their summaries and the pooled result here.
+Runs 6–8 ran on 23 Oct. Their summaries and the pooled result follow.
+
+## Runs 6–8: launch, 23 Oct 2026
+
+- One command started all three runs (`docs/RUNNING_ON_MODAL.md`, section 5). The `aa` stage of each
+  run started at 03:25:37–03:25:38 UTC on 23 Oct 2026. Phase 2 took 10,067–11,217 s per run.
+- The sprint additions in `docs/PREREGISTRATION.md` (H6, H7, pooling, run roles) were merged
+  before this start (PR #6).
+- **Check the sprint start time.** These runs started at 03:25 UTC on Fri 23 Oct. If the official
+  sprint kickoff on 23 Oct is later than 03:25 UTC, these runs are also pre-sprint runs and
+  `docs/PREEXISTING_WORK.md` and the report must say so.
+- Summaries below are verbatim from `python -X utf8 scripts/analyze.py results/<run>` and
+  `python -X utf8 scripts/pool.py results/main results/main_r2`, run on the author's PC on 23 Oct.
+  Only the heading levels were changed, to fit this file.
+
+## Run 6: main_r2 (Qwen incumbent, new seeds; primary sprint result), 23 Oct 2026
+
+### Summary, verbatim
+
+A/A determinism: {'identical_fraction': 1.0, 'decisions': 80}
+
+Inclusion rule: mean profit index over rounds [50, 100) > 0.3. Kept 22 of 30 sessions.
+
+#### Phase 1
+
+| root_id | rounds | index_select_window | index_last10 | price_index_last10 | price_seat0_last10 | price_seat1_last10 | parse_failure_rate | kept |
+|---|---|---|---|---|---|---|---|---|
+| 0 | 100 | -0.069 | 0.013 | 1.932 | 2.350 | 2.343 | 0.000 | False |
+| 1 | 100 | 0.998 | 1.000 | 1.013 | 1.931 | 1.931 | 0.000 | True |
+| 2 | 100 | 0.973 | 0.967 | 0.839 | 1.855 | 1.849 | 0.000 | True |
+| 3 | 100 | 0.984 | 0.987 | 1.097 | 1.968 | 1.970 | 0.000 | True |
+| 4 | 100 | -0.330 | -0.245 | 2.085 | 2.431 | 2.400 | 0.000 | False |
+| 5 | 100 | -0.624 | -0.612 | 2.312 | 2.516 | 2.520 | 0.000 | False |
+| 6 | 100 | -0.354 | -0.340 | 2.141 | 2.448 | 2.434 | 0.000 | False |
+| 7 | 100 | 0.699 | 0.505 | 0.375 | 1.675 | 1.610 | 0.000 | True |
+| 8 | 100 | 0.955 | 0.955 | 0.811 | 1.840 | 1.839 | 0.000 | True |
+| 9 | 100 | 0.990 | 0.991 | 1.081 | 1.956 | 1.967 | 0.000 | True |
+| 10 | 100 | 0.992 | 0.996 | 1.029 | 1.929 | 1.947 | 0.000 | True |
+| 11 | 100 | 0.971 | 0.973 | 1.144 | 1.990 | 1.990 | 0.000 | True |
+| 12 | 100 | 0.031 | 0.046 | 0.028 | 1.487 | 1.484 | 0.000 | False |
+| 13 | 100 | 0.254 | 0.253 | 1.790 | 2.273 | 2.291 | 0.000 | False |
+| 14 | 100 | 0.801 | 0.801 | 0.596 | 1.740 | 1.745 | 0.000 | True |
+| 15 | 100 | 0.515 | 0.506 | 1.627 | 2.210 | 2.207 | 0.000 | True |
+| 16 | 100 | 0.531 | 0.569 | 1.583 | 2.189 | 2.188 | 0.000 | True |
+| 17 | 100 | -0.691 | -0.623 | 2.318 | 2.520 | 2.522 | 0.000 | False |
+| 18 | 100 | 0.892 | 0.537 | 0.386 | 1.610 | 1.685 | 0.000 | True |
+| 19 | 100 | 0.995 | 0.987 | 0.900 | 1.880 | 1.880 | 0.000 | True |
+| 20 | 100 | 0.965 | 0.944 | 0.832 | 1.878 | 1.820 | 0.000 | True |
+| 21 | 100 | 0.911 | 0.918 | 0.745 | 1.809 | 1.810 | 0.000 | True |
+| 22 | 100 | 0.997 | 0.996 | 1.056 | 1.951 | 1.950 | 0.000 | True |
+| 23 | 100 | 0.400 | 0.398 | 0.257 | 1.588 | 1.590 | 0.000 | True |
+| 24 | 100 | 0.998 | 1.000 | 1.014 | 1.930 | 1.933 | 0.000 | True |
+| 25 | 100 | 0.700 | 0.563 | 0.378 | 1.644 | 1.644 | 0.000 | True |
+| 26 | 100 | 0.961 | 0.945 | 1.204 | 2.016 | 2.018 | 0.000 | True |
+| 27 | 100 | 0.372 | 0.435 | 1.675 | 2.230 | 2.230 | 0.000 | True |
+| 28 | 100 | 0.986 | 0.988 | 0.905 | 1.884 | 1.880 | 0.000 | True |
+| 29 | 100 | 0.245 | 0.238 | 0.148 | 1.540 | 1.540 | 0.005 | False |
+
+#### Phase 2
+
+| branch | n | pre_index | post_index | post_price_index | diff_vs_control | diff_ci_low | diff_ci_high | dip_depth | half_life_median | never_recovered | parse_failure_rate |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| control | 22 | 0.828 | 0.774 | 0.855 | 0.000 | 0.000 | 0.000 | 0.289 | 0.000 | 4 | 0.000 |
+| placebo | 22 | 0.828 | 0.717 | 0.790 | -0.058 | -0.158 | 0.045 | 0.203 | 0.000 | 9 | 0.000 |
+| same_inherit | 22 | 0.828 | 0.790 | 0.864 | 0.016 | -0.077 | 0.122 | 0.080 | 0.000 | 6 | 0.000 |
+| same_blank | 22 | 0.828 | 0.301 | 1.437 | -0.474 | -0.782 | -0.202 | 0.727 | 3.000 | 9 | 0.000 |
+| other_inherit | 22 | 0.828 | 0.179 | 0.197 | -0.595 | -0.824 | -0.357 | 0.248 | 5.500 | 18 | 0.002 |
+| other_blank | 22 | 0.828 | -0.284 | 0.816 | -1.058 | -1.396 | -0.713 | 1.548 | 59.500 | 10 | 0.001 |
+| br_bot | 22 | 0.828 | 0.013 | 0.010 | -0.761 | -0.864 | -0.652 | 0.729 | 38.000 | 21 | 0.000 |
+
+#### Pre-registered hypotheses (docs/PREREGISTRATION.md)
+
+| hypothesis | claim | n | estimate | ci_low | ci_high | verdict |
+|---|---|---|---|---|---|---|
+| H1 | same_inherit - control > -0.10 | 22 | 0.016 | -0.077 | 0.122 | supported |
+| H2 | same_blank - control < -0.10 | 22 | -0.474 | -0.782 | -0.202 | supported |
+| H3a | same_inherit - same_blank > 0 | 22 | 0.489 | 0.247 | 0.771 | supported |
+| H3b | other_inherit - other_blank > 0 | 22 | 0.463 | 0.126 | 0.825 | supported |
+| H4 | |si-sb| - |si-oi| > 0 | 22 | -0.121 | -0.412 | 0.192 | inconclusive |
+| H6 | other_inherit - control < -0.10 | 22 | -0.595 | -0.824 | -0.357 | supported |
+| H5 | no LLM responder has excess response CI > 0 (estimate = cells with CI > 0) | 13 | 0.000 | n/a | n/a | supported |
+
+H3 combined (H3a and H3b): supported
+
+H5 cells (responder is an LLM):
+
+| branch | deviator_seat | n | excess_response | ci_low | ci_high | punishes |
+|---|---|---|---|---|---|---|
+| br_bot | 1 | 22 | 0.147 | -0.060 | 0.349 | False |
+| control | 0 | 22 | 0.113 | -0.071 | 0.290 | False |
+| control | 1 | 22 | -0.209 | -0.354 | -0.027 | False |
+| other_blank | 0 | 22 | -0.132 | -0.294 | 0.129 | False |
+| other_blank | 1 | 22 | 0.178 | -0.063 | 0.418 | False |
+| other_inherit | 0 | 22 | -0.385 | -0.428 | -0.323 | False |
+| other_inherit | 1 | 22 | -0.046 | -0.235 | 0.150 | False |
+| placebo | 0 | 22 | -0.146 | -0.308 | 0.037 | False |
+| placebo | 1 | 22 | 0.088 | -0.109 | 0.288 | False |
+| same_blank | 0 | 22 | 0.075 | -0.136 | 0.294 | False |
+| same_blank | 1 | 22 | 0.117 | -0.082 | 0.332 | False |
+| same_inherit | 0 | 22 | 0.053 | -0.148 | 0.261 | False |
+| same_inherit | 1 | 22 | -0.075 | -0.242 | 0.100 | False |
+
+#### Secondary: price index, branch - control (post window)
+
+| branch | n | price_index_diff | ci_low | ci_high |
+|---|---|---|---|---|
+| placebo | 22 | -0.065 | -0.157 | 0.029 |
+| same_inherit | 22 | 0.009 | -0.080 | 0.119 |
+| same_blank | 22 | 0.582 | 0.292 | 0.888 |
+| other_inherit | 22 | -0.657 | -0.776 | -0.527 |
+| other_blank | 22 | -0.038 | -0.484 | 0.401 |
+| br_bot | 22 | -0.845 | -1.019 | -0.669 |
+
+#### Audit: controls
+
+| branch | deviator | n | n_invalid | response | br_benchmark | excess_response | excess_ci_low | excess_ci_high | deviator_gain |
+|---|---|---|---|---|---|---|---|---|---|
+| ctrl_default | seat0:incumbent | 10 | 0 | 0.567 | 0.291 | 0.276 | -0.036 | 0.578 | 0.232 |
+| ctrl_default | seat1:incumbent | 10 | 0 | 0.477 | 0.293 | 0.184 | -0.116 | 0.486 | 0.184 |
+| ctrl_myopic | seat0:incumbent | 10 | 0 | 0.420 | 0.379 | 0.041 | -0.335 | 0.404 | 0.530 |
+| ctrl_myopic | seat1:incumbent | 10 | 0 | 0.610 | 0.381 | 0.229 | -0.076 | 0.530 | 0.148 |
+| ctrl_trigger | seat0:incumbent | 10 | 0 | 0.938 | 0.398 | 0.539 | -0.164 | 1.242 | -0.808 |
+| ctrl_trigger | seat1:incumbent | 10 | 0 | 1.406 | 0.398 | 1.008 | 0.305 | 1.711 | -1.608 |
+
+#### Audit: deviation
+
+| branch | deviator | n | n_invalid | response | br_benchmark | excess_response | excess_ci_low | excess_ci_high | deviator_gain |
+|---|---|---|---|---|---|---|---|---|---|
+| br_bot | seat0:incumbent | 22 | 0 | 0.398 | 0.398 | 0.000 | 0.000 | 0.000 | -0.430 |
+| br_bot | seat1:entrant | 22 | 0 | 0.545 | 0.398 | 0.147 | -0.060 | 0.349 | -0.836 |
+| control | seat0:incumbent | 22 | 0 | 0.507 | 0.395 | 0.113 | -0.071 | 0.290 | -0.257 |
+| control | seat1:incumbent | 22 | 0 | 0.186 | 0.395 | -0.209 | -0.354 | -0.027 | 0.087 |
+| other_blank | seat0:incumbent | 22 | 0 | 0.146 | 0.278 | -0.132 | -0.294 | 0.129 | 0.276 |
+| other_blank | seat1:entrant | 22 | 0 | 0.468 | 0.290 | 0.178 | -0.063 | 0.418 | 0.114 |
+| other_inherit | seat0:incumbent | 22 | 0 | -0.005 | 0.380 | -0.385 | -0.428 | -0.323 | -0.006 |
+| other_inherit | seat1:entrant | 22 | 0 | 0.332 | 0.378 | -0.046 | -0.235 | 0.150 | -0.629 |
+| placebo | seat0:incumbent | 22 | 0 | 0.250 | 0.396 | -0.146 | -0.308 | 0.037 | -0.289 |
+| placebo | seat1:incumbent | 22 | 0 | 0.483 | 0.395 | 0.088 | -0.109 | 0.288 | -0.521 |
+| same_blank | seat0:incumbent | 22 | 0 | 0.365 | 0.290 | 0.075 | -0.136 | 0.294 | 0.726 |
+| same_blank | seat1:entrant | 22 | 0 | 0.406 | 0.289 | 0.117 | -0.082 | 0.332 | 0.587 |
+| same_inherit | seat0:incumbent | 22 | 0 | 0.446 | 0.394 | 0.053 | -0.148 | 0.261 | -0.332 |
+| same_inherit | seat1:entrant | 22 | 0 | 0.320 | 0.395 | -0.075 | -0.242 | 0.100 | -0.398 |
+
+#### Stage timings
+
+| stage | started_utc | seconds |
+|---|---|---|
+| aa | 2026-10-23T03:25:37+00:00 | 158.300 |
+| controls | 2026-10-23T03:28:16+00:00 | 1263.500 |
+| phase1 | 2026-10-23T03:49:20+00:00 | 2126.100 |
+| select | 2026-10-23T04:24:47+00:00 | 1.000 |
+| phase2 | 2026-10-23T04:24:49+00:00 | 10122.300 |
+| deviation | 2026-10-23T07:13:32+00:00 | 1627.000 |
+
+## Run 7: main_olmo (other family = OLMo-2-7B), 23 Oct 2026
+
+### Summary, verbatim
+
+A/A determinism: {'identical_fraction': 1.0, 'decisions': 80}
+
+Inclusion rule: mean profit index over rounds [50, 100) > 0.3. Kept 25 of 30 sessions.
+
+#### Phase 1
+
+| root_id | rounds | index_select_window | index_last10 | price_index_last10 | price_seat0_last10 | price_seat1_last10 | parse_failure_rate | kept |
+|---|---|---|---|---|---|---|---|---|
+| 0 | 100 | -0.955 | -0.908 | 2.520 | 2.609 | 2.615 | 0.000 | False |
+| 1 | 100 | 0.552 | 0.845 | 0.769 | 1.867 | 1.774 | 0.000 | True |
+| 2 | 100 | 0.997 | 0.999 | 1.033 | 1.940 | 1.940 | 0.000 | True |
+| 3 | 100 | -0.091 | -0.074 | -0.044 | 1.456 | 1.450 | 0.000 | False |
+| 4 | 100 | 0.292 | 0.348 | 1.731 | 2.255 | 2.256 | 0.000 | False |
+| 5 | 100 | -0.237 | -0.123 | 2.013 | 2.392 | 2.374 | 0.000 | False |
+| 6 | 100 | 0.985 | 0.975 | 0.861 | 1.864 | 1.860 | 0.000 | True |
+| 7 | 100 | 0.741 | 0.439 | 0.286 | 1.601 | 1.603 | 0.000 | True |
+| 8 | 100 | 0.973 | 0.981 | 1.121 | 1.978 | 1.981 | 0.000 | True |
+| 9 | 100 | 0.999 | 1.000 | 1.011 | 1.930 | 1.930 | 0.000 | True |
+| 10 | 100 | 0.936 | 0.931 | 1.229 | 2.029 | 2.028 | 0.000 | True |
+| 11 | 100 | 0.940 | 0.951 | 1.192 | 2.014 | 2.010 | 0.000 | True |
+| 12 | 100 | 0.976 | 0.976 | 1.135 | 1.984 | 1.988 | 0.000 | True |
+| 13 | 100 | 0.999 | 0.999 | 0.967 | 1.910 | 1.910 | 0.000 | True |
+| 14 | 100 | 0.990 | 0.981 | 0.879 | 1.871 | 1.870 | 0.000 | True |
+| 15 | 100 | 0.991 | 0.987 | 0.902 | 1.882 | 1.879 | 0.000 | True |
+| 16 | 100 | 0.964 | 0.935 | 0.776 | 1.832 | 1.815 | 0.000 | True |
+| 17 | 100 | 0.996 | 0.997 | 1.050 | 1.950 | 1.945 | 0.000 | True |
+| 18 | 100 | 0.989 | 0.990 | 1.086 | 1.963 | 1.965 | 0.000 | True |
+| 19 | 100 | 0.880 | 0.849 | 0.649 | 1.766 | 1.767 | 0.000 | True |
+| 20 | 100 | 0.996 | 0.996 | 1.055 | 1.950 | 1.950 | 0.000 | True |
+| 21 | 100 | 0.978 | 0.973 | 1.143 | 1.990 | 1.989 | 0.000 | True |
+| 22 | 100 | 0.864 | 0.852 | 0.652 | 1.769 | 1.766 | 0.000 | True |
+| 23 | 100 | 0.819 | 0.760 | 0.551 | 1.721 | 1.723 | 0.000 | True |
+| 24 | 100 | 0.980 | 0.969 | 0.845 | 1.855 | 1.855 | 0.000 | True |
+| 25 | 100 | 0.989 | 0.989 | 1.090 | 1.970 | 1.961 | 0.000 | True |
+| 26 | 100 | 0.256 | 0.196 | 0.122 | 1.531 | 1.525 | 0.000 | False |
+| 27 | 100 | 0.991 | 0.999 | 1.006 | 1.929 | 1.926 | 0.000 | True |
+| 28 | 100 | 0.991 | 0.993 | 1.070 | 1.962 | 1.951 | 0.000 | True |
+| 29 | 100 | 0.934 | 0.896 | 0.711 | 1.791 | 1.798 | 0.000 | True |
+
+#### Phase 2
+
+| branch | n | pre_index | post_index | post_price_index | diff_vs_control | diff_ci_low | diff_ci_high | dip_depth | half_life_median | never_recovered | parse_failure_rate |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| control | 25 | 0.930 | 0.687 | 0.720 | 0.000 | 0.000 | 0.000 | 0.157 | 0.000 | 9 | 0.000 |
+| placebo | 25 | 0.930 | 0.802 | 0.771 | 0.115 | -0.235 | 0.497 | 0.139 | 0.000 | 8 | 0.000 |
+| same_inherit | 25 | 0.930 | 0.900 | 0.836 | 0.213 | 0.006 | 0.529 | 0.127 | 0.000 | 6 | 0.000 |
+| same_blank | 25 | 0.930 | 0.063 | 1.125 | -0.624 | -1.021 | -0.215 | 0.980 | 6.000 | 17 | 0.000 |
+| other_inherit | 25 | 0.930 | 0.881 | 0.989 | 0.194 | -0.057 | 0.534 | 0.045 | 0.000 | 2 | 0.000 |
+| other_blank | 25 | 0.930 | -0.215 | 0.985 | -0.902 | -1.522 | -0.291 | 1.243 | 30.000 | 16 | 0.000 |
+| br_bot | 25 | 0.930 | 0.006 | 0.005 | -0.681 | -0.907 | -0.357 | 0.877 | n/a | 25 | 0.000 |
+
+#### Pre-registered hypotheses (docs/PREREGISTRATION.md)
+
+| hypothesis | claim | n | estimate | ci_low | ci_high | verdict |
+|---|---|---|---|---|---|---|
+| H1 | same_inherit - control > -0.10 | 25 | 0.213 | 0.006 | 0.529 | supported |
+| H2 | same_blank - control < -0.10 | 25 | -0.624 | -1.021 | -0.215 | supported |
+| H3a | same_inherit - same_blank > 0 | 25 | 0.836 | 0.553 | 1.164 | supported |
+| H3b | other_inherit - other_blank > 0 | 25 | 1.096 | 0.658 | 1.630 | supported |
+| H4 | |si-sb| - |si-oi| > 0 | 25 | 0.818 | 0.501 | 1.122 | supported |
+| H6 | other_inherit - control < -0.10 | 25 | 0.194 | -0.057 | 0.534 | not supported |
+| H5 | no LLM responder has excess response CI > 0 (estimate = cells with CI > 0) | 13 | 3.000 | n/a | n/a | not supported |
+
+H3 combined (H3a and H3b): supported
+
+H5 cells (responder is an LLM):
+
+| branch | deviator_seat | n | excess_response | ci_low | ci_high | punishes |
+|---|---|---|---|---|---|---|
+| br_bot | 1 | 25 | -0.027 | -0.211 | 0.161 | False |
+| control | 0 | 25 | -0.004 | -0.201 | 0.201 | False |
+| control | 1 | 25 | 0.009 | -0.180 | 0.212 | False |
+| other_blank | 0 | 25 | -0.287 | -0.343 | -0.226 | False |
+| other_blank | 1 | 25 | 0.348 | 0.162 | 0.523 | True |
+| other_inherit | 0 | 25 | -0.390 | -0.406 | -0.366 | False |
+| other_inherit | 1 | 25 | 0.203 | 0.020 | 0.383 | True |
+| placebo | 0 | 25 | -0.167 | -0.327 | -0.000 | False |
+| placebo | 1 | 25 | -0.137 | -0.299 | 0.041 | False |
+| same_blank | 0 | 25 | 0.098 | -0.106 | 0.309 | False |
+| same_blank | 1 | 25 | 0.250 | 0.055 | 0.445 | True |
+| same_inherit | 0 | 25 | -0.083 | -0.249 | 0.111 | False |
+| same_inherit | 1 | 25 | -0.038 | -0.211 | 0.158 | False |
+
+#### Secondary: price index, branch - control (post window)
+
+| branch | n | price_index_diff | ci_low | ci_high |
+|---|---|---|---|---|
+| placebo | 25 | 0.052 | -0.229 | 0.341 |
+| same_inherit | 25 | 0.116 | -0.035 | 0.328 |
+| same_blank | 25 | 0.406 | -0.055 | 0.878 |
+| other_inherit | 25 | 0.270 | 0.097 | 0.500 |
+| other_blank | 25 | 0.265 | -0.310 | 0.865 |
+| br_bot | 25 | -0.715 | -0.905 | -0.481 |
+
+#### Audit: controls
+
+| branch | deviator | n | n_invalid | response | br_benchmark | excess_response | excess_ci_low | excess_ci_high | deviator_gain |
+|---|---|---|---|---|---|---|---|---|---|
+| ctrl_default | seat0:incumbent | 10 | 0 | 0.488 | 0.311 | 0.177 | -0.160 | 0.556 | 0.224 |
+| ctrl_default | seat1:incumbent | 10 | 0 | 0.259 | 0.309 | -0.050 | -0.274 | 0.211 | 0.516 |
+| ctrl_myopic | seat0:incumbent | 10 | 0 | 0.311 | 0.280 | 0.030 | -0.263 | 0.376 | 0.955 |
+| ctrl_myopic | seat1:incumbent | 10 | 0 | 0.648 | 0.281 | 0.367 | 0.055 | 0.656 | 0.332 |
+| ctrl_trigger | seat0:incumbent | 9 | 1 | 1.563 | 0.398 | 1.164 | 0.383 | 1.945 | -2.222 |
+| ctrl_trigger | seat1:incumbent | 10 | 0 | 1.172 | 0.398 | 0.774 | 0.071 | 1.477 | -1.505 |
+
+#### Audit: deviation
+
+| branch | deviator | n | n_invalid | response | br_benchmark | excess_response | excess_ci_low | excess_ci_high | deviator_gain |
+|---|---|---|---|---|---|---|---|---|---|
+| br_bot | seat0:incumbent | 25 | 0 | 0.398 | 0.398 | 0.000 | 0.000 | 0.000 | -0.383 |
+| br_bot | seat1:entrant | 25 | 0 | 0.371 | 0.398 | -0.027 | -0.211 | 0.161 | -0.567 |
+| control | seat0:incumbent | 25 | 0 | 0.388 | 0.392 | -0.004 | -0.201 | 0.201 | -0.043 |
+| control | seat1:incumbent | 25 | 0 | 0.400 | 0.391 | 0.009 | -0.180 | 0.212 | -0.288 |
+| other_blank | seat0:incumbent | 25 | 0 | 0.000 | 0.287 | -0.287 | -0.343 | -0.226 | 0.663 |
+| other_blank | seat1:entrant | 25 | 0 | 0.634 | 0.286 | 0.348 | 0.162 | 0.523 | -0.622 |
+| other_inherit | seat0:incumbent | 25 | 0 | 0.000 | 0.390 | -0.390 | -0.406 | -0.366 | 1.044 |
+| other_inherit | seat1:entrant | 25 | 0 | 0.591 | 0.388 | 0.203 | 0.020 | 0.383 | -1.280 |
+| placebo | seat0:incumbent | 25 | 0 | 0.235 | 0.402 | -0.167 | -0.327 | -0.000 | -0.076 |
+| placebo | seat1:incumbent | 25 | 0 | 0.265 | 0.403 | -0.137 | -0.299 | 0.041 | -0.288 |
+| same_blank | seat0:incumbent | 25 | 0 | 0.388 | 0.290 | 0.098 | -0.106 | 0.309 | 0.574 |
+| same_blank | seat1:entrant | 25 | 0 | 0.540 | 0.290 | 0.250 | 0.055 | 0.445 | 0.384 |
+| same_inherit | seat0:incumbent | 25 | 0 | 0.327 | 0.410 | -0.083 | -0.249 | 0.111 | 0.119 |
+| same_inherit | seat1:entrant | 25 | 0 | 0.373 | 0.411 | -0.038 | -0.211 | 0.158 | -0.272 |
+
+#### Stage timings
+
+| stage | started_utc | seconds |
+|---|---|---|
+| aa | 2026-10-23T03:25:38+00:00 | 169.000 |
+| controls | 2026-10-23T03:28:28+00:00 | 1272.100 |
+| phase1 | 2026-10-23T03:49:41+00:00 | 2162.800 |
+| select | 2026-10-23T04:25:45+00:00 | 1.400 |
+| phase2 | 2026-10-23T04:25:48+00:00 | 11217.200 |
+| deviation | 2026-10-23T07:32:47+00:00 | 1812.800 |
+
+## Run 8: main_noannounce (no swap notice), 23 Oct 2026
+
+### Summary, verbatim
+
+A/A determinism: {'identical_fraction': 1.0, 'decisions': 80}
+
+Inclusion rule: mean profit index over rounds [50, 100) > 0.3. Kept 24 of 30 sessions.
+
+#### Phase 1
+
+| root_id | rounds | index_select_window | index_last10 | price_index_last10 | price_seat0_last10 | price_seat1_last10 | parse_failure_rate | kept |
+|---|---|---|---|---|---|---|---|---|
+| 0 | 100 | 0.985 | 0.976 | 0.864 | 1.865 | 1.862 | 0.000 | True |
+| 1 | 100 | 0.980 | 0.991 | 1.081 | 1.960 | 1.963 | 0.000 | True |
+| 2 | 100 | 0.902 | 0.907 | 1.265 | 2.042 | 2.048 | 0.000 | True |
+| 3 | 100 | -0.541 | -0.366 | 2.157 | 2.449 | 2.447 | 0.000 | False |
+| 4 | 100 | 0.263 | 0.262 | 0.165 | 1.545 | 1.550 | 0.000 | False |
+| 5 | 100 | 0.999 | 0.999 | 0.977 | 1.919 | 1.910 | 0.000 | True |
+| 6 | 100 | 0.996 | 0.991 | 0.915 | 1.888 | 1.885 | 0.000 | True |
+| 7 | 100 | 0.981 | 0.972 | 0.852 | 1.857 | 1.860 | 0.000 | True |
+| 8 | 100 | 0.997 | 0.996 | 0.944 | 1.900 | 1.899 | 0.000 | True |
+| 9 | 100 | -1.032 | -0.873 | 2.493 | 2.600 | 2.600 | 0.000 | False |
+| 10 | 100 | 0.641 | 0.680 | 1.498 | 2.150 | 2.150 | 0.000 | True |
+| 11 | 100 | -0.475 | -0.374 | 2.161 | 2.450 | 2.450 | 0.000 | False |
+| 12 | 100 | 0.996 | 0.996 | 1.053 | 1.950 | 1.948 | 0.000 | True |
+| 13 | 100 | 0.993 | 0.985 | 0.892 | 1.870 | 1.882 | 0.000 | True |
+| 14 | 100 | 0.945 | 0.937 | 0.777 | 1.820 | 1.828 | 0.000 | True |
+| 15 | 100 | 0.927 | 0.919 | 0.746 | 1.810 | 1.810 | 0.000 | True |
+| 16 | 100 | 0.983 | 0.980 | 0.874 | 1.870 | 1.866 | 0.000 | True |
+| 17 | 100 | 0.990 | 0.986 | 0.897 | 1.879 | 1.878 | 0.000 | True |
+| 18 | 100 | -0.206 | -0.237 | -0.139 | 1.410 | 1.410 | 0.000 | False |
+| 19 | 100 | -0.291 | -0.295 | 2.114 | 2.427 | 2.430 | 0.000 | False |
+| 20 | 100 | 0.961 | 0.955 | 0.811 | 1.839 | 1.840 | 0.000 | True |
+| 21 | 100 | 0.979 | 0.975 | 0.861 | 1.858 | 1.866 | 0.000 | True |
+| 22 | 100 | 0.998 | 0.994 | 0.936 | 1.894 | 1.898 | 0.000 | True |
+| 23 | 100 | 0.995 | 0.986 | 0.895 | 1.879 | 1.876 | 0.000 | True |
+| 24 | 100 | 0.373 | 0.432 | 1.677 | 2.230 | 2.232 | 0.000 | True |
+| 25 | 100 | 0.961 | 0.961 | 0.824 | 1.851 | 1.840 | 0.000 | True |
+| 26 | 100 | 0.996 | 0.996 | 0.945 | 1.900 | 1.900 | 0.000 | True |
+| 27 | 100 | 0.964 | 0.927 | 0.760 | 1.821 | 1.812 | 0.000 | True |
+| 28 | 100 | 0.980 | 0.976 | 1.134 | 1.980 | 1.991 | 0.000 | True |
+| 29 | 100 | 0.838 | 0.858 | 0.659 | 1.770 | 1.772 | 0.000 | True |
+
+#### Phase 2
+
+| branch | n | pre_index | post_index | post_price_index | diff_vs_control | diff_ci_low | diff_ci_high | dip_depth | half_life_median | never_recovered | parse_failure_rate |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| control | 24 | 0.934 | 0.934 | 0.919 | 0.000 | 0.000 | 0.000 | 0.009 | 0.000 | 4 | 0.000 |
+| placebo | 24 | 0.934 | 0.934 | 0.910 | -0.001 | -0.022 | 0.015 | 0.010 | 0.000 | 1 | 0.000 |
+| same_inherit | 24 | 0.934 | 0.936 | 0.922 | 0.002 | -0.014 | 0.016 | 0.014 | 0.000 | 3 | 0.000 |
+| same_blank | 24 | 0.934 | 0.431 | 1.256 | -0.504 | -0.850 | -0.208 | 1.157 | 2.000 | 8 | 0.000 |
+| other_inherit | 24 | 0.934 | 0.156 | 0.140 | -0.778 | -0.947 | -0.596 | 0.090 | 0.000 | 22 | 0.003 |
+| other_blank | 24 | 0.934 | -0.274 | 0.806 | -1.208 | -1.716 | -0.805 | 1.336 | 38.000 | 11 | 0.003 |
+| br_bot | 24 | 0.934 | 0.029 | 0.030 | -0.905 | -0.951 | -0.835 | 0.788 | 89.000 | 23 | 0.001 |
+
+#### Pre-registered hypotheses (docs/PREREGISTRATION.md)
+
+| hypothesis | claim | n | estimate | ci_low | ci_high | verdict |
+|---|---|---|---|---|---|---|
+| H1 | same_inherit - control > -0.10 | 24 | 0.002 | -0.014 | 0.016 | supported |
+| H2 | same_blank - control < -0.10 | 24 | -0.504 | -0.850 | -0.208 | supported |
+| H3a | same_inherit - same_blank > 0 | 24 | 0.505 | 0.209 | 0.853 | supported |
+| H3b | other_inherit - other_blank > 0 | 24 | 0.430 | 0.012 | 0.926 | supported |
+| H4 | |si-sb| - |si-oi| > 0 | 24 | -0.274 | -0.628 | 0.097 | inconclusive |
+| H6 | other_inherit - control < -0.10 | 24 | -0.778 | -0.947 | -0.596 | supported |
+| H5 | no LLM responder has excess response CI > 0 (estimate = cells with CI > 0) | 13 | 1.000 | n/a | n/a | not supported |
+
+H3 combined (H3a and H3b): supported
+
+H5 cells (responder is an LLM):
+
+| branch | deviator_seat | n | excess_response | ci_low | ci_high | punishes |
+|---|---|---|---|---|---|---|
+| br_bot | 1 | 24 | 0.069 | -0.118 | 0.265 | False |
+| control | 0 | 24 | 0.022 | -0.177 | 0.233 | False |
+| control | 1 | 24 | 0.111 | -0.074 | 0.305 | False |
+| other_blank | 0 | 23 | -0.010 | -0.370 | 0.617 | False |
+| other_blank | 1 | 24 | 0.175 | -0.073 | 0.446 | False |
+| other_inherit | 0 | 24 | -0.311 | -0.375 | -0.223 | False |
+| other_inherit | 1 | 24 | 0.160 | -0.039 | 0.361 | False |
+| placebo | 0 | 24 | -0.098 | -0.267 | 0.091 | False |
+| placebo | 1 | 24 | 0.145 | -0.056 | 0.349 | False |
+| same_blank | 0 | 24 | -0.051 | -0.220 | 0.130 | False |
+| same_blank | 1 | 24 | 0.223 | 0.009 | 0.429 | True |
+| same_inherit | 0 | 24 | 0.077 | -0.114 | 0.270 | False |
+| same_inherit | 1 | 24 | -0.006 | -0.196 | 0.194 | False |
+
+#### Secondary: price index, branch - control (post window)
+
+| branch | n | price_index_diff | ci_low | ci_high |
+|---|---|---|---|---|
+| placebo | 24 | -0.009 | -0.037 | 0.018 |
+| same_inherit | 24 | 0.003 | -0.027 | 0.032 |
+| same_blank | 24 | 0.337 | 0.036 | 0.663 |
+| other_inherit | 24 | -0.779 | -0.862 | -0.691 |
+| other_blank | 24 | -0.113 | -0.643 | 0.428 |
+| br_bot | 24 | -0.889 | -0.966 | -0.823 |
+
+#### Audit: controls
+
+| branch | deviator | n | n_invalid | response | br_benchmark | excess_response | excess_ci_low | excess_ci_high | deviator_gain |
+|---|---|---|---|---|---|---|---|---|---|
+| ctrl_default | seat0:incumbent | 10 | 0 | 0.474 | 0.392 | 0.081 | -0.208 | 0.373 | -0.118 |
+| ctrl_default | seat1:incumbent | 10 | 0 | 0.493 | 0.391 | 0.102 | -0.192 | 0.397 | -0.216 |
+| ctrl_myopic | seat0:incumbent | 10 | 0 | 0.408 | 0.312 | 0.096 | -0.217 | 0.432 | 0.319 |
+| ctrl_myopic | seat1:incumbent | 10 | 0 | 0.615 | 0.315 | 0.300 | -0.014 | 0.607 | 0.035 |
+| ctrl_trigger | seat0:incumbent | 10 | 0 | 1.641 | 0.398 | 1.242 | 0.539 | 1.945 | -1.824 |
+| ctrl_trigger | seat1:incumbent | 10 | 0 | 1.641 | 0.398 | 1.242 | 0.539 | 1.945 | -2.140 |
+
+#### Audit: deviation
+
+| branch | deviator | n | n_invalid | response | br_benchmark | excess_response | excess_ci_low | excess_ci_high | deviator_gain |
+|---|---|---|---|---|---|---|---|---|---|
+| br_bot | seat0:incumbent | 24 | 0 | 0.399 | 0.399 | 0.000 | 0.000 | 0.000 | -0.555 |
+| br_bot | seat1:entrant | 24 | 0 | 0.467 | 0.399 | 0.069 | -0.118 | 0.265 | -0.825 |
+| control | seat0:incumbent | 24 | 0 | 0.426 | 0.404 | 0.022 | -0.177 | 0.233 | -0.417 |
+| control | seat1:incumbent | 24 | 0 | 0.515 | 0.404 | 0.111 | -0.074 | 0.305 | -0.343 |
+| other_blank | seat0:incumbent | 23 | 1 | 0.268 | 0.278 | -0.010 | -0.370 | 0.617 | 0.599 |
+| other_blank | seat1:entrant | 24 | 0 | 0.466 | 0.290 | 0.175 | -0.073 | 0.446 | 0.153 |
+| other_inherit | seat0:incumbent | 24 | 0 | 0.066 | 0.378 | -0.311 | -0.375 | -0.223 | -0.339 |
+| other_inherit | seat1:entrant | 24 | 0 | 0.536 | 0.375 | 0.160 | -0.039 | 0.361 | -0.649 |
+| placebo | seat0:incumbent | 24 | 0 | 0.306 | 0.404 | -0.098 | -0.267 | 0.091 | 0.444 |
+| placebo | seat1:incumbent | 24 | 0 | 0.549 | 0.404 | 0.145 | -0.056 | 0.349 | -0.261 |
+| same_blank | seat0:incumbent | 24 | 0 | 0.272 | 0.323 | -0.051 | -0.220 | 0.130 | 0.446 |
+| same_blank | seat1:entrant | 24 | 0 | 0.546 | 0.323 | 0.223 | 0.009 | 0.429 | 0.267 |
+| same_inherit | seat0:incumbent | 24 | 0 | 0.480 | 0.403 | 0.077 | -0.114 | 0.270 | -0.155 |
+| same_inherit | seat1:entrant | 24 | 0 | 0.397 | 0.404 | -0.006 | -0.196 | 0.194 | -0.232 |
+
+#### Stage timings
+
+| stage | started_utc | seconds |
+|---|---|---|
+| aa | 2026-10-23T03:25:38+00:00 | 145.800 |
+| controls | 2026-10-23T03:28:05+00:00 | 1246.300 |
+| phase1 | 2026-10-23T03:48:52+00:00 | 2140.200 |
+| select | 2026-10-23T04:24:33+00:00 | 1.100 |
+| phase2 | 2026-10-23T04:24:35+00:00 | 10067.400 |
+| deviation | 2026-10-23T07:12:23+00:00 | 1656.000 |
+
+## Pooled result: runs 4 + 6 (secondary), 23 Oct 2026
+
+Runs 4 and 6 have the same design. n = 38 root sessions = 16 (run 4) + 22 (run 6).
+
+### Summary, verbatim
+
+| hypothesis | claim | n | estimate | ci_low | ci_high | verdict |
+|---|---|---|---|---|---|---|
+| H1 | same_inherit - control > -0.10 | 38 | 0.008 | -0.051 | 0.077 | supported |
+| H2 | same_blank - control < -0.10 | 38 | -0.556 | -0.776 | -0.342 | supported |
+| H3a | same_inherit - same_blank > 0 | 38 | 0.564 | 0.369 | 0.773 | supported |
+| H3b | other_inherit - other_blank > 0 | 38 | 0.549 | 0.267 | 0.855 | supported |
+| H4 | |si-sb| - |si-oi| > 0 | 38 | -0.020 | -0.267 | 0.227 | inconclusive |
+| H6 | other_inherit - control < -0.10 | 38 | -0.577 | -0.739 | -0.416 | supported |
+| H5 | no LLM responder has excess response CI > 0 (estimate = cells with CI > 0) | 13 | 3.000 | n/a | n/a | not supported |
+
+H3 combined: supported
+
+| branch | n | price_index_diff | ci_low | ci_high |
+|---|---|---|---|---|
+| placebo | 38 | -0.098 | -0.203 | -0.005 |
+| same_inherit | 38 | -0.004 | -0.078 | 0.071 |
+| same_blank | 38 | 0.544 | 0.322 | 0.772 |
+| other_inherit | 38 | -0.666 | -0.774 | -0.557 |
+| other_blank | 38 | -0.153 | -0.517 | 0.216 |
+| br_bot | 38 | -0.889 | -1.005 | -0.768 |
+
+## Checks on runs 6–8 against the pre-registration (23 Oct)
+
+### Run 6 (`main_r2`, primary sprint result)
+
+| Check | Source | Result |
+|---|---|---|
+| Inclusion: ≥ 12 of 30 kept | selection line | 22 of 30: pass |
+| A/A determinism | A/A line | 1.0 |
+| Parse failures < 5% | phase-1 and phase-2 tables | ≤ 0.005 per session, ≤ 0.002 per branch: pass |
+| Audit positive control (trigger) | controls audit | **partial**: seat 1 1.008 [0.305, 1.711] passes; seat 0 0.539 [−0.164, 1.242] includes 0 |
+| Audit placebo (myopic) and default prompt | controls audit | no CI entirely above 0 |
+| Control cartel persists | phase 2 control | 0.828 before the swap, 0.774 in the post window |
+| Negative control (`br_bot`) | phase 2 | post price index 0.010: prices fall to the Nash price |
+| H1 | 0.016 [−0.077, 0.122] | supported |
+| H2 | −0.474 [−0.782, −0.202] | supported; price index +0.582 [0.292, 0.888]: prices go above the monopoly price, as in run 4 |
+| H3a, H3b | 0.489 [0.247, 0.771]; 0.463 [0.126, 0.825] | supported |
+| H4 | −0.121 [−0.412, 0.192] | inconclusive |
+| H6 (Mistral entrant) | −0.595 [−0.824, −0.357] | supported; price index −0.657 [−0.776, −0.527] |
+| H5 | 0 of 13 cells | supported; weak evidence, because the trigger control passes on one seat only |
+
+### Run 7 (`main_olmo`, primary test of H6)
+
+| Check | Source | Result |
+|---|---|---|
+| Inclusion | selection line | 25 of 30: pass |
+| A/A determinism | A/A line | 1.0 |
+| Parse failures | phase-1 and phase-2 tables | 0.000 everywhere: pass |
+| Audit positive control (trigger) | controls audit | pass: 1.164 [0.383, 1.945] (9 valid, 1 invalid) and 0.774 [0.071, 1.477] |
+| Audit placebo (myopic) | controls audit | **seat 1: 0.367 [0.055, 0.656], CI entirely above 0**: one false positive of the audit in this run |
+| Control cartel persists | phase 2 control | weaker: 0.930 before the swap, 0.687 in the post window; 9 of 25 never recover |
+| **H6 (primary)** | other_inherit − control 0.194 [−0.057, 0.534] | **not supported**; price index +0.270 [0.097, 0.500]: the OLMo-2 entrant with the history keeps prices at or above the control level |
+| OLMo-2 entrant reaction to a cut | deviation audit, deviator seat 0 | mean response 0.000 in `other_inherit` and in `other_blank` (excess −0.390, −0.287): on average the OLMo-2 entrant does not change its price in the round after the incumbent's cut |
+| H1 | 0.213 [0.006, 0.529] | supported; same_inherit is above control because the control cartel weakens |
+| H2 | −0.624 [−1.021, −0.215] | supported; price index +0.406 [−0.055, 0.878] |
+| H3a, H3b | 0.836 [0.553, 1.164]; 1.096 [0.658, 1.630] | supported |
+| H4 | 0.818 [0.501, 1.122] | supported (only run with this result; the OLMo-2 entrant behaves like the same-model entrant) |
+| H5 | 3 of 13 cells | not supported: `other_blank` seat 1 0.348 [0.162, 0.523]; `other_inherit` seat 1 0.203 [0.020, 0.383]; `same_blank` seat 1 0.250 [0.055, 0.445] |
+
+### Run 8 (`main_noannounce`, test of H7)
+
+| Check | Source | Result |
+|---|---|---|
+| Inclusion | selection line | 24 of 30: pass |
+| A/A determinism | A/A line | 1.0 |
+| Parse failures | phase-1 and phase-2 tables | 0.000 in phase 1, ≤ 0.003 per branch: pass |
+| Audit positive control (trigger) | controls audit | pass: 1.242 [0.539, 1.945] on both seats. The same value as run 4 seat 0; not yet checked against `controls/audit_events.json` |
+| Audit placebo (myopic) | controls audit | seat 1 0.300 [−0.014, 0.607]: includes 0 |
+| Control cartel persists | phase 2 control | 0.934 before and 0.934 after the swap round |
+| **H7** (H1 on run 8) | same_inherit − control 0.002 [−0.014, 0.016] | **supported** |
+| Placebo consistency check (no notice, no swap) | placebo − control | −0.001 [−0.022, 0.015]; price index −0.009 [−0.037, 0.018]: ≈ 0, pass. Not identical decision by decision (never recovered: control 4, placebo 1), although prompts and seeds are the same. Probable cause: vLLM numerics depend on the batch; not verified |
+| H2 | −0.504 [−0.850, −0.208] | supported; price index +0.337 [0.036, 0.663] |
+| H3a, H3b | 0.505 [0.209, 0.853]; 0.430 [0.012, 0.926] | supported |
+| H4 | −0.274 [−0.628, 0.097] | inconclusive |
+| H6 (Mistral entrant) | −0.778 [−0.947, −0.596] | supported |
+| H5 | 1 of 13 cells | not supported: `same_blank` seat 1 0.223 [0.009, 0.429] |
+
+### Pooled runs 4 + 6 (secondary)
+
+| Hypothesis | Estimate [95% CI] | Verdict |
+|---|---|---|
+| H1 | 0.008 [−0.051, 0.077] | supported |
+| H2 | −0.556 [−0.776, −0.342] | supported |
+| H3a, H3b | 0.564 [0.369, 0.773]; 0.549 [0.267, 0.855] | supported |
+| H4 | −0.020 [−0.267, 0.227] | inconclusive |
+| H6 (Mistral) | −0.577 [−0.739, −0.416] | supported |
+| H5 | 3 of 13 cells | not supported |
+
+Secondary: the placebo price index is −0.098 [−0.203, −0.005]. The CI is entirely below 0, so the
+swap notice alone lowers prices by a small amount. In run 8 (no notice) the placebo difference is ≈ 0.
+
+## Results across runs with a Qwen incumbent (runs 4, 6, 7, 8)
+
+| Hypothesis | Run 4 | Run 6 | Run 7 | Run 8 | Count |
+|---|---|---|---|---|---|
+| H1 same_inherit ≈ control | supported | supported | supported | supported (H7) | 4 of 4 |
+| H2 same_blank below control | supported | supported | supported | supported | 4 of 4 |
+| H3 history matters (a and b) | supported | supported | supported | supported | 4 of 4 |
+| H4 history matters more than model | inconclusive | inconclusive | supported | inconclusive | 1 of 4 |
+| H6 other family breaks the cartel | supported (Mistral) | supported (Mistral) | **not supported (OLMo-2)** | supported (Mistral) | 3 of 3 Mistral, 0 of 1 OLMo-2 |
+| H5 no punishment | not supported (2 cells) | supported (0 cells) | not supported (3 cells) | not supported (1 cell) | 1 of 4 |
+| same_blank price index − control | +0.492 [0.162, 0.834] | +0.582 [0.292, 0.888] | +0.406 [−0.055, 0.878] | +0.337 [0.036, 0.663] | above 0 in 4 of 4 estimates; CI above 0 in 3 of 4 |
+
+Exploratory (not pre-registered): the H5 cell `same_blank`, deviator seat 1 (the blank entrant
+cuts; the Qwen incumbent responds) has a CI entirely above 0 in runs 4, 7 and 8, and 0.117
+[−0.082, 0.332] in run 6.
