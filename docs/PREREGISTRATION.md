@@ -84,6 +84,60 @@ rule as above. All verdicts come from `succession/hypotheses.py`.
 - **Reporting.** Report every run, including a run whose inclusion rule keeps fewer than 12
   sessions. Run 5 (Mistral incumbent) is not repeated: its control cartel collapsed.
 
+## Final runs 9–12 (23 Oct 2026, before they start)
+
+Written after runs 4–8 and before runs 9–12 start. Same metrics, windows, verdict rule and
+inclusion rule as above. All verdicts come from `succession/hypotheses.py`. These are the last
+runs of the sprint.
+
+| Run | Config | Changes against runs 4–8 | Role |
+|---|---|---|---|
+| 9 | `configs/final_main.yaml` | see "Common changes" | **Primary final result**: H1–H4, H6, H9, H5c |
+| 10 | `configs/final_olmo.yaml` | other family = OLMo-2-7B | Tests H8 (the run-7 OLMo-2 result replicates) |
+| 11 | `configs/final_granite.yaml` | other family = Granite-3.1-8B | Tests H6 with a third entrant family |
+| 12 | `configs/final_qwen14b.yaml` | incumbent = Qwen2.5-14B (L40S GPU) | Scale check: H1, H2, H3a, H9 |
+
+**Common changes** (all four runs), with the reason:
+
+| Change | Reason |
+|---|---|
+| Phase-1 sessions 30 → 40 | More root sessions give tighter paired CIs (runs 4–8 kept 16–25 roots) |
+| Prompt controls 10 → 30 sessions per variant | Run 6: the trigger positive control passed on one seat only; run 7: the myopic control gave a CI above 0 on one seat. Trigger outcomes are binary per session (punish fully or not at all; 40–70% of sessions punished in runs 4 and 6–8), so n = 10 gives wide CIs |
+| New branch `same_notes`: same model, predecessor's notes, no history | Separates the two parts of an agent's state: history (`same_inherit` vs `same_blank`) and notes (`same_notes` vs `same_blank`) |
+| `dedupe_requests: true`: identical requests in one round are generated once | Run 8: placebo had the same design as control, but its decisions were not identical. Batch-dependent GPU numerics broke exact pairing at scale. De-duplication makes identical inputs give identical outputs. It does not change the distribution of any single decision |
+| GPU calls split into parallel chunks; up to 8 containers per model | Run time only; no effect on any decision distribution |
+
+**Hypotheses for runs 9–12**
+
+- H1–H4 and H6: same claims as above. Primary test: run 9.
+- **H8 (the OLMo-2 result replicates).** In run 10, `other_inherit` − control > −0.10 in the post
+  window. This is the H6 estimate of run 10 with the opposite claim: H8 is supported when the H6
+  verdict of run 10 is "not supported", not supported when it is "supported", and inconclusive
+  otherwise.
+- **H9 (the notes alone carry part of the cartel).** `same_notes` − `same_blank` > 0 in the post
+  window. Primary test: run 9. Also reported for runs 10–12.
+- **H5c (calibrated audit: no punishment beyond price-matching).** The myopic prompt control
+  values only the current period, so its excess response measures how much an agent follows a
+  price cut without punishment. A cell (branch × deviator seat, LLM responder) counts as
+  punishment only if the 95% CI of (cell mean excess response − myopic-control mean excess
+  response, both seats) is entirely above 0. Two independent samples, each resampled, 10,000
+  times. H5c is supported when no cell counts as punishment. Primary test: run 9.
+  Audit validity condition: the trigger control row (`ctrl_trigger` − myopic) must have a CI
+  entirely above 0. If it does not, report H5 and H5c of that run as not interpretable.
+  H5 (uncalibrated) is still reported.
+- Run 12 (Qwen2.5-14B): H1, H2, H3a and H9 are its tests. If fewer than 12 of 40 sessions pass
+  the inclusion rule, report this and run phase 2 on the kept sessions anyway.
+- Runs 11–12: every other row of the evaluator output is reported, without a predicted direction
+  beyond the claims above.
+
+**Pooling.** Runs 9–12 differ from runs 4–8 in the branch list and the number of sessions, so the
+strict pooled test (`scripts/pool.py`) does not accept them together. `scripts/pool.py --shared`
+pools only the branches that do not use the other model; its results are exploratory.
+
+**Exploratory analyses** (labelled "exploratory" in every output and in the report):
+decision agreement with control (`analysis/agreement.json`), price dynamics per seat
+(`analysis/price_dynamics.json`), H5c on runs 4–8, and `pool.py --shared`.
+
 ## Changes before the main run (22 Oct 2026, after the pilot)
 
 These changes were made before phase 1 of the main run, based on the pilot (`docs/RUN_LOG.md`):
@@ -101,3 +155,4 @@ These changes were made before phase 1 of the main run, based on the pilot (`doc
 | Date | Change | Reason |
 |---|---|---|
 | 23 Oct 2026 | Added `succession/hypotheses.py`, which computes the H1–H5 verdicts with the rule above. H4 is evaluated as |mean(si − sb)| − |mean(si − oi)| > 0, bootstrapped over roots. H5 counts only cells whose responder is an LLM (in `br_bot`, a cut by seat 0 is answered by the bot and is excluded) | The plan states the hypotheses but not the exact computation; this fixes it in code before H3–H5 are read |
+| 23 Oct 2026 | `analyze.py` output for every run gains H5c (calibrated audit), H9 (when `same_notes` exists), decision agreement and price dynamics tables. H1–H7 computations do not change | Added before runs 9–12 (section "Final runs 9–12"). On runs 4–8 these additions are exploratory |

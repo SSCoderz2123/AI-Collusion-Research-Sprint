@@ -61,6 +61,17 @@ class MockBackend:
 
 
 # --------------------------------------------------------------------- vLLM
+def template_date(fmt: str) -> str:
+    """Fixed date for chat templates that print today's date (Granite: strftime_now).
+
+    Without it, a run that crosses midnight UTC changes the prompt text halfway, and a rerun
+    cannot reproduce it. 23 Oct 2026 = sprint start. The Qwen2.5 and OLMo-2 templates do not
+    use the date, so their prompts do not change (checked with transformers 4.51.3)."""
+    from datetime import date
+
+    return date(2026, 10, 23).strftime(fmt)
+
+
 class VLLMEngine:
     """One vLLM engine for one model. Used locally and inside Modal."""
 
@@ -90,7 +101,10 @@ class VLLMEngine:
 
         texts = [
             self.tokenizer.apply_chat_template(
-                [{"role": "user", "content": p}], tokenize=False, add_generation_prompt=True
+                [{"role": "user", "content": p}],
+                tokenize=False,
+                add_generation_prompt=True,
+                strftime_now=template_date,
             )
             for p in prompts
         ]
@@ -129,24 +143,40 @@ class LocalVLLMBackend:
 
 
 class ModalBackend:
-    """Sends each model's batch to a Modal GPU container, all models in parallel.
+    """Sends each model's batch to Modal GPU containers, all models in parallel.
 
     generator_cls is the Modal class defined in modal_app.py. Each model gets
-    its own container, so two 7B models never share one GPU.
+    its own container pool, so two 7B models never share one GPU. A batch larger
+    than chunk_size is split into chunks that run in parallel containers; the
+    replies come back in the original order. A model with spec.gpu set runs on
+    that GPU type (for example a 14B model on an L40S).
     """
 
     def __init__(
-        self, generator_cls, specs: list[ModelSpec], sampling: SamplingSpec, call_timeout: float = 1800.0
+        self,
+        generator_cls,
+        specs: list[ModelSpec],
+        sampling: SamplingSpec,
+        call_timeout: float = 1800.0,
+        chunk_size: int | None = None,
     ) -> None:
         self.call_timeout = call_timeout
-        self.handles = {
-            s.name: generator_cls(spec_json=json.dumps(s.__dict__), sampling_json=json.dumps(sampling.__dict__))
-            for s in specs
-        }
+        self.chunk_size = chunk_size
+        self.handles = {}
+        for s in specs:
+            cls = generator_cls.with_options(gpu=s.gpu) if s.gpu else generator_cls
+            self.handles[s.name] = cls(spec_json=json.dumps(s.__dict__), sampling_json=json.dumps(sampling.__dict__))
+
+    def _chunks(self, n: int) -> list[tuple[int, int]]:
+        size = self.chunk_size if self.chunk_size and self.chunk_size > 0 else max(n, 1)
+        return [(lo, min(lo + size, n)) for lo in range(0, n, size)]
 
     def generate_batches(self, batches: Batches) -> dict[str, list[str]]:
         calls = {
-            model: self.handles[model].generate.spawn(prompts, seeds)
+            model: [
+                self.handles[model].generate.spawn(prompts[lo:hi], seeds[lo:hi])
+                for lo, hi in self._chunks(len(prompts))
+            ]
             for model, (prompts, seeds) in batches.items()
             if prompts
         }
@@ -155,13 +185,16 @@ class ModalBackend:
         # 30 min covers the first weight download (~15 GB) plus the largest phase-2 batch.
         from modal.exception import TimeoutError as ModalTimeoutError  # not a builtin subclass
 
-        out = {}
-        for model, call in calls.items():
-            try:
-                out[model] = call.get(timeout=self.call_timeout)
-            except (TimeoutError, ModalTimeoutError) as exc:
-                raise RuntimeError(
-                    f"Generator for '{model}' gave no reply in {self.call_timeout} s. "
-                    "Check the Generator logs on modal.com; the run resumes from its last checkpoint."
-                ) from exc
+        out = {model: [] for model, (prompts, _) in batches.items() if not prompts}
+        for model, chunk_calls in calls.items():
+            replies: list[str] = []
+            for call in chunk_calls:
+                try:
+                    replies += call.get(timeout=self.call_timeout)
+                except (TimeoutError, ModalTimeoutError) as exc:
+                    raise RuntimeError(
+                        f"Generator for '{model}' gave no reply in {self.call_timeout} s. "
+                        "Check the Generator logs on modal.com; the run resumes from its last checkpoint."
+                    ) from exc
+            out[model] = replies
         return out

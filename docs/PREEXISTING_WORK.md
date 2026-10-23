@@ -33,6 +33,8 @@ Record here, with commit hashes:
 - 23 Oct: runs 6–8 on Modal, started 03:25 UTC (`docs/RUN_LOG.md`). Check this time against the
   official sprint kickoff time. If the kickoff was later, list runs 6–8 as pre-sprint runs.
 - 23 Oct: Windows UTF-8 output fix for the scripts (PR #7).
+- 23 Oct: final-run changes and configs for runs 9–12 (request de-duplication, `same_notes`, H5c, H9,
+  exploratory tables, `pool.py --shared`, `inspect_replies.py`, parallel GPU chunks).
 
 - Pilot and main runs, all data under `results/`.
 - Code changes after 23 Oct (list them).

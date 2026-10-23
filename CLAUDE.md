@@ -24,8 +24,8 @@ succession/          experiment package (pure Python, no GPU import at module le
   analysis.py        tables (JSON/Markdown) and figures (PNG)
   store.py           RunStore: atomic JSON writes, Modal Volume commit hook
 modal_app.py         Modal app: Generator (GPU, vLLM) + orchestrate (CPU loop)
-configs/             main.yaml (pre-registered), pilot.yaml, local_4060.yaml
-scripts/             run_local.py (mock or local vLLM), analyze.py
+configs/             main.yaml (pre-registered), main_*.yaml (runs 5-8), final_*.yaml (runs 9-12), pilot, local_4060
+scripts/             run_local.py (mock or local vLLM), analyze.py, pool.py, inspect_replies.py
 tests/               pytest suite; runs with the mock backend, no GPU
 docs/                brief, pre-registration, design, Modal guide, related work, disclosures
 paper/               report outline only; the authors write the report text
@@ -57,6 +57,9 @@ Read and follow these files. They are part of this instruction file.
 - The default prompt never mentions collusion, cartels, coordination, punishment or cooperation.
   `tests/test_parsing_prompts.py::test_default_prompt_is_neutral` checks this.
 - A swap branch clears the entrant's notes. "Same model + same history + same notes" equals no swap.
+  Only exception: `same_notes` keeps the notes and hides all history (H9).
+- With `dedupe_requests: true`, identical requests in one round are generated once. The `aa` stage
+  must keep `dedupe=False`, or the A/A check becomes identical by construction.
 - Every stage must resume from its checkpoint and give the same result as an uninterrupted run
   (`tests/test_pipeline.py::test_resume_gives_same_result`).
 - `succession/` must import without vLLM or Modal installed. Import them inside functions.

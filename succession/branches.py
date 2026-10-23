@@ -6,14 +6,18 @@
 | placebo       | no swap; incumbent gets the swap notice  | -                        | -       |
 | same_inherit  | incumbent model, new instance            | full history             | cleared |
 | same_blank    | incumbent model, new instance            | rounds from swap only    | cleared |
+| same_notes    | incumbent model, new instance            | rounds from swap only    | kept    |
 | other_inherit | other model family                       | full history             | cleared |
 | other_blank   | other model family                       | rounds from swap only    | cleared |
 | br_bot        | static best-response bot (negative ctrl) | last rival price         | -       |
 
 A prompted LLM agent has no state outside its prompt. Its state is the
 visible history plus its notes. So "same model, same history, same notes"
-is identical to no swap. The swap branches therefore always clear notes, and
-"inherit" vs "blank" sets which part of the history the entrant can see.
+is identical to no swap. The swap branches with history therefore clear notes,
+and "inherit" vs "blank" sets which part of the history the entrant can see.
+same_notes (final runs, 23 Oct) is the other split: the entrant gets the
+predecessor's notes (a hand-over memo) but no history. Compared with same_blank,
+it measures what the notes alone carry.
 
 When announce is true, the incumbent gets the same notice in placebo and in
 every swap branch, so placebo isolates the effect of the notice.
@@ -25,7 +29,16 @@ from succession.config import ExperimentConfig
 from succession.prompts import swap_notice
 from succession.session import AgentState, Session
 
-BRANCHES = ("control", "placebo", "same_inherit", "same_blank", "other_inherit", "other_blank", "br_bot")
+BRANCHES = (
+    "control",
+    "placebo",
+    "same_inherit",
+    "same_blank",
+    "same_notes",
+    "other_inherit",
+    "other_blank",
+    "br_bot",
+)
 
 
 def make_branch(base: Session, branch: str, cfg: ExperimentConfig) -> Session:
@@ -55,7 +68,7 @@ def make_branch(base: Session, branch: str, cfg: ExperimentConfig) -> Session:
         model=model,
         prompt_variant=base.seats[seat].prompt_variant,
         history_start=history_start,
-        notes="",
+        notes=base.seats[seat].notes if branch == "same_notes" else "",
         label="entrant",
     )
     return s

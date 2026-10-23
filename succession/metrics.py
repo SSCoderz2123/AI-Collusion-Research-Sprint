@@ -73,6 +73,59 @@ def bootstrap_ci(
     return mean(vals), lo, hi
 
 
+def bootstrap_diff_ci(
+    a: list[float], b: list[float], n_boot: int = 10000, alpha: float = 0.05, seed: int = 0
+) -> tuple[float, float, float]:
+    """mean(a) - mean(b) for two independent samples; percentile CI, each sample resampled."""
+    a = [v for v in a if not math.isnan(v)]
+    b = [v for v in b if not math.isnan(v)]
+    if not a or not b:
+        return math.nan, math.nan, math.nan
+    rng = random.Random(seed)
+    na, nb = len(a), len(b)
+    # math.fsum: statistics.mean is exact but about 20x slower, and this runs n_boot times per cell.
+    boots = sorted(math.fsum(rng.choices(a, k=na)) / na - math.fsum(rng.choices(b, k=nb)) / nb for _ in range(n_boot))
+    lo = boots[int((alpha / 2) * n_boot)]
+    hi = boots[min(n_boot - 1, int((1 - alpha / 2) * n_boot))]
+    return mean(a) - mean(b), lo, hi
+
+
+def decision_agreement(a: Session, b: Session, start: int, stop: int, tol: float = 1e-9) -> dict:
+    """Compare two sessions of one root decision by decision over rounds [start, stop).
+
+    same_seat0/1: share of rounds with the same price for that seat.
+    first_diff: first round in the window where any price differs (None if none does).
+    """
+    rows = list(zip(a.records[start:stop], b.records[start:stop], strict=False))
+    if not rows:
+        return {"same_seat0": math.nan, "same_seat1": math.nan, "first_diff": None}
+    same = [[abs(ra.prices[k] - rb.prices[k]) < tol for ra, rb in rows] for k in range(2)]
+    first = next(
+        (ra.round for ra, rb in rows if any(abs(x - y) >= tol for x, y in zip(ra.prices, rb.prices, strict=True))), None
+    )
+    return {"same_seat0": mean(same[0]), "same_seat1": mean(same[1]), "first_diff": first}
+
+
+def price_dynamics(session: Session, seat: int, start: int, stop: int, tol: float = 1e-9) -> dict:
+    """How one seat sets its price over rounds [start, stop), each round against the round before.
+
+    hold: share of rounds with the same price as its own last price.
+    match: share of rounds with the same price as the rival's last price.
+    abs_change: mean absolute change of its own price.
+    """
+    pairs = [
+        (session.records[t - 1], session.records[t]) for t in range(max(start, 1), min(stop, len(session.records)))
+    ]
+    if not pairs:
+        return {"hold": math.nan, "match": math.nan, "abs_change": math.nan}
+    rival = 1 - seat
+    return {
+        "hold": mean(abs(cur.prices[seat] - prev.prices[seat]) < tol for prev, cur in pairs),
+        "match": mean(abs(cur.prices[seat] - prev.prices[rival]) < tol for prev, cur in pairs),
+        "abs_change": mean(abs(cur.prices[seat] - prev.prices[seat]) for prev, cur in pairs),
+    }
+
+
 def paired_differences(
     market: Market, branch: dict[int, Session], control: dict[int, Session], start: int, stop: int
 ) -> dict[int, float]:

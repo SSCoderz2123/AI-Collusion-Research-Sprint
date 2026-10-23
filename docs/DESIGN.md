@@ -6,9 +6,9 @@
 configs/*.yaml ──> ExperimentConfig
                         │
 modal_app.main (your PC) ──> orchestrate (Modal CPU container)
-                                  │  each round: one batch per model
-                                  ├──> Generator[qwen7b]    (Modal L4, vLLM)
-                                  └──> Generator[mistral7b] (Modal L4, vLLM)
+                                  │  each round: one batch per model, split into chunks of 64
+                                  ├──> Generator[qwen7b]    (Modal L4, vLLM; up to 8 containers)
+                                  └──> Generator[mistral7b] (Modal L4, vLLM; up to 8 containers)
                                   │
                                   └──> RunStore on Volume "succession-runs"/<run>/
                                          config.json
@@ -23,7 +23,10 @@ modal_app.main (your PC) ──> orchestrate (Modal CPU container)
 ## One round (`Engine.step`)
 
 1. For every session and seat: a bot computes its price; an LLM seat gets a prompt.
-2. Prompts are grouped by model. Each model gets one batched call. All models run in parallel.
+2. Prompts are grouped by model. With `dedupe_requests: true` (final runs), identical requests
+   (same model, prompt and seed) are sent once and the reply is copied. On Modal, a model's batch
+   is split into chunks (`SUCCESSION_CHUNK`, default 64) that run in parallel containers.
+   All models run in parallel.
 3. Each reply is parsed. A failed parse gets a second attempt with a new seed. A second failure
    uses the agent's last price and is recorded as `parse_ok = false`.
 4. A forced price (audit) replaces the decided price for that seat and round.
@@ -40,11 +43,20 @@ order). The A/A stage measures this: identical copies, same seeds, different bat
 (2026) report 94–98% identical calls with vLLM. Report our value. Pairing reduces variance;
 it does not create bias when it is imperfect.
 
+Runs 4–8 showed the limit at scale: the A/A stage (8 requests per batch) gave 1.0, but in run 8
+the placebo branch, which had the same design as control, did not repeat the control's decisions
+exactly (`analysis/agreement.json` measures by how much). The final runs set
+`dedupe_requests: true`. Then identical requests in one round are generated once, so identical
+inputs give identical outputs by construction. The A/A stage runs without de-duplication, so it
+still measures the backend.
+
 ## Why notes are cleared at a swap
 
 A prompted LLM has no state outside its prompt: visible history plus its own notes. An entrant
-with the same model, the same history and the same notes is the old agent. So every swap clears
-notes, and the inherit/blank factor sets the visible history. The `placebo` branch separates the
+with the same model, the same history and the same notes is the old agent. So every swap with
+history clears notes, and the inherit/blank factor sets the visible history. The final runs add
+`same_notes`: the entrant keeps the predecessor's notes (a hand-over memo) and sees no history.
+Compared with `same_blank`, it measures what the notes alone carry (H9). The `placebo` branch separates the
 effect of the notice from the effect of the swap.
 
 ## Audit
@@ -64,4 +76,5 @@ name stops with an error, because resumed stages would mix two designs. Use a ne
 
 - Two firms only (`n_firms` > 2 is not supported by the history format).
 - One prompt wording. Prompt sensitivity is a limit to report.
-- vLLM determinism is not exact across batch compositions (see above).
+- vLLM determinism is not exact across batch compositions (see above). Runs 1–8 ran without
+  request de-duplication.

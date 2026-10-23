@@ -33,7 +33,7 @@ are paired. Details: `docs/RESEARCH_BRIEF.md`, `docs/PREREGISTRATION.md`, `docs/
 
 ```bash
 pip install -r requirements.txt
-python -m pytest -q                                    # 54 tests, no GPU
+python -m pytest -q                                    # 67 tests, no GPU
 python scripts/run_local.py --backend mock             # full pipeline with a mock model
 python -m modal setup
 modal run modal_app.py --config configs/pilot.yaml --stages aa,phase1,select,analyze
@@ -47,8 +47,8 @@ Full Modal guide, with cost estimates: `docs/RUNNING_ON_MODAL.md`.
 succession/   experiment package: market, prompts, parsing, backends, session, branches,
               experiment stages, metrics, analysis, storage
 modal_app.py  Modal app (GPU Generator + CPU orchestrator)
-configs/      main.yaml (pre-registered), pilot.yaml, local_4060.yaml
-scripts/      run_local.py, analyze.py
+configs/      main.yaml (pre-registered), main_*.yaml (runs 5-8), final_*.yaml (runs 9-12), pilot.yaml, local_4060.yaml
+scripts/      run_local.py, analyze.py, pool.py, inspect_replies.py
 tests/        pytest suite (mock backend)
 docs/         brief, pre-registration, design, Modal guide, related work, disclosures
 paper/        report outline

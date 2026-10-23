@@ -1,7 +1,7 @@
 """Modal entry point for the cartel-succession experiment.
 
 Architecture:
-  Generator (GPU class)   one container per model, serves vLLM generate() calls
+  Generator (GPU class)   one container pool per model, serves vLLM generate() calls
   orchestrate (CPU func)  runs the experiment loop, calls the generators each round,
                           writes all data to the Modal Volume "succession-runs"
 
@@ -23,6 +23,12 @@ APP_NAME = "cartel-succession"
 RUNS_DIR = "/runs"
 HF_CACHE_DIR = "/hf-cache"
 GPU = os.environ.get("SUCCESSION_GPU", "L4")
+# Container limit per model. Modal gives each model (each parameter set of Generator) its own
+# pool, so the total is at most MAX_GPUS x number of models, plus one CPU container per run.
+MAX_GPUS = int(os.environ.get("SUCCESSION_MAX_GPUS", "8"))
+# Prompts per Generator call. A larger round batch is split into chunks that run in parallel.
+# Read on your PC and passed to the orchestrator as an argument (containers do not see local env vars).
+CHUNK = int(os.environ.get("SUCCESSION_CHUNK", "64"))
 # Name of a Modal Secret that holds HF_TOKEN. Needed for gated models (Mistral).
 # Set SUCCESSION_HF_SECRET="" to run without a secret (ungated models only).
 HF_SECRET = os.environ.get("SUCCESSION_HF_SECRET", "huggingface")
@@ -59,7 +65,7 @@ cpu_image = (
     timeout=60 * 60,
     startup_timeout=30 * 60,  # first start downloads ~15 GB of weights
     scaledown_window=5 * 60,  # stop paying 5 minutes after the last call
-    max_containers=3,  # up to 3 runs in parallel each get their own container per model
+    max_containers=MAX_GPUS,  # per model; chunks of one round and parallel runs share the pool
 )
 class Generator:
     spec_json: str = modal.parameter()
@@ -80,10 +86,10 @@ class Generator:
         return self.engine.generate(prompts, seeds)
 
 
-# memory: with 30 sessions the audit holds up to 840 session copies of ~207 rounds. A mock run of
-# configs/main.yaml peaked at 438 MB; real replies are ~4-6x longer, so 8 GiB leaves a margin.
-@app.function(image=cpu_image, volumes={RUNS_DIR: runs_volume}, timeout=20 * 60 * 60, cpu=2, memory=8192)
-def orchestrate(config_yaml: str, run_name: str, stages: list[str]) -> str:
+# memory: the final runs (40 sessions, 8 branches) hold up to 1,280 audit copies of ~207 rounds. A mock
+# run of configs/final_main.yaml peaked at 650 MB; real replies are ~4-6x longer, so 16 GiB leaves a margin.
+@app.function(image=cpu_image, volumes={RUNS_DIR: runs_volume}, timeout=20 * 60 * 60, cpu=2, memory=16384)
+def orchestrate(config_yaml: str, run_name: str, stages: list[str], chunk: int = 64) -> str:
     import yaml
 
     from succession.analysis import analyze
@@ -99,7 +105,7 @@ def orchestrate(config_yaml: str, run_name: str, stages: list[str]) -> str:
 
     run = [s for s in stages if s != "analyze"]
     if run:
-        backend = ModalBackend(Generator, [cfg.incumbent_model, cfg.other_model], cfg.sampling)
+        backend = ModalBackend(Generator, [cfg.incumbent_model, cfg.other_model], cfg.sampling, chunk_size=chunk)
         run_stages(cfg, backend, store, run)
     if "analyze" in stages:
         if not store.exists("config.json"):
@@ -121,8 +127,8 @@ def main(config: str = "configs/pilot.yaml", run: str = "", stages: str = "aa,ph
     calls = []
     for path in configs:
         run_name = run or Path(path).stem
-        print(f"Run '{run_name}' ({path}), stages {stage_list}, GPU {GPU}")
-        calls.append((run_name, orchestrate.spawn(Path(path).read_text(encoding="utf-8"), run_name, stage_list)))
+        print(f"Run '{run_name}' ({path}), stages {stage_list}, GPU {GPU}, max {MAX_GPUS} per model, chunk {CHUNK}")
+        calls.append((run_name, orchestrate.spawn(Path(path).read_text(encoding="utf-8"), run_name, stage_list, CHUNK)))
     for run_name, call in calls:
         try:
             print(f"\n===== {run_name} =====\n{call.get()}")

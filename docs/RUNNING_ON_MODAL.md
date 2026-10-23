@@ -108,8 +108,8 @@ folder. Add both summaries to `docs/RUN_LOG.md`.
 
 ## 5. Sprint runs 6–8, in parallel (about 3–5 hours)
 
-Three runs, one orchestrator each; each model gets up to 3 GPU containers (peak: 3 Qwen,
-2 Mistral, 1 OLMo-2 = 6 L4s). The first OLMo-2 start downloads about 15 GB of weights.
+Three runs, one orchestrator each; each model got up to 3 GPU containers (peak: 3 Qwen,
+2 Mistral, 1 OLMo-2 = 6 L4s). The limit is now 8 per model (section 6). The first OLMo-2 start downloads about 15 GB of weights.
 
 ```bash
 git checkout main
@@ -133,6 +133,87 @@ python scripts/analyze.py results/main_r2
 python scripts/analyze.py results/main_olmo
 python scripts/analyze.py results/main_noannounce
 python scripts/pool.py results/main results/main_r2
+```
+
+## 6. Final runs 9–12, in parallel (the last experiment)
+
+Four runs, one orchestrator each (`docs/PREREGISTRATION.md`, "Final runs 9–12"):
+
+| Run name | Config | Models |
+|---|---|---|
+| `final_main` | `configs/final_main.yaml` | Qwen2.5-7B incumbent, Mistral-7B entrant |
+| `final_olmo` | `configs/final_olmo.yaml` | Qwen2.5-7B incumbent, OLMo-2-7B entrant |
+| `final_granite` | `configs/final_granite.yaml` | Qwen2.5-7B incumbent, Granite-3.1-8B entrant (new download, about 16 GB) |
+| `final_qwen14b` | `configs/final_qwen14b.yaml` | Qwen2.5-14B incumbent on an L40S (new download, about 30 GB), Mistral-7B entrant |
+
+**Containers.** Each model has its own pool of at most `SUCCESSION_MAX_GPUS` containers
+(default 8). Five models → at most 40 GPU containers, plus 4 CPU orchestrators = 44, below a
+limit of 100. Each round's batch is split into chunks of `SUCCESSION_CHUNK` prompts (default 64),
+which run in parallel containers.
+
+1. Get the latest code:
+
+   ```powershell
+   git checkout main
+   git pull
+   python -m pytest -q
+   ```
+
+2. Check the two new models first (about 10–15 minutes, about $1). Each smoke config runs the
+   new model as the incumbent for 2 sessions × 10 rounds. Both run in parallel, and the weights
+   stay in the cache for step 3:
+
+   ```powershell
+   modal run modal_app.py --config configs/smoke_granite.yaml,configs/smoke_qwen14b.yaml --stages aa,phase1,select,analyze
+   ```
+
+   Pass condition for each: an A/A line, a phase-1 table, and `parse_failure_rate` below 0.05.
+   Paste both summaries here before step 3. If one model fails, start the other three runs.
+
+3. Start all four runs:
+
+   ```powershell
+   modal run --detach modal_app.py --config configs/final_main.yaml,configs/final_olmo.yaml,configs/final_granite.yaml,configs/final_qwen14b.yaml --stages aa,controls,phase1,select,phase2,deviation,analyze
+   ```
+
+   Optional, more parallel GPUs (set before the command, same PowerShell window):
+   `$env:SUCCESSION_MAX_GPUS="12"` (5 models × 12 = 60 GPUs). Do not go above 19.
+
+4. Check after about 10 minutes: https://modal.com/apps shows `cartel-succession` with
+   several Generator containers. Then the PC can be shut down. If a run stops, run the same
+   command again; every stage continues from its last checkpoint.
+
+**Cost.** Each 7B run has about twice the workload of run 6 (more sessions, one more branch,
+three times the prompt controls). Request de-duplication removes part of that. Read the cost of
+runs 6–8 on the Modal billing page: plan about 2× one of those runs for each 7B run and about
+5× for `final_qwen14b` (L40S price and a slower model). Set the workspace budget above the sum.
+
+**Results:**
+
+```powershell
+modal volume get succession-runs final_main ./results/
+modal volume get succession-runs final_olmo ./results/
+modal volume get succession-runs final_granite ./results/
+modal volume get succession-runs final_qwen14b ./results/
+python scripts/analyze.py results/final_main > summary_final_main.txt
+python scripts/analyze.py results/final_olmo > summary_final_olmo.txt
+python scripts/analyze.py results/final_granite > summary_final_granite.txt
+python scripts/analyze.py results/final_qwen14b > summary_final_qwen14b.txt
+python scripts/pool.py --shared results/main results/main_r2 results/main_olmo results/final_main results/final_olmo results/final_granite > summary_pooled_shared.txt
+```
+
+## 6b. Re-analyze runs 4–8 with the new tables (no GPU, a few minutes)
+
+The new analysis adds exploratory tables (H5c, decision agreement, price dynamics) to the old runs:
+
+```powershell
+python scripts/analyze.py results/main > summary_main_v2.txt
+python scripts/analyze.py results/main_r2 > summary_main_r2_v2.txt
+python scripts/analyze.py results/main_olmo > summary_main_olmo_v2.txt
+python scripts/analyze.py results/main_noannounce > summary_main_noannounce_v2.txt
+python scripts/pool.py --shared results/main results/main_r2 results/main_olmo > summary_pooled_shared_4_6_7.txt
+python scripts/inspect_replies.py results/main_olmo other_inherit --seat 1 --roots 3 --rounds 4 > olmo_replies.txt
+python scripts/inspect_replies.py results/main_olmo other_inherit --seat 1 --roots 2 --rounds 3 --start 193 >> olmo_replies.txt
 ```
 
 ## Cost estimate
