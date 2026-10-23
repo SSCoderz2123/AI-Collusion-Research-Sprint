@@ -16,6 +16,10 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
+# Windows consoles and `>` redirects default to cp1252, which cannot encode all characters
+# in summaries (model replies, Unicode minus). Always write UTF-8.
+sys.stdout.reconfigure(encoding="utf-8")
+
 from succession.analysis import analyze  # noqa: E402
 from succession.backends import LocalVLLMBackend, MockBackend  # noqa: E402
 from succession.config import load_config  # noqa: E402

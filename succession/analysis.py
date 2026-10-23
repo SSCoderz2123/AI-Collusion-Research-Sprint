@@ -257,7 +257,7 @@ def analyze(store: RunStore) -> str:
         if hyp["H5_cells"]:
             out.append("H5 cells (responder is an LLM):\n")
             out.append(markdown_table(hyp["H5_cells"], list(hyp["H5_cells"][0].keys())))
-        out.append("## Secondary: price index, branch − control (post window)\n")
+        out.append("## Secondary: price index, branch - control (post window)\n")
         out.append(
             markdown_table(hyp["price_index_vs_control"], ["branch", "n", "price_index_diff", "ci_low", "ci_high"])
         )
