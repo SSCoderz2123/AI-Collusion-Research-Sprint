@@ -30,6 +30,9 @@ Record here, with commit hashes:
 - 23 Oct: hypothesis evaluator `succession/hypotheses.py` (PR #5); runs 4–5 hypothesis evaluation.
 - 23 Oct: runs 6–8 configs (`configs/main_r2.yaml`, `main_olmo.yaml`, `main_noannounce.yaml`),
   H6–H7 and pooling (`scripts/pool.py`), pre-registered before the runs start.
+- 23 Oct: runs 6–8 on Modal, started 03:25 UTC (`docs/RUN_LOG.md`). Check this time against the
+  official sprint kickoff time. If the kickoff was later, list runs 6–8 as pre-sprint runs.
+- 23 Oct: Windows UTF-8 output fix for the scripts (PR #7).
 
 - Pilot and main runs, all data under `results/`.
 - Code changes after 23 Oct (list them).
