@@ -63,8 +63,10 @@ def _load_or(store: RunStore, name: str, make) -> list[Session]:
 def stage_aa(
     cfg: ExperimentConfig, backend: Backend, store: RunStore, n: int = 4, warmup: int = 10, span: int = 10
 ) -> dict:
-    """Fork each session at `warmup`, play both copies `span` rounds, count identical prices."""
-    engine = Engine(cfg, backend)
+    """Fork each session at `warmup`, play both copies `span` rounds, count identical prices.
+
+    Request de-duplication is off here: with it, the copies would be identical by construction."""
+    engine = Engine(cfg, backend, dedupe=False)
     sessions = [new_session(9000 + i, cfg, "aa") for i in range(n)]
     engine.run(sessions, warmup)
     copies = [s.fork(tag="copy") for s in sessions]

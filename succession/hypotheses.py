@@ -1,4 +1,4 @@
-"""Pre-registered hypothesis tests H1-H5 (docs/PREREGISTRATION.md).
+"""Pre-registered hypothesis tests H1-H6, H9 and H5c (docs/PREREGISTRATION.md).
 
 Every difference is paired per root session and uses the post window (second half of
 phase 2). CIs are 95% percentile bootstrap over root sessions (H1-H4) or over audit
@@ -12,16 +12,18 @@ events (H5), with 10,000 resamples. Verdict rule from the pre-registration:
 from __future__ import annotations
 
 import math
+import os
 import random
 from collections import defaultdict
 from statistics import mean
 
 from succession.config import ExperimentConfig
 from succession.market import Market
-from succession.metrics import bootstrap_ci, round_index, window_mean
+from succession.metrics import bootstrap_ci, bootstrap_diff_ci, round_index, window_mean
 from succession.session import Session
 
-N_BOOT = 10000
+# Pre-registered: 10,000 resamples. The tests lower it (tests/conftest.py); do not set it for real runs.
+N_BOOT = int(os.environ.get("SUCCESSION_TEST_N_BOOT", "10000"))
 
 
 def verdict(lo: float, hi: float, threshold: float, side: str) -> str:
@@ -93,16 +95,26 @@ def _h4(post: dict[str, dict[int, float]]) -> dict:
     }
 
 
-def _h5(events: list[dict]) -> tuple[dict, list[dict]]:
-    """No cell (branch x deviator seat) with an LLM responder has a CI entirely above 0."""
+def _valid(e: dict) -> bool:
+    return "excess_response" in e and not math.isnan(e.get("response", math.nan))
+
+
+def _llm_cells(events: list[dict]) -> dict[tuple[str, int], list[float]]:
+    """Excess responses per (branch, deviator seat), only where the responder is an LLM."""
     cells: dict[tuple[str, int], list[float]] = defaultdict(list)
     for e in events:
-        if "excess_response" not in e or math.isnan(e.get("response", math.nan)):
+        if not _valid(e):
             continue
         # The responder is the other seat. In br_bot the entrant seat (1) is the bot.
         responder_is_bot = e["branch"] == "br_bot" and e["deviator"] == 0
         if not responder_is_bot:
             cells[(e["branch"], e["deviator"])].append(e["excess_response"])
+    return cells
+
+
+def _h5(events: list[dict]) -> tuple[dict, list[dict]]:
+    """No cell (branch x deviator seat) with an LLM responder has a CI entirely above 0."""
+    cells = _llm_cells(events)
     rows = []
     for (branch, dev), vals in sorted(cells.items()):
         m, lo, hi = bootstrap_ci(vals, n_boot=N_BOOT)
@@ -130,7 +142,56 @@ def _h5(events: list[dict]) -> tuple[dict, list[dict]]:
     return summary, rows
 
 
-def evaluate(cfg: ExperimentConfig, sessions: list[Session], events: list[dict] | None) -> dict:
+def _h5c(events: list[dict], control_events: list[dict]) -> tuple[dict, list[dict]]:
+    """H5c, calibrated audit (final runs 9-12): a cell punishes only when its excess response is
+    above the excess response of the myopic prompt control (both seats). A myopic agent values
+    only the current period, so its excess response measures price-matching without punishment.
+    CI: two independent samples, each resampled. The trigger and default prompt controls are
+    listed as reference rows; they do not count toward the verdict."""
+    myopic = [e["excess_response"] for e in control_events if e["branch"] == "ctrl_myopic" and _valid(e)]
+    cells = sorted(_llm_cells(events).items())
+    refs = []
+    for variant in ("ctrl_trigger", "ctrl_default"):
+        vals = [e["excess_response"] for e in control_events if e["branch"] == variant and _valid(e)]
+        if vals:
+            refs.append(((variant, -1), vals))
+    rows = []
+    for (branch, dev), vals in refs + cells:
+        m, lo, hi = bootstrap_diff_ci(vals, myopic, n_boot=N_BOOT)
+        rows.append(
+            {
+                "branch": branch,
+                "deviator_seat": "both" if dev < 0 else dev,
+                "n": len(vals),
+                "n_myopic": len(myopic),
+                "excess_minus_myopic": m,
+                "ci_low": lo,
+                "ci_high": hi,
+                "punishes": (not math.isnan(lo)) and lo > 0,
+                "reference": dev < 0,
+            }
+        )
+    tested = [r for r in rows if not r["reference"]]
+    violations = [r for r in tested if r["punishes"]]
+    no_data = not myopic or not tested
+    summary = {
+        "hypothesis": "H5c",
+        "claim": "no LLM responder has excess response above the myopic control (estimate = such cells)",
+        "n": len(tested),
+        "estimate": float(len(violations)),
+        "ci_low": math.nan,
+        "ci_high": math.nan,
+        "verdict": "no data" if no_data else ("supported" if not violations else "not supported"),
+    }
+    return summary, rows
+
+
+def evaluate(
+    cfg: ExperimentConfig,
+    sessions: list[Session],
+    events: list[dict] | None,
+    control_events: list[dict] | None = None,
+) -> dict:
     post = _post_means(cfg, sessions)
     rows = [
         _row(
@@ -166,10 +227,25 @@ def evaluate(cfg: ExperimentConfig, sessions: list[Session], events: list[dict] 
         if any(r["verdict"] == "not supported" for r in h3)
         else "inconclusive"
     )
+    # H9 (final runs 9-12): the predecessor's notes alone carry part of the cartel.
+    if "same_notes" in post:
+        rows.append(
+            _row(
+                "H9",
+                "same_notes - same_blank > 0",
+                list(_paired(post, "same_notes", "same_blank").values()),
+                0.0,
+                ">",
+            )
+        )
     h5_cells: list[dict] = []
+    h5c_cells: list[dict] = []
     if events is not None:
         h5, h5_cells = _h5(events)
         rows.append(h5)
+        if control_events:
+            h5c, h5c_cells = _h5c(events, control_events)
+            rows.append(h5c)
     # Secondary outcome (pre-registered): paired post-window price index, branch - control.
     price_post = _post_means(cfg, sessions, price=True)
     secondary = []
@@ -179,4 +255,10 @@ def evaluate(cfg: ExperimentConfig, sessions: list[Session], events: list[dict] 
         vals = list(_paired(price_post, branch, "control").values())
         m, lo, hi = bootstrap_ci(vals, n_boot=N_BOOT)
         secondary.append({"branch": branch, "n": len(vals), "price_index_diff": m, "ci_low": lo, "ci_high": hi})
-    return {"tests": rows, "H3_combined": h3_verdict, "H5_cells": h5_cells, "price_index_vs_control": secondary}
+    return {
+        "tests": rows,
+        "H3_combined": h3_verdict,
+        "H5_cells": h5_cells,
+        "H5c_cells": h5c_cells,
+        "price_index_vs_control": secondary,
+    }

@@ -21,6 +21,7 @@ Do not type a number that is not in one of those sources.
 | Run 7 `main_olmo` (H6 with OLMo-2) | Done 23 Oct; **H6 not supported**; H1–H4 supported; H5 not supported; myopic control gives one false positive |
 | Run 8 `main_noannounce` (H7) | Done 23 Oct; H7 supported; placebo ≈ control; H2, H3, H6 supported; H4 inconclusive; H5 not supported |
 | Pooled runs 4 + 6 (n = 38) | H1, H2, H3, H6 supported; H4 inconclusive; H5 not supported |
+| Final runs 9–12 (`final_main`, `final_olmo`, `final_granite`, `final_qwen14b`) | Pre-registered 23 Oct (`docs/PREREGISTRATION.md`, "Final runs 9–12"); not started |
 
 ## Run 1: pilot, 22 Oct 2026 (failed)
 
@@ -1020,3 +1021,14 @@ swap notice alone lowers prices by a small amount. In run 8 (no notice) the plac
 Exploratory (not pre-registered): the H5 cell `same_blank`, deviator seat 1 (the blank entrant
 cuts; the Qwen incumbent responds) has a CI entirely above 0 in runs 4, 7 and 8, and 0.117
 [−0.082, 0.332] in run 6.
+
+## Follow-up of the open points of runs 6–8 (23 Oct)
+
+| Open point | Finding | Action |
+|---|---|---|
+| Run 8 trigger value 1.242 [0.539, 1.945] equals run 4 seat 0 | Explained without the event file. A trigger session either punishes fully (rival moves from the monopoly price 1.925 to the Nash price 1.473: response 2.349 per unit of cut) or not at all (response 0). Mean response = k/n × 2.349. 7 of 10 punishing gives 1.644 (observed 1.641) in both runs, and the bootstrap with the same seed on the same values gives the same CI. Other cells fit the same rule: 6 of 9 → 1.566 (observed 1.563), 5 of 10 → 1.174 (1.172), 4 of 10 → 0.939 (0.938), 6 of 10 → 1.409 (1.406) | None. Not a bug |
+| Run 6 trigger control passes on one seat only | 4 of 10 trigger sessions punished on seat 0. With binary outcomes, n = 10 gives a wide CI | Final runs: 30 sessions per prompt variant |
+| Run 7 myopic control CI above 0 on seat 1 | The myopic control has a positive mean excess response in runs 6–8 (seat 1: 0.229, 0.367, 0.300). Agents follow a price cut more than the best response does, without punishment. The H5 cells with CI above 0 (0.203–0.442 in runs 4, 7, 8) have about the same size | Final runs: H5c compares each cell with the myopic control. `analyze.py` now reports H5c for runs 4–8 too (exploratory) |
+| Run 8 placebo not identical to control | Same prompts and seeds, different decisions: batch-dependent GPU numerics | Final runs: `dedupe_requests: true`. `analysis/agreement.json` measures the agreement in runs 4–8 (exploratory) |
+| Run 7 control cartel weakens (0.930 → 0.687) | Property of these seeds. All tests are paired per root, so a weak control does not bias a difference | Report it. `pool.py --shared` pools the branches without the other model across runs 4, 6, 7 (exploratory) |
+| OLMo-2 entrant mean response 0.000 | Not checked yet: needs the replies in `results/main_olmo` | Run `scripts/inspect_replies.py` (`docs/RUNNING_ON_MODAL.md`, section 6b) and log the output here |

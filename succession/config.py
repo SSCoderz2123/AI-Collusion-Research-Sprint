@@ -20,6 +20,7 @@ class ModelSpec:
     gpu_memory_utilization: float = 0.90
     dtype: str = "auto"
     quantization: str | None = None
+    gpu: str | None = None  # Modal GPU type for this model; None = the app default (SUCCESSION_GPU)
 
 
 @dataclass
@@ -93,6 +94,10 @@ class ExperimentConfig:
     deviation: DeviationSpec = field(default_factory=DeviationSpec)
     controls: ControlsSpec = field(default_factory=ControlsSpec)
     checkpoint_every: int = 10
+    # True: identical requests (same model, prompt and seed) in one round are generated once and
+    # the reply is copied. Identical inputs then give identical outputs in every branch, also
+    # when GPU numerics depend on the batch. False in runs 1-8 (field added on 23 Oct).
+    dedupe_requests: bool = False
 
     def to_dict(self) -> dict:
         return asdict(self)

@@ -111,10 +111,12 @@ def trigger_prices(market: Market) -> tuple[float, float, float]:
 
 
 class Engine:
-    def __init__(self, cfg: ExperimentConfig, backend: Backend) -> None:
+    def __init__(self, cfg: ExperimentConfig, backend: Backend, dedupe: bool | None = None) -> None:
         self.cfg = cfg
         self.backend = backend
         self.market = Market(cfg.market)
+        # The A/A stage passes dedupe=False: it must test the backend itself.
+        self.dedupe = cfg.dedupe_requests if dedupe is None else dedupe
 
     def _prompt(self, session: Session, seat: int) -> str:
         agent = session.seats[seat]
@@ -150,18 +152,31 @@ class Engine:
             if not pending:
                 break
             batches: dict[str, tuple[list[str], list[int]]] = {}
-            order: dict[str, list[tuple[int, int]]] = {}
+            order: dict[str, list[tuple[tuple[int, int], int]]] = {}  # model -> ((session, seat), batch slot)
+            slots: dict[str, dict[tuple[str, int], int]] = {}
             for i, seat in pending:
                 s = sessions[i]
                 model = s.seats[seat].model
                 prompts, seeds = batches.setdefault(model, ([], []))
-                prompts.append(self._prompt(s, seat))
-                seeds.append(derive_seed(self.cfg.seed, s.root_id, seat, s.next_round, attempt))
-                order.setdefault(model, []).append((i, seat))
+                prompt = self._prompt(s, seat)
+                seed = derive_seed(self.cfg.seed, s.root_id, seat, s.next_round, attempt)
+                known = slots.setdefault(model, {})
+                if self.dedupe and (prompt, seed) in known:
+                    slot = known[(prompt, seed)]
+                else:
+                    slot = len(prompts)
+                    prompts.append(prompt)
+                    seeds.append(seed)
+                    known[(prompt, seed)] = slot
+                order.setdefault(model, []).append(((i, seat), slot))
             replies = self.backend.generate_batches(batches)
             still: list[tuple[int, int]] = []
-            for model, keys in order.items():
-                for (i, seat), text in zip(keys, replies[model], strict=True):
+            for model, items in order.items():
+                texts = replies[model]
+                if len(texts) != len(batches[model][0]):
+                    raise RuntimeError(f"backend returned {len(texts)} replies for {len(batches[model][0])} prompts")
+                for (i, seat), slot in items:
+                    text = texts[slot]
                     parsed = parse_reply(text, self.cfg.price_min, self.cfg.price_max)
                     if parsed.ok:
                         decisions[(i, seat)] = (parsed.price, parsed.notes, text, True)
