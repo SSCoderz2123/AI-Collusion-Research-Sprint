@@ -220,8 +220,12 @@ def evaluate(
         ),
     ]
     h3 = [r for r in rows if r["hypothesis"] in ("H3a", "H3b")]
+    # H3 needs both parts. A missing part (pool.py --shared has no other_* branches) gives "no data",
+    # not "inconclusive".
     h3_verdict = (
-        "supported"
+        "no data"
+        if any(r["verdict"] == "no data" for r in h3)
+        else "supported"
         if all(r["verdict"] == "supported" for r in h3)
         else "not supported"
         if any(r["verdict"] == "not supported" for r in h3)

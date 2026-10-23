@@ -180,6 +180,7 @@ def test_pool_shared_accepts_a_different_other_model(tmp_path):
     h6 = next(line for line in r.stdout.splitlines() if line.startswith("| H6 |"))
     assert "| 0 |" in h6 and "no data" in h6  # other-model branches are left out
     assert "| other_inherit |" not in r.stdout
+    assert "H3 combined: no data" in r.stdout  # H3b is missing, so H3 cannot be "inconclusive"
 
 
 def test_inspect_replies_prints_replies(tmp_path):
