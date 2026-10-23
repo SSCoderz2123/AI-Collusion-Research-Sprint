@@ -22,10 +22,11 @@ succession/          experiment package (pure Python, no GPU import at module le
   experiment.py      stages: aa, controls, phase1, select, phase2, deviation (checkpointed)
   metrics.py         profit index, paired differences, bootstrap CI, dip, half-life, audit
   analysis.py        tables (JSON/Markdown) and figures (PNG)
+  behavior_plots.py  exploratory 3D figures: mean price paths and PCA of price paths
   store.py           RunStore: atomic JSON writes, Modal Volume commit hook
 modal_app.py         Modal app: Generator (GPU, vLLM) + orchestrate (CPU loop)
 configs/             main.yaml (pre-registered), main_*.yaml (runs 5-8), final_*.yaml (runs 9-12), pilot, local_4060
-scripts/             run_local.py (mock or local vLLM), analyze.py, pool.py, inspect_replies.py
+scripts/             run_local.py (mock or local vLLM), analyze.py, pool.py, inspect_replies.py, plot_behavior.py
 tests/               pytest suite; runs with the mock backend, no GPU
 docs/                brief, pre-registration, design, Modal guide, related work, disclosures
 paper/               report outline only; the authors write the report text

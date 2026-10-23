@@ -216,6 +216,25 @@ python scripts/inspect_replies.py results/main_olmo other_inherit --seat 1 --roo
 python scripts/inspect_replies.py results/main_olmo other_inherit --seat 1 --roots 2 --rounds 3 --start 193 >> olmo_replies.txt
 ```
 
+## 7. Exploratory 3D figures (no GPU, $0)
+
+Run on your PC after `git pull`, for the runs already in `./results/`:
+
+```powershell
+python scripts/plot_behavior.py results/final_main results/final_olmo results/main_r2 results/main_olmo results/main_noannounce results/main results/final_qwen14b
+```
+
+For each run, the script writes four files into `results/<run>/analysis/`:
+
+| File | Content |
+|---|---|
+| `price_paths_3d.png` | Mean price path per branch, from 10 rounds before the swap: round × incumbent price index × entrant-seat price index. Grey base plane with a shadow of each path |
+| `price_path_pca_3d.png` | One point per session: PCA of its post-swap price path (both seats), coloured by branch, with shadows on the base plane |
+| `behavior_price_paths.json` | The values in the first figure |
+| `behavior_pca.json` | The PCA coordinates and the explained-variance ratios |
+
+Label both figures "exploratory" in the report: they were defined after the runs had been seen.
+
 ## Cost estimate
 
 Estimates from the workload and the pilot timings (`docs/RUN_LOG.md`), not measurements.
