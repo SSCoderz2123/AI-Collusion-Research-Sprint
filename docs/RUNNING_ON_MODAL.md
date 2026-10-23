@@ -106,6 +106,35 @@ Outputs in `results/<run>/analysis/`: `summary.md`, `phase1_summary.json`,
 `phase1_trajectories.png`, `trajectories.png`, `differences.png`, and `timings.json` in the run
 folder. Add both summaries to `docs/RUN_LOG.md`.
 
+## 5. Sprint runs 6–8, in parallel (about 3–5 hours)
+
+Three runs, one orchestrator each; each model gets up to 3 GPU containers (peak: 3 Qwen,
+2 Mistral, 1 OLMo-2 = 6 L4s). The first OLMo-2 start downloads about 15 GB of weights.
+
+```bash
+git checkout main
+git pull
+modal run --detach modal_app.py --config configs/main_r2.yaml,configs/main_olmo.yaml,configs/main_noannounce.yaml --stages aa,controls,phase1,select,phase2,deviation,analyze
+```
+
+Check after about 5 minutes: https://modal.com/apps shows `cartel-succession` running. Then
+the laptop can be shut down.
+
+Cost: each run has the same workload as run 4. Read the real cost of runs 4–5 on the Modal
+billing page and multiply by about 1.5. Set the workspace budget above that.
+
+Results, in the morning:
+
+```bash
+modal volume get succession-runs main_r2 ./results/
+modal volume get succession-runs main_olmo ./results/
+modal volume get succession-runs main_noannounce ./results/
+python scripts/analyze.py results/main_r2
+python scripts/analyze.py results/main_olmo
+python scripts/analyze.py results/main_noannounce
+python scripts/pool.py results/main results/main_r2
+```
+
 ## Cost estimate
 
 Estimates from the workload and the pilot timings (`docs/RUN_LOG.md`), not measurements.
