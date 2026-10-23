@@ -62,6 +62,28 @@ tokens, swap seat 1, swap round 100, phase-2 length 100, audit cut 10%, horizon 
 Qwen2.5-7B as the other family. H1–H5 are tested on it with the same rules and reported
 separately as a replication. It does not replace the primary analysis (`configs/main.yaml`).
 
+## Sprint additions (23 Oct 2026, before runs 6–8 start)
+
+Written after runs 4–5 and before runs 6–8. Same metrics, windows, verdict rule and inclusion
+rule as above. All verdicts come from `succession/hypotheses.py`.
+
+| Run | Config | Changes against `configs/main.yaml` | Role |
+|---|---|---|---|
+| 6 | `configs/main_r2.yaml` | seed only | **Primary sprint result**: tests H1–H6 again on new seeds |
+| 7 | `configs/main_olmo.yaml` | other family = OLMo-2-7B (not Mistral); seed | Tests H6 with a second "other" family |
+| 8 | `configs/main_noannounce.yaml` | incumbent gets no swap notice; seed | Tests H7 |
+
+- **H6 (different family breaks the cartel).** `other_inherit` − control < −0.10 in the post
+  window. Primary test: run 7 (OLMo-2). Also reported for runs 4 and 6 (Mistral).
+- **H7 (no notice needed).** In run 8, `same_inherit` − control > −0.10 (the H1 test on run 8).
+  In run 8 the `placebo` branch has no notice and no swap, so it equals control; its difference
+  must be ≈ 0 (consistency check, not a hypothesis).
+- **Pooling.** Runs 4 and 6 have the same design. `scripts/pool.py results/main results/main_r2`
+  evaluates them as one sample of root sessions. Run 6 alone is the primary sprint result; the
+  pooled result is secondary. The script refuses to pool runs with different designs.
+- **Reporting.** Report every run, including a run whose inclusion rule keeps fewer than 12
+  sessions. Run 5 (Mistral incumbent) is not repeated: its control cartel collapsed.
+
 ## Changes before the main run (22 Oct 2026, after the pilot)
 
 These changes were made before phase 1 of the main run, based on the pilot (`docs/RUN_LOG.md`):

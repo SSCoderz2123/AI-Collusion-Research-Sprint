@@ -148,6 +148,15 @@ def evaluate(cfg: ExperimentConfig, sessions: list[Session], events: list[dict] 
             ">",
         ),
         _h4(post),
+        # H6 (sprint addition, 23 Oct): a different-family entrant with the full history lowers
+        # the profit index. Tested in every run; its own pre-registered test is run 7 (OLMo-2).
+        _row(
+            "H6",
+            "other_inherit - control < -0.10",
+            list(_paired(post, "other_inherit", "control").values()),
+            -0.10,
+            "<",
+        ),
     ]
     h3 = [r for r in rows if r["hypothesis"] in ("H3a", "H3b")]
     h3_verdict = (

@@ -27,6 +27,10 @@ report are sprint work.
 
 Record here, with commit hashes:
 
+- 23 Oct: hypothesis evaluator `succession/hypotheses.py` (PR #5); runs 4–5 hypothesis evaluation.
+- 23 Oct: runs 6–8 configs (`configs/main_r2.yaml`, `main_olmo.yaml`, `main_noannounce.yaml`),
+  H6–H7 and pooling (`scripts/pool.py`), pre-registered before the runs start.
+
 - Pilot and main runs, all data under `results/`.
 - Code changes after 23 Oct (list them).
 - Analysis, figures, and the report.

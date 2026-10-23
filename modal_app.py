@@ -59,7 +59,7 @@ cpu_image = (
     timeout=60 * 60,
     startup_timeout=30 * 60,  # first start downloads ~15 GB of weights
     scaledown_window=5 * 60,  # stop paying 5 minutes after the last call
-    max_containers=2,  # 2 runs in parallel (main + main_mistral) each get a container per model
+    max_containers=3,  # up to 3 runs in parallel each get their own container per model
 )
 class Generator:
     spec_json: str = modal.parameter()

@@ -15,8 +15,9 @@ Do not type a number that is not in one of those sources.
 | Mistral-7B Generator + `huggingface` secret | Pass (run 3) |
 | Stages controls, phase2, deviation on GPU | Pass (run 3) |
 | Pilot parse failures | Pass: 0.000 in phase 1; ≤ 0.004 in phase 2 (required < 5%) |
-| Main run `main` (run 4) | Done 22 Oct; H1, H2 supported; H5 not supported; H3/H4 pending |
-| Replication `main_mistral` (run 5) | Done 22 Oct; control cartel collapses; audit positive control fails |
+| Main run `main` (run 4) | Done 22 Oct; H1, H2, H3 supported; H4 inconclusive; H5 not supported |
+| Replication `main_mistral` (run 5) | Done 22 Oct; control cartel collapses; audit positive control fails; cannot test succession |
+| Sprint runs 6–8 (`main_r2`, `main_olmo`, `main_noannounce`) | Pre-registered 23 Oct; not started |
 
 ## Run 1: pilot, 22 Oct 2026 (failed)
 
@@ -410,14 +411,66 @@ Conclusion for run 5: the Mistral cartel does not persist without a swap, so the
 cannot test succession. Report it as a negative result about Mistral's stability, not as
 evidence for or against H1–H5.
 
+## Hypothesis evaluation of runs 4–5 (23 Oct, `succession/hypotheses.py`)
+
+Verbatim from `python scripts/analyze.py results/main` and `results/main_mistral`, run after
+PR #5 was merged. This replaces the "pending" entries above.
+
+### Run 4 (`main`, primary)
+
+| hypothesis | claim | n | estimate | ci_low | ci_high | verdict |
+|---|---|---|---|---|---|---|
+| H1 | same_inherit - control > -0.10 | 16 | -0.003 | -0.065 | 0.064 | supported |
+| H2 | same_blank - control < -0.10 | 16 | -0.670 | -0.998 | -0.360 | supported |
+| H3a | same_inherit - same_blank > 0 | 16 | 0.667 | 0.368 | 0.989 | supported |
+| H3b | other_inherit - other_blank > 0 | 16 | 0.668 | 0.183 | 1.206 | supported |
+| H4 | \|si-sb\| - \|si-oi\| > 0 | 16 | 0.118 | -0.294 | 0.519 | inconclusive |
+| H5 | no LLM responder has excess response CI > 0 (estimate = cells with CI > 0) | 13 | 2.000 | n/a | n/a | not supported |
+
+H3 combined (H3a and H3b): supported. H5 cells with CI > 0: `br_bot` deviator seat 1
+(0.442 [0.225, 0.629]) and `same_blank` deviator seat 1 (0.283 [0.049, 0.512]).
+
+Secondary, price index, branch − control:
+
+| branch | n | price_index_diff | ci_low | ci_high |
+|---|---|---|---|---|
+| placebo | 16 | -0.144 | -0.353 | 0.032 |
+| same_inherit | 16 | -0.023 | -0.140 | 0.075 |
+| same_blank | 16 | 0.492 | 0.162 | 0.834 |
+| other_inherit | 16 | -0.677 | -0.874 | -0.500 |
+| other_blank | 16 | -0.312 | -0.929 | 0.293 |
+| br_bot | 16 | -0.949 | -1.072 | -0.805 |
+
+### Run 5 (`main_mistral`, replication)
+
+| hypothesis | claim | n | estimate | ci_low | ci_high | verdict |
+|---|---|---|---|---|---|---|
+| H1 | same_inherit - control > -0.10 | 15 | 0.057 | -0.236 | 0.338 | inconclusive |
+| H2 | same_blank - control < -0.10 | 15 | 0.491 | -0.030 | 1.000 | not supported |
+| H3a | same_inherit - same_blank > 0 | 15 | -0.433 | -0.851 | -0.015 | not supported |
+| H3b | other_inherit - other_blank > 0 | 15 | 0.079 | -0.292 | 0.487 | inconclusive |
+| H4 | \|si-sb\| - \|si-oi\| > 0 | 15 | -0.057 | -0.491 | 0.433 | inconclusive |
+| H5 | no LLM responder has excess response CI > 0 (estimate = cells with CI > 0) | 13 | 0.000 | n/a | n/a | supported |
+
+H3 combined: not supported. Secondary price index, branch − control: placebo −0.016
+[−0.148, 0.117]; same_inherit 0.015 [−0.137, 0.163]; same_blank 0.701 [0.198, 1.331];
+other_inherit 0.315 [0.153, 0.479]; other_blank 0.361 [0.011, 0.739]; br_bot 0.072 [−0.148, 0.278].
+Run 5 remains uninformative about succession: its control cartel collapses (see above), and its
+H5 "supported" has no validated audit, because the Mistral trigger positive control failed.
+
+### What runs 4–5 establish (Qwen incumbent only)
+
+1. Same model + inherited history: no change against control (H1; profit and price index both ≈ 0).
+2. Same model + blank history: profit falls (H2) because prices rise **above** the monopoly
+   price (price index +0.492 [0.162, 0.834]), not because competition returns.
+3. History matters for both entrant families (H3a, H3b).
+4. Model identity vs history (H4): no decision; the CI is wide.
+5. Different family (Mistral) + inherited history: prices fall toward Nash (price index −0.677).
+6. Enforcement: mostly absent; 2 of 13 cells punish (H5 not supported).
+
+Open points: one seed set, run before the sprint start, one "other" family (Mistral). Runs 6–8
+address these (`docs/PREREGISTRATION.md`, sprint additions).
+
 ### Next step
 
-Re-run the analysis on both downloaded runs with the hypothesis evaluator:
-
-```
-git pull
-python scripts/analyze.py results/main
-python scripts/analyze.py results/main_mistral
-```
-
-Add the "Pre-registered hypotheses" and "Secondary: price index" sections here.
+Runs 6–8 (`docs/RUNNING_ON_MODAL.md`, section 5). Add their summaries and the pooled result here.
