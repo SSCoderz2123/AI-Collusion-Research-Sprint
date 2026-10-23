@@ -24,4 +24,5 @@ A breach can disqualify the project.
 8. **Dual use.** The report needs a Limitations and Dual-Use / Ethical Considerations appendix.
    Do not publish prompts or procedures tuned to make collusion harder to detect.
 9. **Limits.** Report length is 4–8 pages without references and appendices (8 is a hard cap).
-   Abstract ≤ 150 words. Deadline: Sun 25 Oct 2026, 23:59 AoE (Mon 26 Oct, 11:59 UTC).
+   Abstract 150–250 words (official Guidelines tab, checked 23 Oct 2026; an earlier copy of this
+   rule said ≤ 150). Use the official template. Deadline: Sun 25 Oct 2026, 23:59 AoE (Mon 26 Oct, 11:59 UTC).

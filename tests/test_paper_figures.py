@@ -1,6 +1,8 @@
 import importlib.util
 from pathlib import Path
 
+import pytest
+
 ROOT = Path(__file__).resolve().parents[1]
 
 
@@ -21,3 +23,29 @@ def test_punished_needs_a_drop_beyond_the_best_response():
     assert not punished(_event(0.0, 0.4))  # no reaction
     # A myopic best responder that drops by 0.247 is not punishment, although 0.247 > 0.2.
     assert not punished(_event(0.247, 0.247 / 0.6, cut=0.6))
+
+
+def _build_report():
+    pytest.importorskip("docx", reason="python-docx builds the report; not needed for the experiment")
+    spec = importlib.util.spec_from_file_location("build_report", ROOT / "scripts" / "build_report.py")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def test_report_front_matter_is_split_from_the_body():
+    meta, body = _build_report().split_front_matter("---\ntitle: T\nabstract: A\n---\n# 1. Introduction\n")
+    assert meta == {"title": "T", "abstract": "A"}
+    assert body.startswith("# 1. Introduction")
+
+
+def test_schema_reorder_puts_cell_borders_in_ooxml_order():
+    from lxml import etree
+
+    br = _build_report()
+    w = br.W
+    root = etree.fromstring(
+        f'<w:tcBorders xmlns:w="{w[1:-1]}"><w:top/><w:bottom/><w:left/><w:right/></w:tcBorders>'.encode()
+    )
+    br._reorder(root)
+    assert [br._local(child.tag) for child in root] == ["top", "left", "bottom", "right"]

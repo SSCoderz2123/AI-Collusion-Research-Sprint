@@ -52,6 +52,19 @@ RUNS = [
     ("final_olmo", 10),
 ]
 ENTRANT_COLORS = {"mistral": "#2a78d6", "olmo": "#eb6834"}
+# Condition names used in the report (code names stay in the data files).
+LABELS = {
+    "control": "Control",
+    "placebo": "Placebo",
+    "same_inherit": "Same + history",
+    "same_blank": "Same, no history",
+    "same_notes": "Same, notes only",
+    "other_inherit": "Other + history",
+    "other_blank": "Other, no history",
+    "br_bot": "Best-response bot",
+    "ctrl_trigger": "Trigger control",
+    "ctrl_default": "Default-prompt control",
+}
 SURFACE = "#ffffff"
 
 
@@ -104,7 +117,7 @@ def fig_trajectories(data: dict) -> None:
                 color=BRANCH_COLORS[branch],
                 ls=BRANCH_STYLES[branch],
                 lw=1.6,
-                label=branch,
+                label=LABELS[branch],
             )
     for ax, title in zip(axes, ("(a) Profit index", "(b) Price index"), strict=True):
         _style(ax)
@@ -114,10 +127,10 @@ def fig_trajectories(data: dict) -> None:
         ax.set_xlabel("Round", color=MUTED, fontsize=9)
         ax.set_title(title, color=INK, fontsize=10, loc="left")
     axes[0].set_ylabel("0 = Nash, 1 = monopoly", color=MUTED, fontsize=9)
-    axes[0].text(cfg.phase1.rounds + 1, axes[0].get_ylim()[0] + 0.05, "swap", color=MUTED, fontsize=8)
+    axes[0].text(cfg.phase1.rounds + 1, axes[0].get_ylim()[0] + 0.05, "replacement", color=MUTED, fontsize=8)
     handles, labels = axes[0].get_legend_handles_labels()
-    fig.legend(handles, labels, loc="lower center", ncol=8, frameon=False, fontsize=8, labelcolor=INK)
-    fig.tight_layout(rect=(0, 0.08, 1, 1))
+    fig.legend(handles, labels, loc="lower center", ncol=4, frameon=False, fontsize=8, labelcolor=INK)
+    fig.tight_layout(rect=(0, 0.12, 1, 1))
     fig.savefig(OUT / "fig_trajectories.png", dpi=220)
     plt.close(fig)
     data["fig_trajectories"] = {"run": "final_main", "series": series}
@@ -125,10 +138,10 @@ def fig_trajectories(data: dict) -> None:
 
 def fig_forest(data: dict) -> None:
     tests = [
-        ("H1", "H1: same_inherit − control", -0.10),
-        ("H2", "H2: same_blank − control", -0.10),
-        ("H3a", "H3a: same_inherit − same_blank", 0.0),
-        ("H6", "H6: other_inherit − control", -0.10),
+        ("H1", "H1: Same + history − Control", -0.10),
+        ("H2", "H2: Same, no history − Control", -0.10),
+        ("H3a", "H3a: Same + history − Same, no history", 0.0),
+        ("H6", "H6: Other + history − Control", -0.10),
     ]
     rows = []
     for run, number in RUNS:
@@ -164,7 +177,7 @@ def fig_forest(data: dict) -> None:
         ax.grid(axis="x", color="#ecebe7", lw=0.8)
         ax.set_title(title, color=INK, fontsize=9, loc="left")
         ax.set_xlabel("profit-index difference", color=MUTED, fontsize=8)
-    axes[0].set_yticks(ys, [f"run {n} ({run})" for run, n, _, _ in rows], fontsize=8, color=INK)
+    axes[0].set_yticks(ys, [f"run {n}" for _run, n, _, _ in rows], fontsize=8, color=INK)
     handles = [
         plt.Line2D([0], [0], color=ENTRANT_COLORS["mistral"], marker="o", lw=2, label="entrant family: Mistral-7B"),
         plt.Line2D([0], [0], color=ENTRANT_COLORS["olmo"], marker="o", lw=2, label="entrant family: OLMo-2-7B"),
@@ -190,13 +203,13 @@ def fig_paths3d(data: dict) -> None:
         paths = mean_price_paths(cfg, st.load_sessions("phase2/sessions.json"))
         paths = {b: p for b, p in paths.items() if b in keep}
         ax = fig.add_subplot(1, 2, i + 1, projection="3d")
-        draw_price_paths_3d(ax, paths, cfg.phase1.rounds, legend=False)
+        draw_price_paths_3d(ax, paths, cfg.phase1.rounds, legend=False, swap_label="replacement")
         ax.set_title(title, color=INK, fontsize=10)
         out[run] = paths
-    handles = [plt.Line2D([0], [0], color=BRANCH_COLORS[b], ls=BRANCH_STYLES[b], lw=2, label=b) for b in keep]
+    handles = [plt.Line2D([0], [0], color=BRANCH_COLORS[b], ls=BRANCH_STYLES[b], lw=2, label=LABELS[b]) for b in keep]
     fig.legend(handles=handles, loc="lower center", ncol=len(keep), frameon=False, fontsize=8, labelcolor=INK)
     fig.subplots_adjust(left=0.0, right=0.97, top=0.92, bottom=0.1, wspace=0.05)
-    fig.savefig(OUT / "fig_paths3d.png", dpi=220)
+    fig.savefig(OUT / "fig_paths3d.png", dpi=220, bbox_inches="tight", pad_inches=0.05)
     plt.close(fig)
     data["fig_paths3d"] = out
 
@@ -215,7 +228,7 @@ def fig_h5c(data: dict) -> None:
         ax.plot(c["excess_minus_myopic"], y, "o", color=color, ms=5, mec=SURFACE, mew=1)
     ax.axvline(0, color=MUTED, lw=0.8, ls="--")
     labels = [
-        f"{c['branch']} (prompt control)" if c["reference"] else f"{c['branch']}, deviator seat {c['deviator_seat']}"
+        LABELS[c["branch"]] if c["reference"] else f"{LABELS[c['branch']]}; firm {int(c['deviator_seat']) + 1} cuts"
         for c in cells
     ]
     ax.set_yticks(ys, labels, fontsize=8, color=INK)

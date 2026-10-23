@@ -1,0 +1,10 @@
+{
+  "private": true,
+  "description": "Builds Apart Research/slides.pptx",
+  "scripts": {
+    "build": "node build_slides.js"
+  },
+  "dependencies": {
+    "pptxgenjs": "3.12.0"
+  }
+}

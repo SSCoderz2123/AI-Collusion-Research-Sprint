@@ -141,7 +141,7 @@ def _style_axes(ax) -> None:
     ax.tick_params(colors=MUTED, labelsize=8)
 
 
-def draw_price_paths_3d(ax, paths: dict[str, dict], swap: int, legend: bool = True) -> None:
+def draw_price_paths_3d(ax, paths: dict[str, dict], swap: int, legend: bool = True, swap_label: str = "swap") -> None:
     """Draw mean price paths (one per branch) with a base plane and shadows on a 3D axis."""
     rounds = next(iter(paths.values()))["rounds"] if paths else []
     if rounds:
@@ -173,7 +173,7 @@ def draw_price_paths_3d(ax, paths: dict[str, dict], swap: int, legend: bool = Tr
         )
     if rounds:
         ax.plot([swap, swap], [0, 0], [zf, 1], color=MUTED, lw=1, ls="--")
-        ax.text(swap, 0, 1, " swap", color=MUTED, fontsize=8)
+        ax.text(swap, 0, 1, f" {swap_label}", color=MUTED, fontsize=8)
         # Explicit limits: autoscaling with the base plane stretched the round axis down to 0.
         ax.set_xlim(rounds[0], rounds[-1])
         ax.set_ylim(min(all_y) - 0.05, max(all_y) + 0.05)

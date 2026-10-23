@@ -18,6 +18,7 @@ Fixed terms in this project:
 | incumbent | the agent that stays in the market at the swap |
 | entrant | the agent that takes the replaced seat |
 | swap round | the first round played by the entrant (round 100 in the main run) |
+| replacement | the swap of the entrant seat at the swap round; the report, slides and figures use this word |
 | branch | one phase-2 condition applied to a copy of a phase-1 session |
 | root session | a phase-1 session; the unit of analysis |
 | audit | the paired forced-cut test of Tran & Yu (2026) |
@@ -25,5 +26,6 @@ Fixed terms in this project:
 
 The sprint report text is the authors' own writing. AI tools may check reasoning, find gaps,
 and suggest edits. They do not write report sections (see `docs/AI_USE.md`).
-Exception: on 23 Oct 2026 the author asked Claude Code to draft `Apart Research/main3.tex`.
-The report discloses this in its AI-use appendix.
+Exception: on 23 Oct 2026 the author asked Claude Code to draft the report (`Apart Research/report.md`,
+built into `report.docx`, `report.pdf` and `main3.tex`), the slides and the project image.
+The report discloses this in its LLM Usage Statement.
