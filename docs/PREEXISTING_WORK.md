@@ -18,6 +18,11 @@ Pre-sprint setup runs on Modal (22 Oct 2026): the pilot config only (`configs/pi
 4 sessions × 60 rounds), to check the GPU image, determinism and the inclusion rule. See
 `docs/RUN_LOG.md`. No main-run result and no report finding come from these runs.
 
+**Main runs before the sprint start.** The main run (`main`) and the replication (`main_mistral`)
+ran on 22 Oct 2026, 18:40–23:10 UTC, before the sprint start on Fri 23 Oct 2026 (runs 4–5 in
+`docs/RUN_LOG.md`). The report must state this. Analysis of these runs, any further runs, and the
+report are sprint work.
+
 ## Sprint work (23–25 Oct 2026)
 
 Record here, with commit hashes:
