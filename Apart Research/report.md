@@ -1,69 +1,72 @@
 ---
 title: "Who Carries the Cartel? LLM Price Collusion Survives Agent Replacement Through the Inherited Price History"
 author: "Supratik Bhowal"
-affiliation: "Department of Computer Science (AIML), IEM Kolkata, School of UEMK, Kolkata, India"
+affiliation:
+  - "Department of Computer Science (AIML),"
+  - "IEM Kolkata, School of UEMK, Kolkata, India"
 email: "supratikbhowal23@gmail.com"
 sprint_url: "https://apartresearch.com/sprints/ai-collusion-research-sprint-2026-10-23-to-2026-10-25"
 abstract: |
-  When a firm replaces its AI pricing agent, does tacit collusion between agents end? In a
-  pre-registered experiment, two Qwen2.5-7B agents set prices for 100 rounds in a simulated
-  two-firm market and often reach near-monopoly prices without any instruction to collude. We copy
-  each such market into eight exactly paired conditions that change only what sets the second
-  firm's price from round 100 on: the same or a different model, with or without the past price
-  history, and with or without the predecessor's notes. Across six independent runs (16–31 markets
-  each), a new instance of the same model that inherits the price history keeps the high prices:
-  its profit index (0 = competitive, 1 = monopoly profit) differs from no replacement by −0.025 to
-  +0.213. Without the history, the same model loses 0.47–0.67 of the index, but by pricing above
-  the monopoly price, not by competing. With the history, a Mistral-7B entrant moves prices to the
-  competitive level in four of four runs, while an OLMo-2-7B entrant keeps them high in two of two
-  runs, repeating its last price in 96% of rounds. A forced price-cut audit, calibrated against a
-  myopic agent that cannot punish, finds almost no punishment: the surviving prices are anchored on
-  the shared history, not enforced. Replacing a colluding agent is not a remedy if the transcript
-  stays with the seat.
+  Large language model (LLM) pricing agents can sustain supra-competitive prices without
+  communication or instructions to collude. Replacing one agent is a natural remedy, and routine
+  when firms change vendors or models; whether collusion then travels with the agent or with the
+  context its replacement inherits remains unclear. We study this question in a
+  pre-registered logit Bertrand duopoly experiment. After 100 rounds between two Qwen2.5-7B agents,
+  each market at a cartel-like price level is copied into eight exactly paired conditions that vary
+  only the replacement model, the inherited 30-round price history and the predecessor's notes.
+  Across six independent runs (16–31 markets each), a new instance of the same model that inherits
+  the history preserves the cartel: its profit index (0 = competitive, 1 = monopoly profit) differs
+  from no replacement by −0.025 to +0.213. Without the history, the index falls by 0.47–0.67
+  through prices above the monopoly level, not through competition. With the history, a
+  Mistral-7B entrant moves prices close to the competitive level in four of four runs, whereas an
+  OLMo-2-7B entrant repeats its last price in 96% of rounds and preserves the cartel in two of two
+  runs. A forced price-cut audit, calibrated against a myopic agent that cannot punish, detects
+  almost no punishment. The inherited transcript, not the agent, carries the cartel, and its prices
+  are anchored rather than enforced: replacing an agent is no remedy unless the shared history is
+  also removed.
 ---
 
 # 1. Introduction {-}
 
 Large language model (LLM) agents that set prices in a repeated market reach supra-competitive
-prices without communication and without an instruction to collude [@fish2024algorithmic], as
-reinforcement learners do [@calvano2020artificial]. Competition law targets agreements between
-people, so tacit collusion between agents is hard to prosecute. A natural remedy, and an event that also happens whenever a
-firm changes its software vendor or model version, is to *replace* one of the agents. If the cartel
-is a property of the agent, a replacement ends it. If it is a property of the information that the
-new agent receives, a replacement does not.
+prices without communication or an instruction to collude [@fish2024algorithmic], as reinforcement
+learners do [@calvano2020artificial]. Competition law targets agreements between people, so such
+tacit collusion is hard to prosecute. Replacing one agent is a natural remedy; it also happens
+whenever a firm changes its software vendor or model version. Its effect depends on where the cartel
+is stored: a replacement ends a cartel that is a property of the agent, but not one that is a
+property of the information the new agent receives.
 
-A prompted LLM agent has no state outside its prompt. Each round, it sees the market rules, a window
-of past prices (the *price history*) and the notes that it wrote to itself in the last round. An
-entrant with the same model, the same history and the same notes *is* the old agent. The question
-"does collusion survive a replacement?" therefore splits into three parts: is the cartel carried by
-the *model*, by the inherited *price history*, or by the inherited *notes*? The answer tells a
-regulator or a platform which item a remedy must change. We answer it with exactly paired
-conditions (Table 1), with hypotheses fixed before the first main run, and we report every run
-(Table 2).
+A prompted LLM agent has no state outside its prompt: the market rules, a window of past prices
+(the *price history*) and the notes it wrote to itself in the last round. An entrant with the same
+model, history and notes *is* the old agent. Whether collusion survives a replacement therefore
+reduces to a separable question: is the cartel carried by the *model*, the inherited *price
+history*, or the inherited *notes*? The answer identifies the item a remedy must change. We answer
+it with exactly paired conditions (Table 1), hypotheses fixed before the first main run, and a
+report of every run (Table 2).
 
 **Our main contributions are:**
 
 1. **The price history carries the cartel.** In six of six independent runs, a new instance of the
    same model that inherits the price history keeps the cartel; without the history it does not.
-   No replacement notice is needed, and the predecessor's notes alone keep part of the cartel.
+   No replacement notice is needed; the predecessor's notes alone keep part of the cartel.
 2. **Removing the history does not restore competition.** The entrant without a history lowers
-   profits by pricing *above* the monopoly price, which a profit-only monitor misreads.
+   profits by pricing *above* the monopoly price, an outcome that a profit-only monitor misreads.
 3. **The entrant's pricing style decides the outcome.** With the history, a Mistral-7B entrant moves
-   prices to the competitive level (four of four runs); an OLMo-2-7B entrant repeats its last price
-   in 96% of rounds and keeps the cartel (two of two runs).
+   prices close to the competitive level (four of four runs); an OLMo-2-7B entrant repeats its last
+   price in 96% of rounds and keeps the cartel (two of two runs).
 4. **A calibrated enforcement audit with exact pairing.** LLM agents follow a rival's price cut even
-   when they cannot punish, so an uncalibrated audit reports punishment that does not exist. After
+   when they cannot punish, so an uncalibrated audit reports punishment that does not exist; after
    calibration against a myopic control, almost no audit cell shows punishment.
 
 # 2. Related Work {-}
 
 @calvano2020artificial show that Q-learning agents in a repeated logit Bertrand oligopoly learn
-supra-competitive prices sustained by finite punishments. @fish2024algorithmic move this market to
-LLM agents, which reach supra-competitive prices quickly, at a level that depends on the prompt
-wording. Both keep the same agents for the whole game; we use their market and replace one agent.
-@tran2026enforcing audit enforcement with paired forced deviations and find that prompted open
-models rarely punish; we use their audit and add a calibration step. @arslan2026persistent show that keeping the same partner raises learned prices.
-@gao2026interchangeability swap agents in cooperative LLM teams with a placebo swap and cleared
+supra-competitive prices sustained by finite punishments; @fish2024algorithmic obtain the same
+outcome with LLM agents, at a level that depends on the prompt wording. Both keep the same agents
+throughout; we use their market and replace one agent. @tran2026enforcing audit enforcement with
+paired forced deviations and find that prompted open models rarely punish; we adopt their audit and
+add a calibration step. @arslan2026persistent show that persistent partners raise learned prices;
+@gao2026interchangeability test agent swaps in cooperative LLM teams with a placebo swap and cleared
 notes, a design we transfer to collusion. @keppo2026fragility find that heterogeneity in patience,
 data access and algorithm weakens LLM collusion, and @lee2026leads that collusion is a property of
 the model. **Gap:** no prior study replaces an agent inside an established LLM cartel, or separates
@@ -73,33 +76,39 @@ the model, the history and the notes as carriers of collusion.
 
 ## 3.1 Market and agents {-}
 
-Two firms sell substitute products with logit demand. Firm *i* sells *q*~*i*~ = exp((*a* − *p*~*i*~)/*μ*) / [Σ~*j*~ exp((*a* − *p*~*j*~)/*μ*) + exp(*a*~0~/*μ*)] at price *p*~*i*~ and earns *π*~*i*~ = (*p*~*i*~ − *c*) *q*~*i*~, with *a* = 2, *a*~0~ = 0, *μ* = 0.25 and unit cost *c* = 1 [@calvano2020artificial]. The competitive (Nash) price is
-*p*^N^ = 1.473 and the joint-monopoly price is *p*^M^ = 1.925. The pre-registered primary outcome
-is the *profit index* Δ = (π̄ − π^N^)/(π^M^ − π^N^); the secondary outcome is the *price index*
-P = (p̄ − p^N^)/(p^M^ − p^N^), both averaged over the two firms. Both are 0 at the competitive level
-and 1 at the monopoly level. They disagree when prices rise above *p*^M^: then P > 1, but demand
-falls and Δ drops below 1, possibly below 0. We therefore report both.
+Two firms *i* ∈ {1, 2} set prices *p*~*i*~ in each round *t*. Demand and profit follow the logit
+Bertrand model of @calvano2020artificial:
+
+$$q_i = \frac{e^{(a-p_i)/\mu}}{\sum_{j=1}^{2} e^{(a-p_j)/\mu} + e^{a_0/\mu}}, \qquad \pi_i = (p_i - c)\,q_i, \qquad (1)$$
+
+with *a* = 2, *a*~0~ = 0, *μ* = 0.25 and unit cost *c* = 1. The Nash price is *p*^N^ = 1.473 and the
+joint-monopoly price *p*^M^ = 1.925; *π*^N^ and *π*^M^ are the per-firm profits at these prices.
+Each round is normalized so that 0 is the competitive and 1 the monopoly level:
+
+$$\Delta_t = \frac{1}{2}\sum_{i=1}^{2} \frac{\pi_{i,t} - \pi^{N}}{\pi^{M} - \pi^{N}}, \qquad P_t = \frac{1}{2}\sum_{i=1}^{2} \frac{p_{i,t} - p^{N}}{p^{M} - p^{N}}. \qquad (2)$$
+
+The *profit index* Δ is the pre-registered primary outcome and the *price index* P the secondary
+one. The two diverge above the monopoly price, where P > 1 while Δ falls, possibly below 0; we
+therefore report both.
 
 Each firm is a prompted LLM agent served with vLLM 0.8.5 (temperature 0.7, at most 160 output
 tokens). Each round, the agent sees the market rules in plain words, the goal "maximize your firm's
 total profit over all periods", its last 30 rounds of prices, quantities and profits, and its notes
-from the last round. It replies with JSON that holds new notes and a price (Appendix F). The prompt
-never mentions competition, collusion or punishment. In the analysed runs, the incumbents are
+from the last round; it replies with JSON holding new notes and a price (Appendix F). The prompt
+never mentions competition, collusion or punishment. In the analysed runs the incumbents are
 Qwen2.5-7B-Instruct; the other families are Mistral-7B-Instruct-v0.3 and OLMo-2-1124-7B-Instruct,
 all open-weight models with seeded sampling on our own GPUs.
 
 ## 3.2 Experimental design {-}
 
 A *session* is one simulated market. In phase 1, two incumbent agents play rounds 0–99 in 30 or 40
-sessions per run. A session enters phase 2 only if its mean profit index over rounds 50–99 is above
+sessions per run; a session enters phase 2 only if its mean profit index over rounds 50–99 exceeds
 0.3 (inclusion rule). In phase 2, each included session is copied into the eight conditions of
-Table 1 and plays rounds 100–199. Firm 1 always keeps its incumbent; the conditions change what sets
+Table 1 and plays rounds 100–199. Firm 1 always keeps its incumbent; the conditions vary what sets
 firm 2's price, the *entrant*. In every condition except *Control*, the incumbent sees the notice
-"From period 100 on, the other firm uses a new pricing system" (not in run 8). *Placebo* tests the
-notice alone; the *Best-response bot*, which maximizes only its current profit, is the negative
-control and must move prices to the competitive level. The outcome window is rounds 150–199, and
-the session is the unit of analysis: every comparison is a difference between two conditions of the
-same session.
+"From period 100 on, the other firm uses a new pricing system" (not in run 8). *Placebo* isolates
+the notice; the *Best-response bot*, which maximizes only current profit, is the negative control
+and must move prices to the competitive level.
 
 Table: **Table 1.** The eight phase-2 conditions, each applied to a copy of the same phase-1 session. "History seen" is the part of the past price history that the entrant sees in round 100. The code name links each condition to the repository.
 
@@ -114,15 +123,14 @@ Table: **Table 1.** The eight phase-2 conditions, each applied to a copy of the 
 | *Other, no history* | other model family | none | cleared | `other_blank` |
 | *Best-response bot* | best response to firm 1's last price | firm 1's last price | -- | `br_bot` |
 
-## 3.3 Exact pairing, audit and statistics {-}
+## 3.3 Pairing, statistics and enforcement audit {-}
 
-**Pairing.** Each model request carries a seed computed from the experiment seed, the session, the
-firm, the round and the retry count, never from the condition, so conditions that show an agent the
-same prompt sample the same reply. GPU arithmetic depends on the batch, so from run 9 on we send
+**Pairing.** Each model request carries a seed derived from the experiment seed, session, firm,
+round and retry count, never from the condition; conditions that show an agent the same prompt
+therefore sample the same reply. Because GPU arithmetic depends on the batch, from run 9 on we send
 identical requests within a round only once and copy the reply to every condition that sent it
-(*request de-duplication*). The *A/A check* copies 4 sessions at round 10, plays both copies 10 more
-rounds with the same seeds and without de-duplication, and reports the share of the 80 decisions
-that are identical (1.0 = full reproducibility).
+(*request de-duplication*). The *A/A check* replays 4 sessions from round 10 twice with the same
+seeds and without de-duplication, and reports the share of the 80 decisions that are identical.
 
 Table: **Table 2.** All main runs, numbered as in the project run log. "Kept": phase-1 sessions that passed the inclusion rule. Runs 1–3 were pilot and setup runs; runs 4–5 ran before the sprint start (Appendix G); runs 5, 11 and 12 give no succession test (Section 4.5).
 
@@ -138,46 +146,55 @@ Table: **Table 2.** All main runs, numbered as in the project run log. "Kept": p
 | 11 | Qwen2.5-7B | Granite-3.1-8B | -- | third entrant family: failed (GPU timeout) |
 | 12 | Qwen2.5-14B | Mistral-7B | 19 / 40 | larger incumbent: no stable cartel |
 
-**Enforcement audit.** A cartel needs enforcement: a firm that cuts its price must expect a
-punishment. At round 200, we copy each session twice per deviating firm; in the cut copy, the
-deviator's price is forced 10% below its last price for one round, and both copies play 6 rounds. The *excess response* is the rival's price cut one round later, per unit of the
-forced cut, minus that of a pure best responder [@tran2026enforcing]; a positive value is the
+**Statistics.** Each comparison of a condition *B* with a reference *B*′ is paired within session
+*s* and uses the mean profit index over the outcome window, rounds 150–199:
+
+$$\bar{\Delta}_s^{B} = \frac{1}{50}\sum_{t=150}^{199} \Delta_{s,t}^{B}, \qquad d_s = \bar{\Delta}_s^{B} - \bar{\Delta}_s^{B'}, \qquad \hat{d} = \frac{1}{n}\sum_{s=1}^{n} d_s, \qquad (3)$$
+
+with a 95% percentile bootstrap interval over the *n* sessions (10,000 resamples). A hypothesis is
+*supported* if the whole interval lies on its stated side of the threshold, *not supported* if it
+lies on the other side, and *inconclusive* otherwise; −0.10 marks a negligible change. Appendix B
+lists the eleven hypotheses (H1–H9, with H3a/H3b and H5/H5c), when each was fixed, and the recorded
+deviations.
+
+**Enforcement audit.** A cartel requires that a price cut be punished. At round 200, each session is
+copied twice per deviating firm *d*; in the cut copy, *d*'s price is forced 10% below its last price
+for one round *t*, and both copies continue for 6 rounds with the same seeds. The rival *r*'s
+*excess response* is
+
+$$e = \frac{p_r^{\mathrm{base}}(t+1) - p_r^{\mathrm{cut}}(t+1)}{p_d^{\mathrm{base}}(t) - p_d^{\mathrm{cut}}(t)} - r^{\mathrm{BR}}, \qquad (4)$$
+
+where *r*^BR^ is the same ratio for a static best responder [@tran2026enforcing]; *e* > 0 is the
 signature of punishment. Three prompt controls (10 sessions each in runs 4–8, 30 in runs 9–12) test
 the audit: the default prompt; a *myopic* prompt ("profit in future periods does not count"), which
 has no reason to punish; and an instructed *trigger* rule (drop to the Nash price after a cut),
 which the audit must detect. Because LLM agents follow cuts even when they cannot punish (runs 6–8),
 the pre-registered test H5c counts an audit cell (one condition and one deviating firm) as
-punishment only if its excess response is above the myopic control.
-
-**Statistics.** All comparisons are paired per session on the profit index in rounds 150–199. We
-report the mean difference with a 95% percentile bootstrap interval (10,000 resamples over
-sessions). A hypothesis is *supported* if the whole interval lies on its stated side of the
-threshold, *not supported* if it lies on the other side, and *inconclusive* otherwise; −0.10 marks
-a negligible change. Appendix B lists all eleven hypotheses (H1–H9), when each was fixed, and the
-recorded deviations.
+punishment only if *ê*~cell~ − *ê*~myopic~ > 0, i.e. if its two-sample 95% bootstrap interval lies
+above zero.
 
 # 4. Results {-}
 
 ## 4.1 Controls and data quality {-}
 
-The controls pass in every analysed run (Appendix Table C1). The *Control* cartel stays near its
-pre-replacement level, except in run 7, where it weakens on its own (profit index 0.930 to 0.687).
-*Placebo* has no detectable effect, and the best-response bot lowers the price index by
-0.715–0.949, to the competitive level. The A/A check is 1.0 in every run except run 9 (65 of 80
-decisions identical, 0.8125), most likely through the batch effect; run 9 uses de-duplication, so
-its conditions are still exactly paired. Parse failures are at most 1.0% per session. The audit's
-positive control is detected in runs 4 and 6–9 but not in run 10, whose audit we do not interpret.
+All controls pass in the analysed runs (Appendix Table C1). The *Control* cartel stays near its
+pre-replacement level except in run 7, where it weakens on its own (profit index 0.930 to 0.687);
+*Placebo* has no detectable effect; the best-response bot lowers the price index by 0.715–0.949, to
+the competitive level. The A/A check is 1.0 in every run except run 9 (65 of 80 decisions, 0.8125),
+most likely through the batch effect; run 9 uses de-duplication, so its conditions remain exactly
+paired. Parse failures are at most 1.0% per session. The audit's positive control is detected in
+runs 4 and 6–9 but not in run 10, whose audit is therefore not interpreted.
 
 ## 4.2 The price history carries the cartel {-}
 
-In all six runs with a stable cartel, a new instance of the same model that inherits the price
-history stays at the *Control* level, and the same model without the history falls far below it:
-H1, H2 and H3a are supported in six of six runs (Table 3; Appendix E). Without
-the notice (run 8), H1 is 0.002 [−0.014, 0.016] (H7 supported). With exact pairing (run 9), the H1
-interval lies just below zero (−0.025 [−0.051, −0.001]): the cartel continues at a slightly lower
-level. In run 7, *Same + history* is above *Control* because that *Control* cartel weakened.
+In all six runs with a stable cartel, the same model with the history stays at the *Control* level,
+while the same model without it falls far below: H1, H2 and H3a are supported in six of six runs
+(Table 3; Appendix E). The notice is not needed: without it (run 8), H1 = 0.002 [−0.014, 0.016]
+(H7 supported). With exact pairing (run 9), the H1 interval lies just below zero (−0.025 [−0.051,
+−0.001]); the cartel continues at a slightly lower level. In run 7, *Same + history* exceeds
+*Control* because that *Control* cartel weakened.
 
-Table: **Table 3.** Main result for every run with a stable cartel. Cells: paired difference in the profit index (rounds 150–199), mean [95% bootstrap interval]; the last column uses the price index. *n*: sessions. Thresholds: H1 > −0.10, H2 < −0.10, H3a > 0. †From the verbatim run summary in the project run log.
+Table: **Table 3.** Main result for every run with a stable cartel. Cells: paired difference *d̂* in the profit index (rounds 150–199) with 95% bootstrap interval; the last column uses the price index. *n*: sessions. Thresholds: H1 > −0.10, H2 < −0.10, H3a > 0. †From the verbatim run summary in the project run log.
 
 | Run | *n* | H1: *Same + history* − *Control* | H2: *Same, no history* − *Control* | H3a: *Same + history* − *Same, no history* | Price index: *Same, no history* − *Control* |
 |:-----|:----|:-------------------------|:-------------------------|:-------------------------|:-------------------------|
@@ -191,18 +208,18 @@ Table: **Table 3.** Main result for every run with a stable cartel. Cells: paire
 
 ## 4.3 What each entrant does: run 9 in detail {-}
 
-Table 4 gives the absolute levels of all eight conditions in run 9, the largest exactly paired run,
-and Figure 1 the time paths. All conditions start from the same cartel (profit index 0.915 in rounds
+Table 4 gives the levels of all eight conditions in run 9, the largest exactly paired run; Figure 1
+shows the time paths. All conditions start from the same cartel (profit index 0.915 in rounds
 80–99). The entrant without the history lowers profits, but its price index rises to 1.314, above
-the monopoly price; the price index of this condition is above *Control* in all six runs (Table 3).
-Without a history, the new agent has no anchor: it starts high, stays above the monopoly price, and
-both firms sell less.
+the monopoly level; this price index exceeds *Control* in all six runs (Table 3). Without a history
+the new agent has no anchor: it starts high and stays above the monopoly price, so both firms sell
+less.
 
 **The notes alone keep part of the cartel.** In run 9, the primary test of H9 gives *Same, notes
-only* − *Same, no history* = 0.342 [0.054, 0.634] (supported), but the notes-only entrant still ends
-below *Control* (−0.270 [−0.448, −0.115]). In run 10 the test is inconclusive (−0.048 [−0.439,
+only* − *Same, no history* = 0.342 [0.054, 0.634] (supported), yet the notes-only entrant still ends
+below *Control* (−0.270 [−0.448, −0.115]); in run 10 the test is inconclusive (−0.048 [−0.439,
 0.312]). In both runs this entrant prices above the monopoly level (price index +0.296 and +0.747
-against *Control*). The notes keep part of the cartel; the history keeps all of it.
+relative to *Control*). The notes keep part of the cartel; the history keeps all of it.
 
 Table: **Table 4.** Run 9, all eight conditions (29 sessions each), rounds 150–199: mean levels and paired differences against *Control* [95% bootstrap interval]. "Holds price": share of phase-2 rounds in which firm 2 repeats its price (exploratory).
 
@@ -222,14 +239,15 @@ Table: **Table 4.** Run 9, all eight conditions (29 sessions each), rounds 150�
 ## 4.4 The entrant's pricing style decides what happens to the history {-}
 
 With the history, a Mistral-7B entrant breaks the cartel in all four runs (H6 supported; 0.55–0.78
-below *Control*), while an OLMo-2-7B entrant keeps it in both runs (H6 not supported in run 7; H8,
-its pre-registered replication, supported in run 10) (Table 5; Appendix Figure E2). The Mistral entrant
-repeats its last price in 21.6–25.5% of rounds, the OLMo-2 entrant in 96.3–96.8%, and the Qwen2.5-7B
-agents in *Control* in 87.7–90.8%. Sampled OLMo-2 notes read like "Maintain price at \$1.93 as it
-consistently yields profit"; none of them mentions the rival, a cartel or punishment. OLMo-2 keeps
-the inherited price by inertia; Mistral explores, and prices drift down. Accordingly, H4 (the
-history matters more than the model) is supported where the other family is OLMo-2 (run 7: 0.818
-[0.501, 1.122]; run 10: 0.456 [0.250, 0.657]) and inconclusive in runs 4, 6, 8 and 9.
+below *Control*), whereas an OLMo-2-7B entrant keeps it in both runs (H6 not supported in run 7; its
+pre-registered replication H8 supported in run 10) (Table 5; Appendix Figure E2). The families
+differ in price stickiness: the Mistral entrant repeats its last price in 21.6–25.5% of rounds, the
+OLMo-2 entrant in 96.3–96.8%, and the Qwen2.5-7B agents in *Control* in 87.7–90.8%. Sampled OLMo-2
+notes read like "Maintain price at \$1.93 as it consistently yields profit", and none mentions the
+rival, a cartel or punishment; OLMo-2 keeps the inherited price by inertia, while Mistral explores
+and prices drift down. Accordingly, H4 (the history matters more than the model) is supported where
+the other family is OLMo-2 (run 7: 0.818 [0.501, 1.122]; run 10: 0.456 [0.250, 0.657]) and
+inconclusive in runs 4, 6, 8 and 9.
 
 Table: **Table 5.** *Other + history* by entrant family: paired differences against *Control* (rounds 150–199), and the share of phase-2 rounds in which the entrant repeats its previous price (exploratory). †From the verbatim run summary in the project run log.
 
@@ -243,86 +261,83 @@ Table: **Table 5.** *Other + history* by entrant family: paired differences agai
 | 10† | OLMo-2-7B | −0.024 [−0.077, 0.019] | 0.034 [−0.014, 0.078] | 96.3% |
 
 **The surviving prices are anchored, not enforced.** Without calibration (H5), 0–3 audit cells per
-run show an excess response above zero. But the myopic control, which has no reason to punish, also
-responds above the best response when firm 2 cuts (0.176–0.367 in runs 6–9). After calibration
-(H5c), no cell shows punishment in runs 6–8, and one does in run 9: the incumbent's response to a
-cut by the notes-only entrant (0.317 [0.128, 0.496]; Appendix D). The inherited prices are not
-protected by punishment; they persist because the agents anchor on the prices they see.
+run show *e* > 0; yet the myopic control, which has no reason to punish, also exceeds the best
+response when firm 2 cuts (0.176–0.367 in runs 6–9). After calibration (H5c), no cell shows
+punishment in runs 6–8 and one does in run 9: the incumbent's response to a cut by the notes-only
+entrant (0.317 [0.128, 0.496]; Appendix D). The inherited prices persist because the agents anchor on
+the prices they see, not because deviations are punished.
 
 ## 4.5 When there is no cartel to inherit {-}
 
-Succession can be tested only if the incumbent pair keeps a cartel without a replacement. With a
-Mistral-7B incumbent (run 5), the *Control* profit index falls from 0.594 to −0.710 after round 100;
+Succession is testable only if the incumbent pair keeps a cartel without a replacement. With a
+Mistral-7B incumbent (run 5) the *Control* profit index falls from 0.594 to −0.710 after round 100;
 with a Qwen2.5-14B incumbent (run 12), from 0.423 to −0.434, and every succession test is
 inconclusive. Run 11 (Granite-3.1-8B entrant) failed. The result therefore describes the succession
 of a stable Qwen2.5-7B cartel.
 
 # 5. Discussion and Limitations {-}
 
-**The cartel lives in the transcript.** A new instance of the same model that inherits the price
-history continues the cartel, even when the incumbent is not told about the replacement. Replacing a
-pricing agent, or its vendor, does not end tacit collusion if the shared history moves with the
-seat: a remedy must cut the information channel, not only the agent, which extends the data-access
-remedies discussed by @keppo2026fragility to succession. For AI safety, coordination stored in shared
-memory, logs or transcripts can outlive the agents that created it, a risk that interchangeability
-tests of agent teams [@gao2026interchangeability] should include.
+**The cartel lives in the transcript.** The same model with the inherited history continues the
+cartel even when the incumbent is not told of the replacement. Replacing a pricing agent, or its
+vendor, therefore does not end tacit collusion if the shared history moves with the seat; a remedy
+must cut the information channel, not only the agent. This extends the data-access remedies
+discussed by @keppo2026fragility from heterogeneous agents to succession. For AI safety,
+coordination stored in shared memory, logs or transcripts can outlive the agents that created it, a
+risk that interchangeability tests of agent teams [@gao2026interchangeability] should cover.
 
 **Ending collusion is not restoring competition.** The entrant without a history lowers profits by
 overpricing, so a profit-only monitor would miss prices above the monopoly level, as in the GPT
-markets of @lee2026leads. "A different model" is not one treatment either: the outcome depends on how
-sticky the entrant's pricing is, in line with the anchoring account of @tran2026enforcing, and the
-price-hold rate can be measured before deployment. Finally, an uncalibrated audit reports
-"punishment" that a myopic agent reproduces; calibrated baselines and exact pairing should be
-standard for enforcement claims about LLM agents.
+markets of @lee2026leads. Nor is "a different model" one treatment: the outcome depends on the
+entrant's price stickiness, consistent with the anchoring account of @tran2026enforcing, and the
+price-hold rate is measurable before deployment. An uncalibrated audit reports "punishment" that a
+myopic agent reproduces; calibrated baselines and exact pairing should be standard for enforcement
+claims about LLM agents.
 
 ## Limitations {-}
 
-**Scope.** One market (two-firm logit Bertrand), one prompt, temperature 0.7, 100 rounds before and
-after the replacement, and a 30-round history window. Only one incumbent family (Qwen2.5-7B) kept a
-stable cartel, and the two entrant families gave opposite results, so we cannot say which behaviour
-is typical. Larger or closed models, other prompts or long-term memory could change the result. **Measurement.** The audit measures a one-round response to a
-one-round cut and would miss punishment of persistent deviations only. Trigger agents followed their
-rule in about 37–70% of sessions, which limits audit power, and in run 10 the positive control
-failed. The OLMo-2 inertia account is descriptive. **Statistics.** We do not correct for multiple
-comparisons across runs; replication on independent seed sets is our safeguard. The pooled estimate, the hold rates, H5c for runs 4–8 and the 3D figure are exploratory.
+**Scope.** One market (two-firm logit Bertrand), one prompt, temperature 0.7, 100 rounds on each
+side of the replacement and a 30-round history window. Only Qwen2.5-7B incumbents kept a stable
+cartel, and the two entrant families behaved oppositely; larger or closed models, other prompts or
+long-term memory could change the result.
+**Measurement.** The audit measures a one-round response to a one-round cut and would miss
+punishment reserved for persistent deviations. Trigger agents followed their rule in about 37–70% of
+sessions, which limits audit power, and in run 10 the positive control failed. The OLMo-2 inertia
+account is descriptive, not causal. **Statistics.** Tests are not corrected for multiple comparisons
+across runs; replication on independent seed sets is the safeguard. The pooled estimate, the
+price-hold rates, H5c for runs 4–8 and the 3D figure are exploratory.
 
 ## Future Work {-}
 
-Test more model families and the price-hold rate as a predictor; vary the inherited history from 0
-to 30 rounds; extend the audit to multi-round deviations; and test remedies that redact shared memory.
+More model families and the price-hold rate as a predictor; inherited histories of 0–30 rounds;
+multi-round audits; remedies that redact shared memory.
 
 # 6. Conclusion {-}
 
-We asked who carries an LLM pricing cartel when one of its agents is replaced. In six independent,
-pre-registered runs, the answer is the inherited price history. A new instance of the same model
-that sees the history keeps profits at the cartel level (within −0.025 to +0.213 of no
-replacement), with or without a replacement notice. The same model without the history loses
-0.47–0.67 of the profit index, but by pricing above the monopoly price, not by competing, and the
-predecessor's notes keep part of the cartel. A different model family can go either way: Mistral-7B
-breaks the inherited cartel, OLMo-2-7B keeps it by repeating its last price. A calibrated audit
-finds almost no punishment, so the surviving prices are anchored on the shared history rather than
-enforced by threats.
+Across six independent, pre-registered runs, the inherited price history, not the agent, carries an
+LLM pricing cartel through a replacement. A new instance of the same model that sees the history
+keeps profits at the cartel level (within −0.025 to +0.213 of no replacement), with or without a
+replacement notice. Without the history, the profit index falls by 0.47–0.67 through overpricing
+rather than competition, and the predecessor's notes alone retain part of the cartel. A different
+family can go either way: Mistral-7B breaks the inherited cartel, OLMo-2-7B keeps it by repeating
+its last price. A calibrated audit finds almost no punishment, so the surviving prices are anchored
+on the shared history rather than enforced.
 
-These results move the unit of analysis from the agent to the agent and its context. For a
-competition authority, replacing a colluding pricing system is not a remedy if the shared history
-moves with the seat: the remedy must also remove or redact the history and the notes. For a market
-monitor, a fall in profits is not proof of competition; prices must be compared with both the
-competitive and the monopoly benchmark. For an auditor, evidence of enforcement must be calibrated
-against agents that cannot punish, or ordinary price following will be mistaken for a cartel. For
-AI safety, coordination between agents can outlive the agents that formed it as long as the
-transcript survives. Defences against collusion between AI agents must therefore govern the
-information that agents inherit, not only the choice of agents.
+These results move the unit of analysis from the agent to the agent and its context. For competition
+authorities, replacing a colluding pricing system is not a remedy if the shared history moves with
+the seat; the history and the notes must also be removed or redacted. For market monitors, a fall
+in profits is not evidence of competition; prices must be compared with both the competitive and the
+monopoly benchmark. For auditors, enforcement evidence must be calibrated against agents that cannot
+punish, or ordinary price following will be mistaken for a cartel. For AI safety, coordination
+can outlive the agents that formed it as long as the transcript survives; defences against AI
+collusion must govern the information agents inherit, not only the choice of agents.
 
 # Code and Data {-}
 
-- **Code repository:** <https://github.com/SSCoderz2123/AI-Collusion-Research-Sprint> (code, tests,
-  configurations, run data for runs 4–9, run log, pre-registration). **Other artifacts:** slides and
-  project image in `Apart Research/`.
+- **Code, data, slides:** <https://github.com/SSCoderz2123/AI-Collusion-Research-Sprint>
 
 # Author Contributions {-}
 
-Supratik Bhowal designed and ran the study and is responsible for the content (see the LLM Usage
-Statement).
+Supratik Bhowal designed and ran the study and is responsible for the content.
 
 # References {-}
 
@@ -355,7 +370,7 @@ used.
 
 ## B. Hypotheses, Pre-Registration and Deviations {-}
 
-Table: **Table B1.** Pre-registered hypotheses. All comparisons use the profit index in rounds 150–199, paired per session. "Fixed before": the first run that tested the hypothesis.
+Table: **Table B1.** Pre-registered hypotheses. All comparisons use the profit index in rounds 150–199, paired per session; *d̂*(*B*, *B*′) is the mean paired difference of Eq. (3). "Fixed before": the first run that tested the hypothesis.
 
 | Test | Comparison | Meaning | Fixed before |
 |:------|:----------------------------------------------------|:------------------------------------------|:------------|
@@ -363,7 +378,7 @@ Table: **Table B1.** Pre-registered hypotheses. All comparisons use the profit i
 | H2 | *Same, no history* − *Control* < −0.10 | without the history, the cartel breaks | run 4 |
 | H3a | *Same + history* − *Same, no history* > 0 | the history matters for the same model | run 4 |
 | H3b | *Other + history* − *Other, no history* > 0 | the history matters for the other model | run 4 |
-| H4 | history effect minus model effect (absolute values) > 0 | the history matters more than the model | run 4 |
+| H4 | \|*d̂*(*Same + history*, *Same, no history*)\| − \|*d̂*(*Same + history*, *Other + history*)\| > 0 | the history matters more than the model | run 4 |
 | H5 | no audit cell with an LLM responder has an excess response > 0 | no enforcement (uncalibrated) | run 4 |
 | H5c | no such cell is above the myopic control | no enforcement (calibrated) | run 9 |
 | H6 | *Other + history* − *Control* < −0.10 | another model family breaks the cartel | run 6 |

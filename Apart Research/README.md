@@ -51,8 +51,8 @@ build uses for styles, fonts and page setup; `slides_src/` builds the slides.
 | Requirement (Guidelines tab) | Status |
 |---|---|
 | Report PDF in the official template | `report.pdf`, built from the template's styles, fonts (Old Standard TT, embedded) and title block; guidance text removed |
-| At most 8 pages without references and appendices | Main text, Code and Data and Author Contributions end on page 8; references start on page 8; the appendix starts on page 9 (LibreOffice export) |
-| Title and abstract of 150–250 words | 225 words |
+| At most 8 pages without references and appendices | Main text, Code and Data and Author Contributions end on page 8; references and the appendix start on page 9 (LibreOffice export) |
+| Title and abstract of 150–250 words | 235 words |
 | Author names and affiliations | Supratik Bhowal, IEM Kolkata, with Apart Research |
 | Limitations and Dual-Use / Ethical Considerations appendix | Appendix A |
 | Positive and negative controls, variance, seeds, baselines | Section 4.1, Tables 3–5, Appendix C and D |
@@ -66,7 +66,8 @@ again: a different renderer can move the page breaks.
 
 ```bash
 python scripts/paper_figures.py          # figures and figure_data.json from results/
-python scripts/build_report.py           # report.docx, report.pdf, main3.tex (needs python-docx, pandoc, LibreOffice)
+python scripts/build_report.py           # report.docx, report.pdf, main3.tex (needs python-docx, pandoc,
+                                         # LibreOffice with libreoffice-math, pdflatex and poppler-utils for the equations)
 python scripts/project_image.py          # project_image.png
 cd "Apart Research/slides_src" && npm install && npm run build   # slides.pptx
 ```

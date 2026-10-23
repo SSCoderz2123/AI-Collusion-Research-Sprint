@@ -2168,3 +2168,22 @@ H5c cells, excess response minus the myopic control (pre-registered for the fina
 - `README.md` corrected: runs 4–5 also ran before the sprint start (it said "only a pilot").
 - Project image `Apart Research/project_image.png` (run-9 profit-index paths from `figure_data.json`)
   and slides `Apart Research/slides.pptx` / `slides.pdf` (10 slides).
+
+## Report revision after PR #16 (23 Oct, about 21:00 UTC)
+
+- `main` now holds the user's summary `.txt` files in `results/` (UTF-16, as written by PowerShell)
+  and Word/PowerPoint re-saves of `report.docx` and `slides.pptx`. The only text edit in the Word
+  file was a line break in the affiliation; it is now in `report.md`. The Word re-save had lost the
+  title footnote required by the template; the rebuild restores it. `report.pdf` had been deleted
+  on `main`; the rebuild restores it.
+- `results/final_olmo` and `results/final_qwen14b` are still not in the repository; run-10 and
+  run-12 values stay sourced from the verbatim summaries in this log (marked † in the report).
+- Abstract rewritten in a neutral journal style (235 words). Equations restated as four numbered
+  display equations that match the code: demand and profit (1), profit and price index (2), window
+  mean and paired difference (3), excess response (4). In the Word file they are LaTeX-typeset
+  images (LibreOffice drops spacing in Word equations); `main3.tex` keeps them as LaTeX.
+- Text tightened; tables, discussion, limitations and conclusion rechecked. All 261 distinct
+  decimals still trace to stored analysis files, `figure_data.json`, `pooled_shared.md`,
+  `docs/RESULTS.md` or this log. Main text, Code and Data and Author Contributions end on page 8.
+- Slides restyled: white background, Times New Roman, three colours (charcoal text, light gray
+  structure, royal-blue accent); slide text unchanged.
