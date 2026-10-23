@@ -37,6 +37,7 @@ Record here, with commit hashes:
   exploratory tables, `pool.py --shared`, `inspect_replies.py`, parallel GPU chunks).
 - 23 Oct: final runs 9–12 on Modal, started 10:26 UTC (sprint work); results in `docs/RUN_LOG.md`
   and `docs/RESULTS.md`. Run 11 failed in phase 2.
+- 23 Oct: exploratory 3D behavior figures (`succession/behavior_plots.py`, `scripts/plot_behavior.py`).
 
 - Pilot and main runs, all data under `results/`.
 - Code changes after 23 Oct (list them).
