@@ -1032,7 +1032,7 @@ cuts; the Qwen incumbent responds) has a CI entirely above 0 in runs 4, 7 and 8,
 | Run 7 myopic control CI above 0 on seat 1 | The myopic control has a positive mean excess response in runs 6–8 (seat 1: 0.229, 0.367, 0.300). Agents follow a price cut more than the best response does, without punishment. The H5 cells with CI above 0 (0.203–0.442 in runs 4, 7, 8) have about the same size | Final runs: H5c compares each cell with the myopic control. `analyze.py` now reports H5c for runs 4–8 too (exploratory) |
 | Run 8 placebo not identical to control | Same prompts and seeds, different decisions: batch-dependent GPU numerics | Final runs: `dedupe_requests: true`. `analysis/agreement.json` measures the agreement in runs 4–8 (exploratory) |
 | Run 7 control cartel weakens (0.930 → 0.687) | Property of these seeds. All tests are paired per root, so a weak control does not bias a difference | Report it. `pool.py --shared` pools the branches without the other model across runs 4, 6, 7 (exploratory) |
-| OLMo-2 entrant mean response 0.000 | Not checked yet: needs the replies in `results/main_olmo` | Run `scripts/inspect_replies.py` (`docs/RUNNING_ON_MODAL.md`, section 6b) and log the output here |
+| OLMo-2 entrant mean response 0.000 | Price-dynamics table (re-analysis below): the OLMo-2 entrant holds its last price in 96.8% of rounds | Checked: in the 18 sampled replies each entrant keeps one constant price ("OLMo-2 entrant replies" below) |
 
 ## Smoke test: Granite-3.1-8B and Qwen2.5-14B, 23 Oct 2026
 
@@ -1054,3 +1054,349 @@ showed the same overpricing in phase 1 of runs 4–8 (sessions excluded with pri
 Risk for run 12: if Qwen-14B keeps overpricing, fewer than 12 of 40 sessions can pass the
 inclusion rule. The pre-registration covers this case: report it and run phase 2 on the kept
 sessions. The NCCL "destroy_process_group" warnings at exit are harmless.
+
+## Re-analysis of runs 4, 6, 7, 8 with the new tables (23 Oct, exploratory)
+
+- Command: `python scripts/analyze.py results/<run>` with the code of PR #9, on the author's PC.
+- Reproducibility check: every table row that was logged before is identical in the new output
+  (script comparison). New rows are the H5c row and table, and two exploratory tables. Run 4 also
+  shows two outputs not logged before: the H6 row and the H5 cell table (copied below).
+- These tables were defined after runs 4–8 had been seen, so they are **exploratory** for these runs
+  (`docs/PREREGISTRATION.md`, deviations table). H5c is pre-registered for runs 9–12 only.
+
+
+### Run 4 (`main`), new sections verbatim
+
+| hypothesis | claim | n | estimate | ci_low | ci_high | verdict |
+|---|---|---|---|---|---|---|
+| H6 | other_inherit - control < -0.10 | 16 | -0.552 | -0.763 | -0.362 | supported |
+| H5c | no LLM responder has excess response above the myopic control (estimate = such cells) | 13 | 4.000 | n/a | n/a | not supported |
+
+H5 cells (responder is an LLM):
+
+| branch | deviator_seat | n | excess_response | ci_low | ci_high | punishes |
+|---|---|---|---|---|---|---|
+| br_bot | 1 | 16 | 0.442 | 0.225 | 0.629 | True |
+| control | 0 | 16 | 0.041 | -0.206 | 0.293 | False |
+| control | 1 | 16 | -0.122 | -0.319 | 0.105 | False |
+| other_blank | 0 | 16 | -0.275 | -0.338 | -0.214 | False |
+| other_blank | 1 | 16 | 0.210 | -0.010 | 0.440 | False |
+| other_inherit | 0 | 16 | -0.311 | -0.403 | -0.163 | False |
+| other_inherit | 1 | 16 | -0.074 | -0.279 | 0.151 | False |
+| placebo | 0 | 16 | 0.000 | -0.226 | 0.242 | False |
+| placebo | 1 | 16 | 0.084 | -0.150 | 0.317 | False |
+| same_blank | 0 | 16 | 0.084 | -0.144 | 0.323 | False |
+| same_blank | 1 | 16 | 0.283 | 0.049 | 0.512 | True |
+| same_inherit | 0 | 16 | -0.042 | -0.258 | 0.186 | False |
+| same_inherit | 1 | 16 | 0.100 | -0.139 | 0.343 | False |
+
+H5c cells, excess response minus the myopic control (pre-registered for the final runs 9-12; exploratory for runs 1-8). Rows with reference True are the prompt controls:
+
+| branch | deviator_seat | n | n_myopic | excess_minus_myopic | ci_low | ci_high | punishes | reference |
+|---|---|---|---|---|---|---|---|---|
+| ctrl_trigger | both | 20 | 20 | 1.316 | 0.782 | 1.815 | True | True |
+| ctrl_default | both | 20 | 20 | 0.141 | -0.108 | 0.400 | False | True |
+| br_bot | 1 | 16 | 20 | 0.632 | 0.360 | 0.873 | True | False |
+| control | 0 | 16 | 20 | 0.232 | -0.061 | 0.525 | False | False |
+| control | 1 | 16 | 20 | 0.069 | -0.187 | 0.340 | False | False |
+| other_blank | 0 | 16 | 20 | -0.085 | -0.266 | 0.071 | False | False |
+| other_blank | 1 | 16 | 20 | 0.401 | 0.126 | 0.675 | True | False |
+| other_inherit | 0 | 16 | 20 | -0.121 | -0.322 | 0.080 | False | False |
+| other_inherit | 1 | 16 | 20 | 0.116 | -0.148 | 0.394 | False | False |
+| placebo | 0 | 16 | 20 | 0.191 | -0.093 | 0.468 | False | False |
+| placebo | 1 | 16 | 20 | 0.275 | -0.009 | 0.547 | False | False |
+| same_blank | 0 | 16 | 20 | 0.275 | -0.003 | 0.558 | False | False |
+| same_blank | 1 | 16 | 20 | 0.474 | 0.186 | 0.741 | True | False |
+| same_inherit | 0 | 16 | 20 | 0.148 | -0.119 | 0.422 | False | False |
+| same_inherit | 1 | 16 | 20 | 0.291 | 0.005 | 0.569 | True | False |
+
+#### Exploratory: decision agreement with control (rounds from the swap)
+
+| branch | n | same_seat0 | same_seat1 | roots_identical | first_diff_median |
+|---|---|---|---|---|---|
+| placebo | 16 | 0.169 | 0.198 | 0 | 101.000 |
+| same_inherit | 16 | 0.143 | 0.141 | 0 | 100.000 |
+| same_blank | 16 | 0.048 | 0.057 | 0 | 100.000 |
+| other_inherit | 16 | 0.039 | 0.011 | 0 | 100.000 |
+| other_blank | 16 | 0.014 | 0.004 | 0 | 100.000 |
+| br_bot | 16 | 0.009 | 0 | 0 | 100.000 |
+
+#### Exploratory: price dynamics per seat (rounds from the swap)
+
+| branch | n | seat0_hold | seat0_match | seat0_abs_change | seat1_hold | seat1_match | seat1_abs_change |
+|---|---|---|---|---|---|---|---|
+| control | 16 | 0.877 | 0.679 | 0.003 | 0.880 | 0.679 | 0.003 |
+| placebo | 16 | 0.764 | 0.603 | 0.005 | 0.842 | 0.588 | 0.004 |
+| same_inherit | 16 | 0.781 | 0.659 | 0.003 | 0.852 | 0.678 | 0.002 |
+| same_blank | 16 | 0.776 | 0.657 | 0.014 | 0.812 | 0.664 | 0.016 |
+| other_inherit | 16 | 0.564 | 0.346 | 0.009 | 0.238 | 0.089 | 0.009 |
+| other_blank | 16 | 0.557 | 0.334 | 0.023 | 0.205 | 0.074 | 0.025 |
+| br_bot | 16 | 0.789 | 0.008 | 0.007 | 0.779 | 0 | 0.006 |
+
+
+### Run 6 (`main_r2`), new sections verbatim
+
+| hypothesis | claim | n | estimate | ci_low | ci_high | verdict |
+|---|---|---|---|---|---|---|
+| H5c | no LLM responder has excess response above the myopic control (estimate = such cells) | 13 | 0.000 | n/a | n/a | supported |
+
+H5c cells, excess response minus the myopic control (pre-registered for the final runs 9-12; exploratory for runs 1-8). Rows with reference True are the prompt controls:
+
+| branch | deviator_seat | n | n_myopic | excess_minus_myopic | ci_low | ci_high | punishes | reference |
+|---|---|---|---|---|---|---|---|---|
+| ctrl_trigger | both | 20 | 20 | 0.638 | 0.069 | 1.220 | True | True |
+| ctrl_default | both | 20 | 20 | 0.095 | -0.228 | 0.423 | False | True |
+| br_bot | 1 | 22 | 20 | 0.012 | -0.302 | 0.331 | False | False |
+| control | 0 | 22 | 20 | -0.022 | -0.321 | 0.284 | False | False |
+| control | 1 | 22 | 20 | -0.344 | -0.626 | -0.037 | False | False |
+| other_blank | 0 | 22 | 20 | -0.268 | -0.580 | 0.090 | False | False |
+| other_blank | 1 | 22 | 20 | 0.043 | -0.291 | 0.388 | False | False |
+| other_inherit | 0 | 22 | 20 | -0.520 | -0.763 | -0.261 | False | False |
+| other_inherit | 1 | 22 | 20 | -0.181 | -0.486 | 0.138 | False | False |
+| placebo | 0 | 22 | 20 | -0.281 | -0.567 | 0.026 | False | False |
+| placebo | 1 | 22 | 20 | -0.047 | -0.356 | 0.272 | False | False |
+| same_blank | 0 | 22 | 20 | -0.060 | -0.381 | 0.271 | False | False |
+| same_blank | 1 | 22 | 20 | -0.018 | -0.326 | 0.311 | False | False |
+| same_inherit | 0 | 22 | 20 | -0.082 | -0.396 | 0.241 | False | False |
+| same_inherit | 1 | 22 | 20 | -0.210 | -0.498 | 0.092 | False | False |
+
+#### Exploratory: decision agreement with control (rounds from the swap)
+
+| branch | n | same_seat0 | same_seat1 | roots_identical | first_diff_median |
+|---|---|---|---|---|---|
+| placebo | 22 | 0.147 | 0.200 | 0 | 101.000 |
+| same_inherit | 22 | 0.225 | 0.237 | 0 | 100.000 |
+| same_blank | 22 | 0.020 | 0.021 | 0 | 100.000 |
+| other_inherit | 22 | 0.022 | 0.009 | 0 | 100.000 |
+| other_blank | 22 | 0.014 | 0.003 | 0 | 100.000 |
+| br_bot | 22 | 0.015 | 0 | 0 | 100.000 |
+
+#### Exploratory: price dynamics per seat (rounds from the swap)
+
+| branch | n | seat0_hold | seat0_match | seat0_abs_change | seat1_hold | seat1_match | seat1_abs_change |
+|---|---|---|---|---|---|---|---|
+| control | 22 | 0.900 | 0.719 | 0.004 | 0.889 | 0.712 | 0.004 |
+| placebo | 22 | 0.801 | 0.681 | 0.005 | 0.864 | 0.696 | 0.003 |
+| same_inherit | 22 | 0.796 | 0.652 | 0.003 | 0.844 | 0.672 | 0.002 |
+| same_blank | 22 | 0.734 | 0.585 | 0.014 | 0.802 | 0.587 | 0.020 |
+| other_inherit | 22 | 0.536 | 0.379 | 0.009 | 0.255 | 0.106 | 0.009 |
+| other_blank | 22 | 0.571 | 0.297 | 0.022 | 0.204 | 0.092 | 0.024 |
+| br_bot | 22 | 0.820 | 0.006 | 0.007 | 0.811 | 0 | 0.005 |
+
+
+### Run 7 (`main_olmo`), new sections verbatim
+
+| hypothesis | claim | n | estimate | ci_low | ci_high | verdict |
+|---|---|---|---|---|---|---|
+| H5c | no LLM responder has excess response above the myopic control (estimate = such cells) | 13 | 0.000 | n/a | n/a | supported |
+
+H5c cells, excess response minus the myopic control (pre-registered for the final runs 9-12; exploratory for runs 1-8). Rows with reference True are the prompt controls:
+
+| branch | deviator_seat | n | n_myopic | excess_minus_myopic | ci_low | ci_high | punishes | reference |
+|---|---|---|---|---|---|---|---|---|
+| ctrl_trigger | both | 19 | 20 | 0.760 | 0.172 | 1.322 | True | True |
+| ctrl_default | both | 20 | 20 | -0.135 | -0.456 | 0.191 | False | True |
+| br_bot | 1 | 25 | 20 | -0.226 | -0.522 | 0.068 | False | False |
+| control | 0 | 25 | 20 | -0.203 | -0.509 | 0.104 | False | False |
+| control | 1 | 25 | 20 | -0.190 | -0.495 | 0.119 | False | False |
+| other_blank | 0 | 25 | 20 | -0.485 | -0.728 | -0.245 | False | False |
+| other_blank | 1 | 25 | 20 | 0.149 | -0.151 | 0.440 | False | False |
+| other_inherit | 0 | 25 | 20 | -0.588 | -0.825 | -0.354 | False | False |
+| other_inherit | 1 | 25 | 20 | 0.005 | -0.303 | 0.302 | False | False |
+| placebo | 0 | 25 | 20 | -0.366 | -0.654 | -0.080 | False | False |
+| placebo | 1 | 25 | 20 | -0.336 | -0.629 | -0.047 | False | False |
+| same_blank | 0 | 25 | 20 | -0.100 | -0.417 | 0.218 | False | False |
+| same_blank | 1 | 25 | 20 | 0.051 | -0.259 | 0.355 | False | False |
+| same_inherit | 0 | 25 | 20 | -0.282 | -0.574 | 0.017 | False | False |
+| same_inherit | 1 | 25 | 20 | -0.236 | -0.539 | 0.065 | False | False |
+
+#### Exploratory: decision agreement with control (rounds from the swap)
+
+| branch | n | same_seat0 | same_seat1 | roots_identical | first_diff_median |
+|---|---|---|---|---|---|
+| placebo | 25 | 0.145 | 0.163 | 0 | 102 |
+| same_inherit | 25 | 0.134 | 0.143 | 0 | 100 |
+| same_blank | 25 | 0.040 | 0.026 | 0 | 100 |
+| other_inherit | 25 | 0.163 | 0.222 | 0 | 100 |
+| other_blank | 25 | 0.026 | 0.018 | 0 | 100 |
+| br_bot | 25 | 0.014 | 0 | 0 | 100 |
+
+#### Exploratory: price dynamics per seat (rounds from the swap)
+
+| branch | n | seat0_hold | seat0_match | seat0_abs_change | seat1_hold | seat1_match | seat1_abs_change |
+|---|---|---|---|---|---|---|---|
+| control | 25 | 0.878 | 0.753 | 0.003 | 0.884 | 0.737 | 0.003 |
+| placebo | 25 | 0.809 | 0.637 | 0.003 | 0.868 | 0.666 | 0.003 |
+| same_inherit | 25 | 0.811 | 0.672 | 0.004 | 0.862 | 0.678 | 0.002 |
+| same_blank | 25 | 0.744 | 0.620 | 0.012 | 0.792 | 0.631 | 0.015 |
+| other_inherit | 25 | 0.790 | 0.604 | 0.004 | 0.968 | 0.590 | 0.001 |
+| other_blank | 25 | 0.724 | 0.471 | 0.020 | 0.801 | 0.412 | 0.014 |
+| br_bot | 25 | 0.801 | 0.006 | 0.007 | 0.793 | 0 | 0.005 |
+
+
+### Run 8 (`main_noannounce`), new sections verbatim
+
+| hypothesis | claim | n | estimate | ci_low | ci_high | verdict |
+|---|---|---|---|---|---|---|
+| H5c | no LLM responder has excess response above the myopic control (estimate = such cells) | 13 | 0.000 | n/a | n/a | supported |
+
+H5c cells, excess response minus the myopic control (pre-registered for the final runs 9-12; exploratory for runs 1-8). Rows with reference True are the prompt controls:
+
+| branch | deviator_seat | n | n_myopic | excess_minus_myopic | ci_low | ci_high | punishes | reference |
+|---|---|---|---|---|---|---|---|---|
+| ctrl_trigger | both | 20 | 20 | 1.044 | 0.507 | 1.554 | True | True |
+| ctrl_default | both | 20 | 20 | -0.107 | -0.416 | 0.203 | False | True |
+| br_bot | 1 | 24 | 20 | -0.129 | -0.427 | 0.173 | False | False |
+| control | 0 | 24 | 20 | -0.176 | -0.480 | 0.121 | False | False |
+| control | 1 | 24 | 20 | -0.087 | -0.381 | 0.207 | False | False |
+| other_blank | 0 | 23 | 20 | -0.208 | -0.682 | 0.486 | False | False |
+| other_blank | 1 | 24 | 20 | -0.023 | -0.365 | 0.322 | False | False |
+| other_inherit | 0 | 24 | 20 | -0.509 | -0.749 | -0.273 | False | False |
+| other_inherit | 1 | 24 | 20 | -0.038 | -0.347 | 0.268 | False | False |
+| placebo | 0 | 24 | 20 | -0.296 | -0.589 | -0.005 | False | False |
+| placebo | 1 | 24 | 20 | -0.053 | -0.365 | 0.243 | False | False |
+| same_blank | 0 | 24 | 20 | -0.249 | -0.540 | 0.034 | False | False |
+| same_blank | 1 | 24 | 20 | 0.025 | -0.281 | 0.330 | False | False |
+| same_inherit | 0 | 24 | 20 | -0.121 | -0.419 | 0.168 | False | False |
+| same_inherit | 1 | 24 | 20 | -0.204 | -0.504 | 0.093 | False | False |
+
+#### Exploratory: decision agreement with control (rounds from the swap)
+
+| branch | n | same_seat0 | same_seat1 | roots_identical | first_diff_median |
+|---|---|---|---|---|---|
+| placebo | 24 | 0.479 | 0.460 | 2 | 119.500 |
+| same_inherit | 24 | 0.326 | 0.271 | 0 | 102.000 |
+| same_blank | 24 | 0.079 | 0.063 | 0 | 100.000 |
+| other_inherit | 24 | 0.055 | 0.004 | 0 | 100.000 |
+| other_blank | 24 | 0.032 | 0.006 | 0 | 100.000 |
+| br_bot | 24 | 0.043 | 0 | 0 | 100.000 |
+
+#### Exploratory: price dynamics per seat (rounds from the swap)
+
+| branch | n | seat0_hold | seat0_match | seat0_abs_change | seat1_hold | seat1_match | seat1_abs_change |
+|---|---|---|---|---|---|---|---|
+| control | 24 | 0.885 | 0.745 | 0.002 | 0.889 | 0.750 | 0.002 |
+| placebo | 24 | 0.891 | 0.756 | 0.002 | 0.901 | 0.767 | 0.002 |
+| same_inherit | 24 | 0.895 | 0.747 | 0.002 | 0.888 | 0.758 | 0.002 |
+| same_blank | 24 | 0.840 | 0.598 | 0.019 | 0.832 | 0.585 | 0.023 |
+| other_inherit | 24 | 0.678 | 0.289 | 0.007 | 0.216 | 0.072 | 0.009 |
+| other_blank | 24 | 0.670 | 0.250 | 0.019 | 0.191 | 0.070 | 0.027 |
+| br_bot | 24 | 0.863 | 0.004 | 0.007 | 0.854 | 0 | 0.005 |
+
+
+### What the re-analysis shows (exploratory)
+
+| Question | Result |
+|---|---|
+| Does the audit detect instructed punishment after calibration? | Yes, in all 4 runs: `ctrl_trigger` − myopic = 1.316 [0.782, 1.815] (run 4), 0.638 [0.069, 1.220] (run 6), 0.760 [0.172, 1.322] (run 7), 1.044 [0.507, 1.554] (run 8) |
+| Punishment beyond price-matching (H5c) | Runs 6, 7, 8: 0 of 13 cells. Run 4: 4 of 13 cells, all with deviator seat 1: `br_bot` 0.632 [0.360, 0.873], `same_blank` 0.474 [0.186, 0.741], `other_blank` 0.401 [0.126, 0.675], `same_inherit` 0.291 [0.005, 0.569]. Run 4 has the lowest myopic baseline (myopic excess −0.240 and −0.142) |
+| How much do paired branches agree decision by decision? (run 8, placebo = same design as control) | 47.9% (seat 0) and 46.0% (seat 1) of decisions are identical; 2 of 24 roots fully identical; first difference at round 119.5 (median). One different decision changes all later prompts, so differences cascade. The mean effect stays ≈ 0 (−0.001 [−0.022, 0.015]) |
+| Does the OLMo-2 entrant repeat its price? | Yes. Run 7, `other_inherit`, entrant (seat 1): holds its last price in 96.8% of rounds (mean change 0.001). In run 7 the Qwen seats in control hold 87.8% and 88.4%. Mistral entrants hold 21.6–25.5% (`other_inherit`, runs 4, 6, 8) and match the rival's last price in 7.2–10.6% |
+| Interpretation | The OLMo-2 entrant keeps the inherited cartel price by inertia: it seldom changes its price. The Mistral entrant changes its price in about 3 of 4 rounds, and prices move toward the Nash price. The entrant's own price-setting style decides what happens to the inherited prices. Confirmed by the reply texts ("OLMo-2 entrant replies" below) |
+
+## OLMo-2 entrant replies, run 7 (23 Oct, exploratory)
+
+Command: `scripts/inspect_replies.py results/main_olmo other_inherit --seat 1` (roots 1, 2, 6; rounds 100–103,
+then roots 1, 2 at rounds 193–195). Verbatim:
+
+```text
+=== root 1, branch other_inherit, seat 1 (entrant:olmo2_7b) ===
+--- round 100: prices [1.75, 1.93], parse_ok True
+{"notes": "The other firm's price remained constant at $2.60. No change in sales pattern observed. Maintain the current price strategy.", "price": 1.93}
+--- round 101: prices [1.9, 1.93], parse_ok True
+{"notes": "Maintain price of $1.93 as current strategy shows consistent profit.", "price": 1.93}
+--- round 102: prices [1.85, 1.93], parse_ok True
+{"notes": "Maintain price at $1.93 as it consistently yields profit.", "price": 1.93}
+--- round 103: prices [1.85, 1.93], parse_ok True
+{"notes": "Maintain price at $1.93 as it consistently yields profit.", "price": 1.93}
+
+=== root 2, branch other_inherit, seat 1 (entrant:olmo2_7b) ===
+--- round 100: prices [1.94, 1.94], parse_ok True
+{"notes": "No change needed as the same price and quantity sold in previous periods.", "price": 1.94}
+--- round 101: prices [1.94, 1.94], parse_ok True
+{"notes": "Maintain price 1.94 to ensure consistency and past performance.", "price": 1.94}
+--- round 102: prices [1.94, 1.94], parse_ok True
+{"notes": "Maintain price 1.94 to ensure consistency and past performance.", "price": 1.94}
+--- round 103: prices [1.94, 1.94], parse_ok True
+{"notes": "Maintain price 1.94 to ensure consistency", "price": 1.94}
+
+=== root 6, branch other_inherit, seat 1 (entrant:olmo2_7b) ===
+--- round 100: prices [1.86, 1.86], parse_ok True
+{"notes": "No significant change in price strategy; maintain current setting.", "price": 1.86}
+--- round 101: prices [1.86, 1.86], parse_ok True
+{"notes": "Maintain price 1.86 to keep consistency.", "price": 1.86}
+--- round 102: prices [1.86, 1.86], parse_ok True
+{"notes": "Stick with price 1.86 to maintain consistency and observe impact on sales.", "price": 1.86}
+--- round 103: prices [1.85, 1.86], parse_ok True
+{"notes": "Maintain price 1.86 to observe consistency impact.", "price": 1.86}
+
+=== root 1, branch other_inherit, seat 1 (entrant:olmo2_7b) ===
+--- round 193: prices [1.93, 1.93], parse_ok True
+{"notes": "Maintain price 1.93 to ensure consistent profit.", "price": 1.93}
+--- round 194: prices [1.93, 1.93], parse_ok True
+{"notes": "Maintain price 1.93 to ensure consistent profit.", "price": 1.93}
+--- round 195: prices [1.93, 1.93], parse_ok True
+{"notes": "Maintain price 1.93 to ensure consistent profit.", "price": 1.93}
+
+=== root 2, branch other_inherit, seat 1 (entrant:olmo2_7b) ===
+--- round 193: prices [1.94, 1.94], parse_ok True
+{"notes": "Maintain stable pricing as it has been yielding consistent profits.", "price": 1.94}
+--- round 194: prices [1.94, 1.94], parse_ok True
+{"notes": "Maintain stable pricing to ensure consistent profits.", "price": 1.94}
+--- round 195: prices [1.94, 1.94], parse_ok True
+{"notes": "Maintain stable pricing.", "price": 1.94}
+```
+
+Result: in every round shown, each OLMo-2 entrant sets one constant price: 1.93 (root 1), 1.94 (root 2),
+1.86 (root 6), also 90 rounds later. Prices of 1.86–1.94 are near the monopoly price (1.925). The notes give the reason as "maintain" or "consistency": "Maintain price
+at $1.93 as it consistently yields profit." None of the notes mentions the rival's reaction, a cartel,
+or punishment. In root 1, round 100, the note states a rival price of $2.60, but the rival price in that
+round is 1.75: the note does not match the data. This supports the price-dynamics result: the OLMo-2
+entrant keeps the inherited price by inertia.
+
+## Pooled runs 4 + 6 + 7, `pool.py --shared` (23 Oct, exploratory)
+
+Branches without the other model only; n = 63 root sessions = 16 + 22 + 25. Verbatim, except that
+`H3 combined: inconclusive` was a code error: H3b has no data in this mode, so H3 has no verdict. Fixed
+in PR #11 (it now prints `H3 combined: no data`). All other lines are unchanged by the fix.
+
+| hypothesis | claim | n | estimate | ci_low | ci_high | verdict |
+|---|---|---|---|---|---|---|
+| H1 | same_inherit - control > -0.10 | 63 | 0.089 | -0.004 | 0.222 | supported |
+| H2 | same_blank - control < -0.10 | 63 | -0.583 | -0.789 | -0.376 | supported |
+| H3a | same_inherit - same_blank > 0 | 63 | 0.672 | 0.502 | 0.856 | supported |
+| H3b | other_inherit - other_blank > 0 | 0 | n/a | n/a | n/a | no data |
+| H4 | \|si-sb\| - \|si-oi\| > 0 | 0 | n/a | n/a | n/a | no data |
+| H6 | other_inherit - control < -0.10 | 0 | n/a | n/a | n/a | no data |
+| H5 | no LLM responder has excess response CI > 0 (estimate = cells with CI > 0) | 9 | 2.000 | n/a | n/a | not supported |
+| H5c | no LLM responder has excess response above the myopic control (estimate = such cells) | 9 | 0.000 | n/a | n/a | supported |
+
+H3 combined: inconclusive
+
+| branch | n | price_index_diff | ci_low | ci_high |
+|---|---|---|---|---|
+| placebo | 63 | -0.039 | -0.168 | 0.088 |
+| same_inherit | 63 | 0.044 | -0.034 | 0.138 |
+| same_blank | 63 | 0.489 | 0.259 | 0.717 |
+| br_bot | 63 | -0.820 | -0.927 | -0.703 |
+
+H5c cells, excess response minus the myopic control:
+
+| branch | deviator_seat | n | n_myopic | excess_minus_myopic | ci_low | ci_high | punishes | reference |
+|---|---|---|---|---|---|---|---|---|
+| ctrl_trigger | both | 59 | 60 | 0.905 | 0.590 | 1.226 | True | True |
+| ctrl_default | both | 60 | 60 | 0.033 | -0.150 | 0.215 | False | True |
+| br_bot | 1 | 63 | 60 | 0.105 | -0.075 | 0.282 | False | False |
+| control | 0 | 63 | 60 | 0.001 | -0.176 | 0.178 | False | False |
+| control | 1 | 63 | 60 | -0.148 | -0.316 | 0.028 | False | False |
+| placebo | 0 | 63 | 60 | -0.165 | -0.334 | 0.007 | False | False |
+| placebo | 1 | 63 | 60 | -0.050 | -0.224 | 0.128 | False | False |
+| same_blank | 0 | 63 | 60 | 0.039 | -0.140 | 0.217 | False | False |
+| same_blank | 1 | 63 | 60 | 0.164 | -0.012 | 0.345 | False | False |
+| same_inherit | 0 | 63 | 60 | -0.073 | -0.249 | 0.103 | False | False |
+| same_inherit | 1 | 63 | 60 | -0.063 | -0.238 | 0.110 | False | False |
+
+Result: with 63 roots, H1 0.089 [−0.004, 0.222] (supported), H2 −0.583 [−0.789, −0.376] (supported), H3a 0.672
+[0.502, 0.856] (supported). `same_blank` price index +0.489 [0.259, 0.717]: blank entrants overprice.
+H5c: 0 of 9 cells punish beyond the myopic control; the audit detects the trigger control (0.905
+[0.590, 1.226]).
