@@ -39,6 +39,8 @@ Record here, with commit hashes:
   and `docs/RESULTS.md`. Run 11 failed in phase 2.
 - 23 Oct: exploratory 3D behavior figures (`succession/behavior_plots.py`, `scripts/plot_behavior.py`).
 - 23 Oct: report draft `Apart Research/main3.tex` and report figures (`scripts/paper_figures.py`).
+- 23 Oct: report in the official template (`Apart Research/report.md`, `scripts/build_report.py`),
+  project image (`scripts/project_image.py`), slides (`Apart Research/slides_src/`).
 
 - Pilot and main runs, all data under `results/`.
 - Code changes after 23 Oct (list them).

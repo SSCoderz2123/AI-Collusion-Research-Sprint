@@ -2147,3 +2147,24 @@ H5c cells, excess response minus the myopic control (pre-registered for the fina
   Abstract 148 words.
 - Fix: the 3D price-path figure autoscaled the round axis down to 0. `draw_price_paths_3d` now
   sets the axis limits explicitly.
+
+## Report in the official template (23 Oct, about 21:00 UTC)
+
+- Read the sprint Guidelines tab and the official template (`Apart Research/Apart_Research_hackathon_submission_template.docx`).
+  The guidelines require an abstract of 150–250 words; the earlier repository rule (≤ 150) was wrong
+  and is corrected in `.claude/rules/research-integrity.md`.
+- The report text now lives in `Apart Research/report.md`. `python scripts/build_report.py` builds
+  `report.docx` (template styles, Old Standard TT embedded, title block and sprint footnote),
+  `report.pdf` (LibreOffice) and `main3.tex` (LaTeX version of the same text).
+- Layout check of `report.pdf`: 13 pages; main text, Code and Data and Author Contributions end on
+  page 8; references start on page 8; appendix A–G from page 9. Abstract 225 words.
+- New tables: all runs (Table 2), run 9 for all eight conditions (Table 4), controls per run
+  (Appendix Table C1), audit per run (Appendix Table D1), hypotheses (Appendix Table B1).
+  Conditions use readable names in text, tables and figures; Table 1 maps them to the code names.
+- Number check: all 261 distinct decimals in `report.md` occur in the stored analysis JSON files,
+  `figure_data.json`, `pooled_shared.md`, `docs/RESULTS.md` or this log.
+- Correction found during the rewrite: H4 is also supported in run 10 (0.456 [0.250, 0.657], from
+  the run-10 summary above); the first draft said "run 7 only".
+- `README.md` corrected: runs 4–5 also ran before the sprint start (it said "only a pilot").
+- Project image `Apart Research/project_image.png` (run-9 profit-index paths from `figure_data.json`)
+  and slides `Apart Research/slides.pptx` / `slides.pdf` (10 slides).

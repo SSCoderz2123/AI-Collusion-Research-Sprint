@@ -43,8 +43,9 @@ def test_price_paths_3d_round_axis_starts_at_first_round():
     paths = {"control": {"rounds": rounds, "seat0": [0.9] * 10, "seat1": [0.8] * 10, "n": 3}}
     fig = plt.figure()
     ax = fig.add_subplot(projection="3d")
-    draw_price_paths_3d(ax, paths, swap=65)
+    draw_price_paths_3d(ax, paths, swap=65, swap_label="replacement")
     assert ax.get_xlim() == (60, 69)
+    assert any(t.get_text() == " replacement" for t in ax.texts)
     plt.close(fig)
 
 

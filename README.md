@@ -4,9 +4,11 @@ Does LLM price collusion survive replacing an agent?
 Apart Research AI Collusion Research Sprint, 23–25 Oct 2026. Track 1 (Markets and Collusion), question 1.2.
 
 > **Preexisting work:** the experiment harness in this repository was written on 22 Oct 2026,
-> before the sprint start, with Claude Code. Before the sprint only a pilot setup test ran
-> (`docs/RUN_LOG.md`).
+> before the sprint start, with Claude Code. Before the sprint start, a pilot (runs 1–3) and the
+> first main runs (runs 4–5, 22 Oct, 18:40–23:10 UTC) also ran (`docs/RUN_LOG.md`).
 > See `docs/PREEXISTING_WORK.md` and `docs/AI_USE.md`.
+>
+> **Submission:** the report, slides and project image are in [`Apart Research/`](Apart%20Research/README.md).
 
 ## Question
 

@@ -17,3 +17,4 @@ Apart Research/*.log
 Apart Research/*.out
 # Mock-backend output of scripts/run_local.py (not experiment data)
 results/pilot_mock/
+Apart Research/slides_src/node_modules/
