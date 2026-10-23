@@ -7,19 +7,20 @@ const pptxgen = require("pptxgenjs");
 
 const OUT = path.join(__dirname, "..", "slides.pptx");
 const FIG = path.join(__dirname, "..", "figures");
-const HEAD = "Cambria";
-const BODY = "Calibri";
+// Minimalist research theme: white background, Times New Roman, three colours.
+//   primary (text, ~60%): charcoal; secondary (structure, ~30%): light grays; accent (~10%): royal blue,
+//   used only for key numbers and the highlighted data series.
+const HEAD = "Times New Roman";
+const BODY = "Times New Roman";
+const ACCENT = "1F5FBF";
 const COL = {
-  ink: "16202B", // dark background and main text
-  ink2: "2E3A46",
-  paper: "FFFFFF",
-  tint: "EEF2F5", // card background
-  muted: "5B6670",
-  soft: "C9D3DC",
-  cartel: "D9821F", // high prices
-  compete: "1E9E90", // competitive prices
-  blank: "D9485A", // entrant without history
-  blue: "2A78D6",
+  ink: "2B2F36", // primary: all main text
+  ink2: "2B2F36",
+  paper: "FFFFFF", // background; also text on accent or charcoal shapes
+  tint: "F3F4F6", // secondary: card fill
+  muted: "6B7280", // secondary: captions, footer
+  soft: "D1D5DB", // secondary: lines, borders
+  bar: "B8BEC7", // secondary: chart bars that are not highlighted
 };
 
 const pres = new pptxgen();
@@ -44,17 +45,17 @@ pres.defineSlideMaster({
   slideNumber: { x: 12.3, y: 7.0, w: 0.5, h: 0.3, fontSize: 10, color: COL.muted, fontFace: BODY },
 });
 pres.defineSlideMaster({
-  title: "DARK",
-  background: { color: COL.ink },
+  title: "TITLE",
+  background: { color: COL.paper }, // title and closing slides: no footer
   objects: [
     {
       placeholder: {
-        options: { name: "title", type: "title", x: 0.6, y: 0.35, w: 12.1, h: 0.9, fontSize: 30, bold: true, color: COL.paper, fontFace: HEAD, valign: "middle", align: "left" },
+        options: { name: "title", type: "title", x: 0.6, y: 0.35, w: 12.1, h: 0.9, fontSize: 30, bold: true, color: COL.ink, fontFace: HEAD, valign: "middle", align: "left" },
         text: "",
       },
     },
   ],
-  slideNumber: { x: 12.3, y: 7.0, w: 0.5, h: 0.3, fontSize: 10, color: COL.soft, fontFace: BODY },
+  slideNumber: { x: 12.3, y: 7.0, w: 0.5, h: 0.3, fontSize: 10, color: COL.muted, fontFace: BODY },
 });
 
 function text(slide, value, opts) {
@@ -72,10 +73,10 @@ function numberBadge(slide, x, y, n, color) {
 
 // 1. Title -------------------------------------------------------------------------------------
 {
-  const s = pres.addSlide({ masterName: "DARK" });
-  text(s, "AI COLLUSION RESEARCH SPRINT 2026  ·  TRACK 1: MARKETS AND COLLUSION  ·  QUESTION 1.2", { x: 0.6, y: 0.7, w: 12, h: 0.4, fontSize: 13, color: COL.soft, bold: true });
-  text(s, "Who Carries the Cartel?", { x: 0.6, y: 1.5, w: 12, h: 1.2, fontSize: 54, bold: true, color: COL.paper, fontFace: HEAD });
-  text(s, "LLM price collusion survives agent replacement through the inherited price history", { x: 0.6, y: 2.75, w: 11, h: 0.9, fontSize: 24, color: COL.soft });
+  const s = pres.addSlide({ masterName: "TITLE" });
+  text(s, "AI COLLUSION RESEARCH SPRINT 2026  ·  TRACK 1: MARKETS AND COLLUSION  ·  QUESTION 1.2", { x: 0.6, y: 0.7, w: 12, h: 0.4, fontSize: 13, color: COL.muted, bold: true });
+  text(s, "Who Carries the Cartel?", { x: 0.6, y: 1.5, w: 12, h: 1.2, fontSize: 54, bold: true, color: COL.ink, fontFace: HEAD });
+  text(s, "LLM price collusion survives agent replacement through the inherited price history", { x: 0.6, y: 2.75, w: 11, h: 0.9, fontSize: 24, color: COL.muted });
   const stats = [
     ["6 of 6", "runs: the same model with the old price history keeps the cartel"],
     ["0.47–0.67", "profit-index loss without the history, by overpricing"],
@@ -83,10 +84,10 @@ function numberBadge(slide, x, y, n, color) {
   ];
   stats.forEach(([big, small], i) => {
     const x = 0.6 + i * 4.1;
-    text(s, big, { x, y: 4.3, w: 3.8, h: 0.8, fontSize: 36, bold: true, color: COL.cartel, fontFace: HEAD });
-    text(s, small, { x, y: 5.1, w: 3.6, h: 0.9, fontSize: 15, color: COL.soft });
+    text(s, big, { x, y: 4.3, w: 3.8, h: 0.8, fontSize: 36, bold: true, color: ACCENT, fontFace: HEAD });
+    text(s, small, { x, y: 5.1, w: 3.6, h: 0.9, fontSize: 15, color: COL.ink });
   });
-  text(s, "Supratik Bhowal  ·  IEM Kolkata  ·  with Apart Research", { x: 0.6, y: 6.6, w: 9, h: 0.4, fontSize: 15, color: COL.soft });
+  text(s, "Supratik Bhowal  ·  IEM Kolkata  ·  with Apart Research", { x: 0.6, y: 6.6, w: 9, h: 0.4, fontSize: 15, color: COL.muted });
   s.addNotes(
     "Two AI agents that set prices for two competing firms often learn to keep prices high without being told to. " +
       "We ask what happens when one of them is replaced. Short answer: the cartel survives if the new agent reads the old price history.",
@@ -109,9 +110,9 @@ function numberBadge(slide, x, y, n, color) {
     { x: 0.6, y: 1.6, w: 5.6, h: 4.5, fontSize: 18, color: COL.ink2 },
   );
   const items = [
-    ["The model", "the AI system itself (its weights)", COL.blue],
-    ["The price history", "the last 30 rounds of prices that the new agent reads", COL.cartel],
-    ["The notes", "what the old agent wrote to itself each round", COL.compete],
+    ["The model", "the AI system itself (its weights)", ACCENT],
+    ["The price history", "the last 30 rounds of prices that the new agent reads", ACCENT],
+    ["The notes", "what the old agent wrote to itself each round", ACCENT],
   ];
   items.forEach(([head, body, color], i) => {
     const y = 1.6 + i * 1.6;
@@ -145,10 +146,10 @@ function numberBadge(slide, x, y, n, color) {
   card(s, 7.3, 1.6, 5.4, 4.6);
   text(s, "Two benchmarks define the scale", { x: 7.6, y: 1.85, w: 4.9, h: 0.5, fontSize: 18, bold: true, fontFace: HEAD });
   s.addShape(pres.shapes.RECTANGLE, { x: 7.8, y: 3.25, w: 4.4, h: 0.22, fill: { color: COL.soft }, line: { color: COL.soft } });
-  s.addShape(pres.shapes.OVAL, { x: 7.7, y: 3.16, w: 0.4, h: 0.4, fill: { color: COL.compete }, line: { color: COL.compete } });
-  s.addShape(pres.shapes.OVAL, { x: 11.9, y: 3.16, w: 0.4, h: 0.4, fill: { color: COL.cartel }, line: { color: COL.cartel } });
-  text(s, "Competitive (Nash)\nprice 1.473", { x: 7.5, y: 3.7, w: 2.2, h: 0.8, fontSize: 14, color: COL.compete, bold: true });
-  text(s, "Monopoly\nprice 1.925", { x: 10.5, y: 3.7, w: 2.0, h: 0.8, fontSize: 14, color: COL.cartel, bold: true, align: "right" });
+  s.addShape(pres.shapes.OVAL, { x: 7.7, y: 3.16, w: 0.4, h: 0.4, fill: { color: COL.ink }, line: { color: COL.ink } });
+  s.addShape(pres.shapes.OVAL, { x: 11.9, y: 3.16, w: 0.4, h: 0.4, fill: { color: ACCENT }, line: { color: ACCENT } });
+  text(s, "Competitive (Nash)\nprice 1.473", { x: 7.5, y: 3.7, w: 2.2, h: 0.8, fontSize: 14, color: COL.ink, bold: true });
+  text(s, "Monopoly\nprice 1.925", { x: 10.5, y: 3.7, w: 2.0, h: 0.8, fontSize: 14, color: ACCENT, bold: true, align: "right" });
   text(
     s,
     "Profit index and price index: 0 = competitive level, 1 = monopoly level. A price above the monopoly price gives a price index above 1 but a lower profit index.",
@@ -204,15 +205,15 @@ function numberBadge(slide, x, y, n, color) {
   const values = [0.9, 0.884, 0.876, 0.63, 0.289, 0.199, 0.039, 0.023];
   s.addChart(pres.charts.BAR, [{ name: "Profit index, rounds 150–199", labels, values }], {
     x: 0.6, y: 1.45, w: 7.6, h: 5.3, barDir: "bar", catAxisOrientation: "maxMin",
-    chartColors: [COL.ink2, COL.ink2, COL.cartel, COL.blank, COL.blank, COL.compete, COL.compete, COL.muted],
+    chartColors: [COL.ink, COL.bar, ACCENT, COL.bar, COL.bar, COL.bar, COL.bar, COL.bar],
     showValue: true, dataLabelPosition: "outEnd", dataLabelFormatCode: "0.000", dataLabelFontSize: 13, dataLabelColor: COL.ink, dataLabelFontFace: "+mn-lt",
     valAxisMinVal: 0, valAxisMaxVal: 1, valAxisLabelFormatCode: "0.0", valAxisLabelFontSize: 12, catAxisLabelFontSize: 14,
     valAxisLabelColor: COL.muted, catAxisLabelColor: COL.ink, catAxisLabelFontFace: "+mn-lt", valAxisLabelFontFace: "+mn-lt",
-    valGridLine: { color: "E3E8ED", size: 0.75 }, catGridLine: { style: "none" }, showLegend: false,
+    valGridLine: { color: "E5E7EB", size: 0.75 }, catGridLine: { style: "none" }, showLegend: false,
     showTitle: true, title: "Run 9: profit index after the replacement (29 markets)", titleFontSize: 15, titleColor: COL.ink, titleFontFace: "+mn-lt",
   });
   card(s, 8.6, 1.6, 4.1, 2.3);
-  text(s, "6 of 6", { x: 8.85, y: 1.8, w: 3.7, h: 0.8, fontSize: 40, bold: true, color: COL.cartel, fontFace: HEAD });
+  text(s, "6 of 6", { x: 8.85, y: 1.8, w: 3.7, h: 0.8, fontSize: 40, bold: true, color: ACCENT, fontFace: HEAD });
   text(s, "independent runs: the same model with the history stays at the cartel level; without it, profits fall far.", { x: 8.85, y: 2.65, w: 3.7, h: 1.2, fontSize: 15, color: COL.ink2 });
   card(s, 8.6, 4.15, 4.1, 2.55);
   text(s, "No notice needed", { x: 8.85, y: 4.35, w: 3.7, h: 0.45, fontSize: 18, bold: true, fontFace: HEAD });
@@ -227,7 +228,7 @@ function numberBadge(slide, x, y, n, color) {
   s.addImage({ path: path.join(FIG, "fig_trajectories.png"), x: 0.6, y: 1.5, w: 8.4, h: 3.02 });
   text(s, "Run 9, mean over 29 markets per condition. Left: profit index. Right: price index. Dashed line: the replacement at round 100.", { x: 0.6, y: 4.65, w: 8.4, h: 0.6, fontSize: 13, color: COL.muted });
   card(s, 9.4, 1.5, 3.3, 5.2);
-  text(s, "1.314", { x: 9.65, y: 1.75, w: 2.9, h: 0.8, fontSize: 40, bold: true, color: COL.blank, fontFace: HEAD });
+  text(s, "1.314", { x: 9.65, y: 1.75, w: 2.9, h: 0.8, fontSize: 40, bold: true, color: ACCENT, fontFace: HEAD });
   text(s, "price index of the entrant without history in run 9 (above the monopoly level of 1)", { x: 9.65, y: 2.6, w: 2.85, h: 1.3, fontSize: 15, color: COL.ink2 });
   text(s, "A monitor that tracks only profits would call this the end of the cartel. Consumers still pay more than the monopoly price.", { x: 9.65, y: 4.1, w: 2.85, h: 2.3, fontSize: 15, color: COL.ink2 });
   text(
@@ -243,8 +244,8 @@ function numberBadge(slide, x, y, n, color) {
   const s = pres.addSlide({ masterName: "CONTENT" });
   s.addText("Result 3: the new model's pricing style decides the outcome", { placeholder: "title" });
   const cols = [
-    ["Mistral-7B entrant", "21.6–25.5%", "of rounds it repeats its last price", "Breaks the inherited cartel in 4 of 4 runs: profit index 0.55–0.78 below no replacement. It explores, and prices drift down.", COL.compete],
-    ["OLMo-2-7B entrant", "96.3–96.8%", "of rounds it repeats its last price", "Keeps the inherited cartel in 2 of 2 runs. Typical note: “Maintain price at $1.93 as it consistently yields profit.”", COL.cartel],
+    ["Mistral-7B entrant", "21.6–25.5%", "of rounds it repeats its last price", "Breaks the inherited cartel in 4 of 4 runs: profit index 0.55–0.78 below no replacement. It explores, and prices drift down.", COL.ink],
+    ["OLMo-2-7B entrant", "96.3–96.8%", "of rounds it repeats its last price", "Keeps the inherited cartel in 2 of 2 runs. Typical note: “Maintain price at $1.93 as it consistently yields profit.”", ACCENT],
   ];
   cols.forEach(([head, big, small, body, color], i) => {
     const x = 0.6 + i * 6.2;
@@ -274,19 +275,19 @@ function numberBadge(slide, x, y, n, color) {
     text(s, head, { x: 1.65, y: y + 0.18, w: 5.2, h: 0.4, fontSize: 18, bold: true, fontFace: HEAD });
     text(s, body, { x: 1.65, y: y + 0.6, w: 5.2, h: 0.75, fontSize: 14, color: COL.muted });
   });
-  card(s, 7.4, 1.55, 5.3, 4.6, COL.ink);
-  text(s, "After calibration", { x: 7.7, y: 1.8, w: 4.7, h: 0.45, fontSize: 18, bold: true, color: COL.soft, fontFace: HEAD });
-  text(s, "0 of 13", { x: 7.7, y: 2.35, w: 4.7, h: 0.85, fontSize: 40, bold: true, color: COL.paper, fontFace: HEAD });
-  text(s, "audit cells show punishment in each of runs 6, 7 and 8", { x: 7.7, y: 3.2, w: 4.7, h: 0.5, fontSize: 15, color: COL.soft });
-  text(s, "1 of 15", { x: 7.7, y: 3.95, w: 4.7, h: 0.85, fontSize: 40, bold: true, color: COL.paper, fontFace: HEAD });
-  text(s, "in run 9. The instructed trigger agent (positive control) is detected in runs 4 and 6–9.", { x: 7.7, y: 4.8, w: 4.7, h: 1.0, fontSize: 15, color: COL.soft });
+  card(s, 7.4, 1.55, 5.3, 4.6);
+  text(s, "After calibration", { x: 7.7, y: 1.8, w: 4.7, h: 0.45, fontSize: 18, bold: true, color: COL.ink, fontFace: HEAD });
+  text(s, "0 of 13", { x: 7.7, y: 2.35, w: 4.7, h: 0.85, fontSize: 40, bold: true, color: ACCENT, fontFace: HEAD });
+  text(s, "audit cells show punishment in each of runs 6, 7 and 8", { x: 7.7, y: 3.2, w: 4.7, h: 0.5, fontSize: 15, color: COL.ink });
+  text(s, "1 of 15", { x: 7.7, y: 3.95, w: 4.7, h: 0.85, fontSize: 40, bold: true, color: ACCENT, fontFace: HEAD });
+  text(s, "in run 9. The instructed trigger agent (positive control) is detected in runs 4 and 6–9.", { x: 7.7, y: 4.8, w: 4.7, h: 1.0, fontSize: 15, color: COL.ink });
   text(s, "Without calibration, 0–3 cells per run would look like punishment.", { x: 0.6, y: 6.35, w: 12.1, h: 0.5, fontSize: 15, color: COL.ink2, bold: true });
   s.addNotes("The inherited high prices persist because the agents anchor on what they see, not because they threaten a price war.");
 }
 
 // 9. Implications --------------------------------------------------------------------------------
 {
-  const s = pres.addSlide({ masterName: "DARK" });
+  const s = pres.addSlide({ masterName: "TITLE" });
   s.addText("What this means: govern the transcript, not only the agent", { placeholder: "title" });
   const items = [
     ["Competition authorities", "Replacing a colluding pricing system is not a remedy if the shared price history moves with the seat. Remove or redact the history and the notes."],
@@ -299,9 +300,9 @@ function numberBadge(slide, x, y, n, color) {
     const row = Math.floor(i / 2);
     const x = 0.6 + col * 6.2;
     const y = 1.6 + row * 2.6;
-    card(s, x, y, 5.9, 2.3, COL.ink2);
-    text(s, head, { x: x + 0.3, y: y + 0.25, w: 5.3, h: 0.45, fontSize: 20, bold: true, color: COL.cartel, fontFace: HEAD });
-    text(s, body, { x: x + 0.3, y: y + 0.8, w: 5.3, h: 1.4, fontSize: 16, color: COL.paper });
+    card(s, x, y, 5.9, 2.3);
+    text(s, head, { x: x + 0.3, y: y + 0.25, w: 5.3, h: 0.45, fontSize: 20, bold: true, color: ACCENT, fontFace: HEAD });
+    text(s, body, { x: x + 0.3, y: y + 0.8, w: 5.3, h: 1.4, fontSize: 16, color: COL.ink });
   });
   s.addNotes("The unit of analysis moves from the agent to the agent and its context.");
 }
@@ -334,7 +335,7 @@ function numberBadge(slide, x, y, n, color) {
     { x: 7.2, y: 2.4, w: 5.2, h: 2.2, fontSize: 15, color: COL.ink2, paraSpaceAfter: 8 },
   );
   text(s, "Code, data and report:", { x: 7.2, y: 4.75, w: 5.2, h: 0.4, fontSize: 15, bold: true, color: COL.ink });
-  text(s, [{ text: "github.com/SSCoderz2123/AI-Collusion-Research-Sprint", options: { hyperlink: { url: "https://github.com/SSCoderz2123/AI-Collusion-Research-Sprint" } } }], { x: 7.2, y: 5.15, w: 5.3, h: 0.4, fontSize: 14, color: COL.blue });
+  text(s, [{ text: "github.com/SSCoderz2123/AI-Collusion-Research-Sprint", options: { hyperlink: { url: "https://github.com/SSCoderz2123/AI-Collusion-Research-Sprint" } } }], { x: 7.2, y: 5.15, w: 5.3, h: 0.4, fontSize: 14, color: ACCENT });
   s.addNotes("All numbers come from stored run data through the analysis code in the repository. The report lists every run, null results and failures.");
 }
 

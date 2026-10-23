@@ -49,3 +49,11 @@ def test_schema_reorder_puts_cell_borders_in_ooxml_order():
     )
     br._reorder(root)
     assert [br._local(child.tag) for child in root] == ["top", "left", "bottom", "right"]
+
+
+def test_display_equations_become_numbered_latex_equations():
+    br = _build_report()
+    body = "Text.\n\n$$q = a + b, \\qquad (7)$$\n\nMore text.\n"
+    latex = br.equations_to_latex(body)
+    assert "\\begin{equation*}" in latex and "\\tag{7}" in latex
+    assert "$$" not in latex and "\\qquad (7)" not in latex
