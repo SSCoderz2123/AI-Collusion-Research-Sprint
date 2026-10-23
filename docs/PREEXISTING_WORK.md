@@ -35,6 +35,8 @@ Record here, with commit hashes:
 - 23 Oct: Windows UTF-8 output fix for the scripts (PR #7).
 - 23 Oct: final-run changes and configs for runs 9–12 (request de-duplication, `same_notes`, H5c, H9,
   exploratory tables, `pool.py --shared`, `inspect_replies.py`, parallel GPU chunks).
+- 23 Oct: final runs 9–12 on Modal, started 10:26 UTC (sprint work); results in `docs/RUN_LOG.md`
+  and `docs/RESULTS.md`. Run 11 failed in phase 2.
 
 - Pilot and main runs, all data under `results/`.
 - Code changes after 23 Oct (list them).
