@@ -1,0 +1,87 @@
+"""End-to-end run of every stage with the mock backend."""
+
+import pytest
+
+from succession.analysis import analyze
+from succession.backends import MockBackend
+from succession.config import ExperimentConfig
+from succession.experiment import run_stages, stage_phase1
+from succession.store import RunStore
+
+
+def tiny_cfg() -> ExperimentConfig:
+    cfg = ExperimentConfig()
+    cfg.phase1.n_sessions = 3
+    cfg.phase1.rounds = 20
+    cfg.phase1.select_from = 10
+    cfg.phase1.select_threshold = -10.0  # keep everything in the test
+    cfg.phase2.rounds = 10
+    cfg.deviation.horizon = 2
+    cfg.history_window = 5
+    cfg.checkpoint_every = 5
+    return cfg
+
+
+def test_all_stages_and_analysis(tmp_path):
+    cfg = tiny_cfg()
+    store = RunStore(tmp_path / "run")
+    run_stages(cfg, MockBackend(), store, ["aa", "controls", "phase1", "select", "phase2", "deviation"])
+
+    assert store.load_json("aa/result.json")["identical_fraction"] == 1.0
+    sessions = store.load_sessions("phase2/sessions.json")
+    assert len(sessions) == 3 * len(cfg.phase2.branches)
+    assert all(s.next_round == 30 for s in sessions)
+    events = store.load_json("deviation/audit_events.json")
+    assert len(events) == len(sessions) * len(cfg.deviation.deviator_seats)
+
+    text = analyze(store)
+    assert "Phase 2" in text and "same_inherit" in text
+    assert (tmp_path / "run/analysis/trajectories.png").exists()
+    assert (tmp_path / "run/analysis/differences.png").exists()
+
+
+def test_changed_config_is_refused(tmp_path):
+    store = RunStore(tmp_path / "run")
+    run_stages(tiny_cfg(), MockBackend(), store, ["phase1"])
+    changed = tiny_cfg()
+    changed.history_window = 3
+    with pytest.raises(ValueError, match="history_window"):
+        run_stages(changed, MockBackend(), store, ["phase1"])
+    run_stages(tiny_cfg(), MockBackend(), store, ["phase1"])  # same config resumes
+
+
+def test_resume_gives_same_result(tmp_path):
+    cfg = tiny_cfg()
+    full = RunStore(tmp_path / "full")
+    stage_phase1(cfg, MockBackend(), full)
+
+    part = RunStore(tmp_path / "part")
+    short = tiny_cfg()
+    short.phase1.rounds = 10  # simulate a stop at round 10
+    stage_phase1(short, MockBackend(), part)
+    stage_phase1(cfg, MockBackend(), part)  # resume to round 20
+
+    a = [s.to_dict() for s in full.load_sessions("phase1/sessions.json")]
+    b = [s.to_dict() for s in part.load_sessions("phase1/sessions.json")]
+    assert a == b
+
+
+def test_pilot_summary_has_phase1_table_and_timings(tmp_path):
+    """Regression: the first Modal pilot summary showed no phase-1 numbers and no timings."""
+    store = RunStore(tmp_path / "run")
+    run_stages(tiny_cfg(), MockBackend(), store, ["aa", "phase1", "select"])
+    text = analyze(store)
+    assert "## Phase 1" in text and "index_select_window" in text
+    assert "## Stage timings" in text
+    assert [r["stage"] for r in store.load_json("timings.json")] == ["aa", "phase1", "select"]
+    assert (tmp_path / "run/analysis/phase1_trajectories.png").exists()
+
+
+def test_run_made_before_a_new_config_field_still_resumes(tmp_path):
+    """A field added later at its default value is not a design change."""
+    store = RunStore(tmp_path / "run")
+    run_stages(tiny_cfg(), MockBackend(), store, ["phase1"])
+    old = store.load_json("config.json")
+    del old["controls"]  # simulate a run folder written before ControlsSpec existed
+    store.save_json("config.json", old)
+    run_stages(tiny_cfg(), MockBackend(), store, ["phase1"])  # must not raise

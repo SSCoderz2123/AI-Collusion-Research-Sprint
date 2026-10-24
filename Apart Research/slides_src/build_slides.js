@@ -87,7 +87,7 @@ function numberBadge(slide, x, y, n, color) {
     text(s, big, { x, y: 4.3, w: 3.8, h: 0.8, fontSize: 36, bold: true, color: ACCENT, fontFace: HEAD });
     text(s, small, { x, y: 5.1, w: 3.6, h: 0.9, fontSize: 15, color: COL.ink });
   });
-  text(s, "Supratik Bhowal  ·  IEM Kolkata  ·  with Apart Research", { x: 0.6, y: 6.6, w: 9, h: 0.4, fontSize: 15, color: COL.muted });
+  text(s, "Supratik Bhowal  ·  with Apart Research", { x: 0.6, y: 6.6, w: 9, h: 0.4, fontSize: 15, color: COL.muted });
   s.addNotes(
     "Two AI agents that set prices for two competing firms often learn to keep prices high without being told to. " +
       "We ask what happens when one of them is replaced. Short answer: the cartel survives if the new agent reads the old price history.",

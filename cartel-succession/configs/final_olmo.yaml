@@ -1,0 +1,54 @@
+# Run 10: other family = OLMo-2-7B, as in run 7. Tests H8 (the run-7 OLMo-2 result replicates).
+# Changes against runs 4-8 (final runs): 40 phase-1 sessions,
+# 30 prompt-control sessions per variant, branch same_notes, dedupe_requests true.
+# Do not change phase1.select_* after phase 1 has run.
+name: succession_final_olmo
+seed: 20261028
+history_window: 30
+prompt_variant: default
+price_min: 0.0
+price_max: 10.0
+checkpoint_every: 10
+dedupe_requests: true   # identical requests are generated once: exact pairing (runs 1-8: false)
+
+incumbent_model:
+  name: qwen7b
+  hf_id: Qwen/Qwen2.5-7B-Instruct
+  max_model_len: 4096
+  gpu_memory_utilization: 0.90
+  dtype: auto
+
+other_model:
+  name: olmo2_7b
+  hf_id: allenai/OLMo-2-1124-7B-Instruct   # ungated
+  max_model_len: 4096
+  gpu_memory_utilization: 0.90
+  dtype: auto
+
+sampling:
+  temperature: 0.7
+  top_p: 1.0
+  max_tokens: 160
+
+phase1:
+  n_sessions: 40    # runs 4-8: 30; more roots give tighter paired CIs
+  rounds: 100
+  select_from: 50
+  select_threshold: 0.3
+
+phase2:
+  rounds: 100
+  swap_seat: 1
+  announce: true
+  branches: [control, placebo, same_inherit, same_blank, same_notes, other_inherit, other_blank, br_bot]
+
+controls:
+  n_per_variant: 30   # runs 4-8: 10; the trigger and myopic CIs were too wide
+  rounds: 60
+
+deviation:
+  enabled: true
+  cut: 0.10
+  horizon: 6
+  discount: 0.95
+  deviator_seats: [0, 1]

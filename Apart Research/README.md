@@ -57,7 +57,7 @@ build uses for styles, fonts and page setup; `slides_src/` builds the slides.
 | Limitations and Dual-Use / Ethical Considerations appendix | Appendix A |
 | Positive and negative controls, variance, seeds, baselines | Section 4.1, Tables 3–5, Appendix C and D |
 | Prior work marked as preexisting in the README and the report | Repository README and Appendix G |
-| LLM usage statement | last section of the report |
+| LLM usage statement | removed from the report at the author's request; AI use is logged in `docs/AI_USE.md` |
 
 If you edit `report.docx` in Word or Google Docs and export the PDF there, check the page count
 again: a different renderer can move the page breaks.

@@ -57,3 +57,33 @@ def test_display_equations_become_numbered_latex_equations():
     latex = br.equations_to_latex(body)
     assert "\\begin{equation*}" in latex and "\\tag{7}" in latex
     assert "$$" not in latex and "\\qquad (7)" not in latex
+
+
+def test_title_given_as_a_list_gets_a_line_break():
+    meta = {"title": ["A?", "B"], "affiliation": "X", "author": "N", "email": "e", "sprint_url": "u", "abstract": "S"}
+    front = _build_report().front_markdown(meta)
+    assert "A?\\\nB[^sprint]" in front  # markdown hard line break between the two title lines
+
+
+def _public_copy(tmp_path, monkeypatch):
+    spec = importlib.util.spec_from_file_location("make_public_copy", ROOT / "scripts" / "make_public_copy.py")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    monkeypatch.setattr(module, "OUT", tmp_path)
+    return module
+
+
+def test_public_copy_removes_references_to_left_out_docs(tmp_path, monkeypatch):
+    copy = _public_copy(tmp_path, monkeypatch)
+    src = tmp_path / "src.yaml"
+    src.write_text("# Fixed design (docs/PREREGISTRATION.md, H7).\nseed: 1\n", encoding="utf-8")
+    copy.copy_file(src, "configs/x.yaml")
+    assert (tmp_path / "configs" / "x.yaml").read_text(encoding="utf-8") == "# Fixed design (H7).\nseed: 1\n"
+
+
+def test_public_copy_stops_on_an_assistant_mention(tmp_path, monkeypatch):
+    copy = _public_copy(tmp_path, monkeypatch)
+    src = tmp_path / "src.py"
+    src.write_text('"""Written with Claude Code."""\n', encoding="utf-8")
+    with pytest.raises(SystemExit, match="Claude"):
+        copy.copy_file(src, "scripts/x.py")

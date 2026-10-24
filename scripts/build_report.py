@@ -121,7 +121,9 @@ def make_reference(template: Path, out: Path) -> None:
         st.paragraph_format.line_spacing = 1.15
     doc.styles["Compact"].paragraph_format.space_after = Pt(2)
 
-    for name, size, before in (("Heading 1", 14, 10), ("Heading 2", 13, 6), ("Heading 3", 11, 6)):
+    # Heading 1 (sections 1-6, Code and Data, References, Appendix) gets one blank line (about 13 pt)
+    # more space before it than a subsection, so the sections stand apart.
+    for name, size, before in (("Heading 1", 14, 24), ("Heading 2", 13, 6), ("Heading 3", 11, 6)):
         st = _style(doc, name)
         _set_font(st, size, bold=True, italic=False)
         pf = st.paragraph_format
@@ -184,6 +186,7 @@ def make_reference(template: Path, out: Path) -> None:
     code.font.size = Pt(7.5)
     code.paragraph_format.line_spacing_rule = WD_LINE_SPACING.SINGLE
     code.paragraph_format.space_after = Pt(6)
+    code.paragraph_format.keep_together = True  # the agent prompt stays on one page
 
     verbatim = _style(doc, "Verbatim Char", kind=2)
     verbatim.font.name = "Courier New"
@@ -210,8 +213,9 @@ def _lines(value: str | list[str]) -> list[str]:
 
 def front_markdown(meta: dict) -> str:
     affiliation = "\\\n".join(_lines(meta["affiliation"]))  # markdown hard line breaks
+    title = "\\\n".join(_lines(meta["title"]))
     return f"""::: {{custom-style="Title"}}
-{meta["title"]}[^sprint]
+{title}[^sprint]
 :::
 
 ::: {{custom-style="Author Block"}}
@@ -527,10 +531,16 @@ def build_docx(meta: dict, body: str, template: Path, out: Path, work: Path) -> 
     embed_fonts(raw, template)
     doc = Document(str(raw))
     style_tables(doc)
+    for previous, par in zip(doc.paragraphs, doc.paragraphs[1:], strict=False):
+        if par.style.name == "Source Code":
+            previous.paragraph_format.keep_with_next = True  # the sentence that introduces the code
     for par in doc.paragraphs:
-        if par.style.name in ("Captioned Figure", "Figure") or par._p.xpath(".//pic:pic"):
+        if par.style.name in ("Captioned Figure", "Figure"):
             par.alignment = WD_ALIGN_PARAGRAPH.CENTER
-            par.paragraph_format.keep_with_next = True
+            par.paragraph_format.keep_with_next = True  # a figure stays with its caption
+        elif par._p.xpath(".//pic:pic"):
+            # An equation image: no keep-with-next, so a heading block can end a page before it.
+            par.alignment = WD_ALIGN_PARAGRAPH.CENTER
     doc.save(str(out))
     fix_schema(out)
 
@@ -618,12 +628,14 @@ def build_tex(meta: dict, body: str, out: Path) -> None:
     latex_body = res.stdout.replace("\\section*{References}", "")
     abstract = _latex(meta["abstract"])
     affiliation = "\\\\".join(_latex(line).strip() for line in _lines(meta["affiliation"]))
+    title_lines = "\\\\".join(_latex(line).strip() for line in _lines(meta["title"]))
     meta = {
         key: _latex(value).strip() if key != "sprint_url" else value
         for key, value in meta.items()
-        if key != "affiliation"
+        if key not in ("affiliation", "title")
     }
     meta["affiliation"] = affiliation
+    meta["title"] = title_lines
     title = (
         "\\title{\\bfseries "
         + meta["title"]

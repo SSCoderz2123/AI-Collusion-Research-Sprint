@@ -28,4 +28,4 @@ The sprint report text is the authors' own writing. AI tools may check reasoning
 and suggest edits. They do not write report sections (see `docs/AI_USE.md`).
 Exception: on 23 Oct 2026 the author asked Claude Code to draft the report (`Apart Research/report.md`,
 built into `report.docx`, `report.pdf` and `main3.tex`), the slides and the project image.
-The report discloses this in its LLM Usage Statement.
+`docs/AI_USE.md` records this. At the author's request, the report has no LLM Usage Statement.
