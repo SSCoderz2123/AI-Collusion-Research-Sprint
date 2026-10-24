@@ -63,7 +63,7 @@ def main() -> None:
     fig.text(
         0.05,
         0.655,
-        "LLM price collusion survives agent replacement\nthrough the inherited price history",
+        "LLM price collusion survives agent replacement\nthrough inherited price history",
         color=SOFT,
         fontsize=22,
         linespacing=1.35,

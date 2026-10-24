@@ -60,7 +60,7 @@ results/
 README = """# Cartel Succession
 
 Does LLM price collusion survive replacing an agent? Code for the study "Who Carries the Cartel?
-LLM Price Collusion Survives Agent Replacement Through the Inherited Price History"
+LLM Price Collusion Survives Agent Replacement Through Inherited Price History"
 (AI Collusion Research Sprint, 23–25 Oct 2026; Track 1, question 1.2).
 
 ## Question

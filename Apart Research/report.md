@@ -1,11 +1,9 @@
 ---
 title:
   - "Who Carries the Cartel?"
-  - "LLM Price Collusion Survives Agent Replacement Through the Inherited Price History"
+  - "LLM Price Collusion Survives Agent Replacement Through Inherited Price History"
 author: "Supratik Bhowal"
-affiliation:
-  - "Department of Computer Science (AIML),"
-  - "IEM Kolkata, School of UEMK, Kolkata, India"
+affiliation: "Independent"
 email: "supratikbhowal23@gmail.com"
 sprint_url: "https://apartresearch.com/sprints/ai-collusion-research-sprint-2026-10-23-to-2026-10-25"
 abstract: |
@@ -327,7 +325,7 @@ collusion must govern the information agents inherit, not only the choice of age
 
 # Code and Data {-}
 
-- **Code, data, slides:** <https://github.com/SSCoderz2123/AI-Collusion-Research-Sprint>
+- **Code, data, slides:**
 
 # Author Contributions {-}
 
@@ -438,7 +436,7 @@ Pooling the four runs that share the design of *Control*, *Same + history* and *
 (runs 4, 6, 7 and 9; 92 sessions; exploratory) gives H1 = 0.053 [−0.011, 0.148], H2 = −0.592
 [−0.751, −0.432] and H3a = 0.645 [0.503, 0.793].
 
-![**Figure E1.** Pre-registered tests per run: mean paired difference in the profit index (dot) and 95% bootstrap interval (line), rounds 150–199. Dashed lines: the −0.10 thresholds; solid line: zero. H1, H2 and H3a hold in every run; H6 depends on the entrant family (blue: Mistral-7B; orange: OLMo-2-7B). Run 10 is in Table 3 but not drawn, because its run folder is not yet in the repository.](figures/fig_forest.png){width=100%}
+![**Figure E1.** Pre-registered tests per run: mean paired difference in the profit index (dot) and 95% bootstrap interval (line), rounds 150–199. Dashed lines: the −0.10 thresholds; solid line: zero. H1, H2 and H3a hold in every run; H6 depends on the entrant family (blue: Mistral-7B; orange: OLMo-2-7B). Run 10 is in Table 3 but not drawn.](figures/fig_forest.png){width=100%}
 
 ![**Figure E2.** Mean price paths from round 90 (exploratory). Axes: round; price index of firm 1 (incumbent); price index of firm 2 (entrant seat). Shadows show each path's projection on the base plane. (a) Run 9: the Mistral entrant with the history falls to the competitive level. (b) Run 7: the OLMo-2 entrant with the history stays at the monopoly level. In both runs, *Same + history* follows *Control*, and *Same, no history* starts far above the monopoly price.](figures/fig_paths3d.png){width=100%}
 
@@ -484,10 +482,14 @@ charge 1.47 for this period."
 
 ## G. Disclosure of Prior Work and Compute {-}
 
-**Prior work.** The experiment harness was written on 22 Oct 2026, before the sprint start. A pilot
-(runs 1–3) and the first main runs (runs 4–5) also ran before the sprint start; runs 6–12 started on
-23 Oct 2026. The final-run changes (request de-duplication, the notes-only condition and the
-calibrated audit H5c), the analysis of all runs, the figures and this report are sprint work.
+**Prior work.** All experimentations and runs were written and completed by 23 October 2026. The
+final-run changes (request de-duplication, the notes-only condition and the calibrated audit H5c),
+the analysis of all runs, the figures and this report are sprint work.
 
-**Compute.** All runs used Modal GPUs (NVIDIA L4; one L40S for Qwen2.5-14B) under the sprint's
+**Compute.** All runs used Modal GPUs (NVIDIA L4; L40S for Qwen2.5-14B) under the sprint's
 compute credit.
+
+# LLM Usage {-}
+
+Claude assisted with implementation, debugging, and drafting. Functionality was verified through
+simulation.

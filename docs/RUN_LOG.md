@@ -2202,3 +2202,11 @@ H5c cells, excess response minus the myopic control (pre-registered for the fina
   the appendix. No number changed.
 - New `cartel-succession/`: code, configs, tests, `docs/RESEARCH_BRIEF.md` and
   `docs/RELATED_WORK.md`, written by `scripts/make_public_copy.py`; 72 tests pass inside the copy.
+
+## Author edits and LLM Usage section (24 Oct)
+
+- The author edited `report.docx` on `main`: title ("Through Inherited Price History"), affiliation
+  "Independent", the Code and Data link left empty, the Figure E1 caption and Appendix G. The edits
+  are kept and copied into `report.md` and `main3.tex`; `report.docx` was not rebuilt.
+- Added a final "LLM Usage" section at the author's request (text supplied by the author).
+  `report.pdf` re-exported: main text still ends on page 8; 13 pages.
