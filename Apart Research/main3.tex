@@ -35,8 +35,8 @@
 \setlength{\parskip}{4pt}
 \setlength{\parindent}{0pt}
 \renewcommand{\refname}{References}
-\title{\bfseries Who Carries the Cartel? LLM Price Collusion Survives Agent Replacement
-Through the Inherited Price History\thanks{Research conducted at the \href{https://apartresearch.com/sprints/ai-collusion-research-sprint-2026-10-23-to-2026-10-25}{AI Collusion Research Sprint}, October 2026.}}
+\title{\bfseries Who Carries the Cartel?\\LLM Price Collusion Survives Agent Replacement Through the Inherited
+Price History\thanks{Research conducted at the \href{https://apartresearch.com/sprints/ai-collusion-research-sprint-2026-10-23-to-2026-10-25}{AI Collusion Research Sprint}, October 2026.}}
 \author{\textbf{Supratik Bhowal}\\[2pt]\small Department of Computer Science (AIML),\\IEM Kolkata, School of UEMK, Kolkata, India\\\small\texttt{supratikbhowal23@gmail.com}\\[8pt]\textbf{With}\\Apart Research}
 \date{}
 \begin{document}
@@ -73,18 +73,16 @@ unless the shared history is also removed.
 Large language model (LLM) agents that set prices in a repeated market reach supra-competitive
 prices without communication or an instruction to collude \citep{fish2024algorithmic}, as reinforcement
 learners do \citep{calvano2020artificial}. Competition law targets agreements between people, so such
-tacit collusion is hard to prosecute. Replacing one agent is a natural remedy; it also happens
-whenever a firm changes its software vendor or model version. Its effect depends on where the cartel
-is stored: a replacement ends a cartel that is a property of the agent, but not one that is a
-property of the information the new agent receives.
+tacit collusion is hard to prosecute. Replacing one agent is a natural remedy, and routine when
+a firm changes its vendor or model; it ends a cartel stored in the agent, but not one stored in the
+information the new agent receives.
 
 A prompted LLM agent has no state outside its prompt: the market rules, a window of past prices
-(the \emph{price history}) and the notes it wrote to itself in the last round. An entrant with the same
-model, history and notes \emph{is} the old agent. Whether collusion survives a replacement therefore
-reduces to a separable question: is the cartel carried by the \emph{model}, the inherited \emph{price
-history}, or the inherited \emph{notes}? The answer identifies the item a remedy must change. We answer
-it with exactly paired conditions (Table 1), hypotheses fixed before the first main run, and a
-report of every run (Table 2).
+(the \emph{price history}) and the notes it wrote in the last round. An entrant with the same model,
+history and notes \emph{is} the old agent. The question is therefore separable: does the \emph{model}, the
+inherited \emph{price history} or the inherited \emph{notes} carry the cartel? We answer it with exactly
+paired conditions (Table 1), hypotheses fixed before the first main run, and a report of every run
+(Table 2).
 
 \textbf{Our main contributions are:}
 
@@ -92,20 +90,19 @@ report of every run (Table 2).
 \def\labelenumi{\arabic{enumi}.}
 \tightlist
 \item
-  \textbf{The price history carries the cartel.} In six of six independent runs, a new instance of the
-  same model that inherits the price history keeps the cartel; without the history it does not.
-  No replacement notice is needed; the predecessor's notes alone keep part of the cartel.
+  \textbf{The price history carries the cartel.} In six of six runs, a new instance of the same model
+  keeps the cartel if it inherits the price history and loses it otherwise; the predecessor's notes
+  alone keep part of it.
 \item
-  \textbf{Removing the history does not restore competition.} The entrant without a history lowers
+  \textbf{Removing the history does not restore competition.} The entrant without the history lowers
   profits by pricing \emph{above} the monopoly price, an outcome that a profit-only monitor misreads.
 \item
   \textbf{The entrant's pricing style decides the outcome.} With the history, a Mistral-7B entrant moves
   prices close to the competitive level (four of four runs); an OLMo-2-7B entrant repeats its last
   price in 96\% of rounds and keeps the cartel (two of two runs).
 \item
-  \textbf{A calibrated enforcement audit with exact pairing.} LLM agents follow a rival's price cut even
-  when they cannot punish, so an uncalibrated audit reports punishment that does not exist; after
-  calibration against a myopic control, almost no audit cell shows punishment.
+  \textbf{A calibrated enforcement audit.} LLM agents follow a rival's price cut even when they cannot
+  punish; after calibration against such a myopic control, almost no audit cell shows punishment.
 \end{enumerate}
 
 \hypertarget{related-work}{%
@@ -113,16 +110,15 @@ report of every run (Table 2).
 \addcontentsline{toc}{section}{2. Related Work}
 
 \citet{calvano2020artificial} show that Q-learning agents in a repeated logit Bertrand oligopoly learn
-supra-competitive prices sustained by finite punishments; \citet{fish2024algorithmic} obtain the same
-outcome with LLM agents, at a level that depends on the prompt wording. Both keep the same agents
-throughout; we use their market and replace one agent. \citet{tran2026enforcing} audit enforcement with
-paired forced deviations and find that prompted open models rarely punish; we adopt their audit and
-add a calibration step. \citet{arslan2026persistent} show that persistent partners raise learned prices;
+supra-competitive prices sustained by finite punishments; \citet{fish2024algorithmic} obtain the same with
+LLM agents, at a level that depends on the prompt. Both keep the same agents; we use their market
+and replace one agent. \citet{tran2026enforcing} audit enforcement with paired forced
+deviations and find that prompted open models rarely punish; we adopt their audit and add a
+calibration step. \citet{arslan2026persistent} show that persistent partners raise learned prices;
 \citet{gao2026interchangeability} test agent swaps in cooperative LLM teams with a placebo swap and cleared
-notes, a design we transfer to collusion. \citet{keppo2026fragility} find that heterogeneity in patience,
-data access and algorithm weakens LLM collusion, and \citet{lee2026leads} that collusion is a property of
-the model. \textbf{Gap:} no prior study replaces an agent inside an established LLM cartel, or separates
-the model, the history and the notes as carriers of collusion.
+notes, a design we transfer to collusion. Heterogeneity in patience, data access and algorithm
+weakens LLM collusion \citep{keppo2026fragility}, and collusion is a property of the model \citep{lee2026leads}. \textbf{Gap:} no prior study replaces an agent inside an established LLM cartel, or separates the
+model, the history and the notes as carriers of collusion.
 
 \hypertarget{methods}{%
 \section*{3. Methods}\label{methods}}
@@ -141,23 +137,21 @@ q_i = \frac{e^{(a-p_i)/\mu}}{\sum_{j=1}^{2} e^{(a-p_j)/\mu} + e^{a_0/\mu}}, \qqu
 
 with \emph{a} = 2, \emph{a}\textsubscript{0} = 0, \emph{μ} = 0.25 and unit cost \emph{c} = 1. The Nash price is \emph{p}\textsuperscript{N} = 1.473 and the
 joint-monopoly price \emph{p}\textsuperscript{M} = 1.925; \emph{π}\textsuperscript{N} and \emph{π}\textsuperscript{M} are the per-firm profits at these prices.
-Each round is normalized so that 0 is the competitive and 1 the monopoly level:
+Two indices map the competitive level to 0 and the monopoly level to 1:
 
 \begin{equation*}
 \Delta_t = \frac{1}{2}\sum_{i=1}^{2} \frac{\pi_{i,t} - \pi^{N}}{\pi^{M} - \pi^{N}}, \qquad P_t = \frac{1}{2}\sum_{i=1}^{2} \frac{p_{i,t} - p^{N}}{p^{M} - p^{N}}. \tag{2}
 \end{equation*}
 
 The \emph{profit index} Δ is the pre-registered primary outcome and the \emph{price index} P the secondary
-one. The two diverge above the monopoly price, where P \textgreater{} 1 while Δ falls, possibly below 0; we
-therefore report both.
+one; above the monopoly price they diverge (P \textgreater{} 1 while Δ falls), so we report both.
 
-Each firm is a prompted LLM agent served with vLLM 0.8.5 (temperature 0.7, at most 160 output
-tokens). Each round, the agent sees the market rules in plain words, the goal ``maximize your firm's
-total profit over all periods'', its last 30 rounds of prices, quantities and profits, and its notes
-from the last round; it replies with JSON holding new notes and a price (Appendix F). The prompt
-never mentions competition, collusion or punishment. In the analysed runs the incumbents are
-Qwen2.5-7B-Instruct; the other families are Mistral-7B-Instruct-v0.3 and OLMo-2-1124-7B-Instruct,
-all open-weight models with seeded sampling on our own GPUs.
+Each firm is a prompted LLM agent (vLLM 0.8.5, temperature 0.7, at most 160 output tokens). Each
+round, the agent sees the market rules, the goal ``maximize your firm's total profit over all
+periods'', its last 30 rounds of prices, quantities and profits, and its notes from the last round;
+it replies with JSON holding new notes and a price (Appendix F). The prompt never mentions
+competition, collusion or punishment. The incumbents are Qwen2.5-7B-Instruct; the other families
+are Mistral-7B-Instruct-v0.3 and OLMo-2-1124-7B-Instruct, all open-weight models with seeded sampling.
 
 \hypertarget{experimental-design}{%
 \subsection*{3.2 Experimental design}\label{experimental-design}}
@@ -178,7 +172,7 @@ and must move prices to the competitive level.
   >{\raggedright\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.1754}}
   >{\raggedright\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.1404}}
   >{\raggedright\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.1842}}@{}}
-\caption{\textbf{Table 1.} The eight phase-2 conditions, each applied to a copy of the same phase-1 session. ``History seen'' is the part of the past price history that the entrant sees in round 100. The code name links each condition to the repository.}\tabularnewline
+\caption{\textbf{Table 1.} The eight phase-2 conditions, each applied to a copy of the same phase-1 session. ``History seen'': what the entrant sees in round 100.}\tabularnewline
 \toprule\noalign{}
 \begin{minipage}[b]{\linewidth}\raggedright
 Condition
@@ -223,12 +217,15 @@ Code name
 \subsection*{3.3 Pairing, statistics and enforcement audit}\label{pairing-statistics-and-enforcement-audit}}
 \addcontentsline{toc}{subsection}{3.3 Pairing, statistics and enforcement audit}
 
-\textbf{Pairing.} Each model request carries a seed derived from the experiment seed, session, firm,
-round and retry count, never from the condition; conditions that show an agent the same prompt
-therefore sample the same reply. Because GPU arithmetic depends on the batch, from run 9 on we send
-identical requests within a round only once and copy the reply to every condition that sent it
-(\emph{request de-duplication}). The \emph{A/A check} replays 4 sessions from round 10 twice with the same
-seeds and without de-duplication, and reports the share of the 80 decisions that are identical.
+\textbf{Pairing and the A/A check.} Each model request carries a seed derived from the experiment seed,
+session, firm, round and retry count, never from the condition; conditions that show an agent the
+same prompt therefore receive the same reply, and two conditions differ only through what they
+change. GPU arithmetic depends on the batch composition, so from run 9 on we generate identical
+requests within a round only once and copy the reply to every condition that sent it (\emph{request
+de-duplication}). The \emph{A/A check} tests this determinism before each run: it plays 4 sessions from
+round 10 for 10 more rounds twice, with the same seeds and without de-duplication, and reports the
+share of the 80 price decisions that agree. A value of 1.0 means that equal prompts give equal
+replies; a lower value means that sampling noise unrelated to the conditions enters the comparisons.
 
 \begin{longtable}[]{@{}
   >{\raggedright\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.0566}}
@@ -236,7 +233,7 @@ seeds and without de-duplication, and reports the share of the 80 decisions that
   >{\raggedright\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.1509}}
   >{\raggedright\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.0849}}
   >{\raggedright\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.5660}}@{}}
-\caption{\textbf{Table 2.} All main runs, numbered as in the project run log. ``Kept'': phase-1 sessions that passed the inclusion rule. Runs 1--3 were pilot and setup runs; runs 4--5 ran before the sprint start (Appendix G); runs 5, 11 and 12 give no succession test (Section 4.5).}\tabularnewline
+\caption{\textbf{Table 2.} All main runs, numbered as in the project run log. ``Kept'': phase-1 sessions that passed the inclusion rule. Runs 1--3 were pilot runs; runs 4--5 ran before the sprint start (Appendix G); runs 5, 11 and 12 give no succession test (Section 4.5).}\tabularnewline
 \toprule\noalign{}
 \begin{minipage}[b]{\linewidth}\raggedright
 Run
@@ -288,8 +285,7 @@ Purpose
 with a 95\% percentile bootstrap interval over the \emph{n} sessions (10,000 resamples). A hypothesis is
 \emph{supported} if the whole interval lies on its stated side of the threshold, \emph{not supported} if it
 lies on the other side, and \emph{inconclusive} otherwise; −0.10 marks a negligible change. Appendix B
-lists the eleven hypotheses (H1--H9, with H3a/H3b and H5/H5c), when each was fixed, and the recorded
-deviations.
+lists the eleven hypotheses, when each was fixed, and the recorded deviations.
 
 \textbf{Enforcement audit.} A cartel requires that a price cut be punished. At round 200, each session is
 copied twice per deviating firm \emph{d}; in the cut copy, \emph{d}'s price is forced 10\% below its last price
@@ -300,14 +296,13 @@ for one round \emph{t}, and both copies continue for 6 rounds with the same seed
 e = \frac{p_r^{\mathrm{base}}(t+1) - p_r^{\mathrm{cut}}(t+1)}{p_d^{\mathrm{base}}(t) - p_d^{\mathrm{cut}}(t)} - r^{\mathrm{BR}}, \tag{4}
 \end{equation*}
 
-where \emph{r}\textsuperscript{BR} is the same ratio for a static best responder \citep{tran2026enforcing}; \emph{e} \textgreater{} 0 is the
-signature of punishment. Three prompt controls (10 sessions each in runs 4--8, 30 in runs 9--12) test
-the audit: the default prompt; a \emph{myopic} prompt (``profit in future periods does not count''), which
-has no reason to punish; and an instructed \emph{trigger} rule (drop to the Nash price after a cut),
-which the audit must detect. Because LLM agents follow cuts even when they cannot punish (runs 6--8),
-the pre-registered test H5c counts an audit cell (one condition and one deviating firm) as
-punishment only if \emph{ê}\textsubscript{cell} − \emph{ê}\textsubscript{myopic} \textgreater{} 0, i.e.~if its two-sample 95\% bootstrap interval lies
-above zero.
+where \emph{r}\textsuperscript{BR} is the same ratio for a static best responder \citep{tran2026enforcing}; \emph{e} \textgreater{} 0 signals
+punishment. Three prompt controls (10 sessions each in runs 4--8, 30 in runs 9--12) test the audit:
+the default prompt; a \emph{myopic} prompt (``profit in future periods does not count''), which has no
+reason to punish; and an instructed \emph{trigger} rule (drop to the Nash price after a cut), which the
+audit must detect. Because LLM agents follow cuts even when they cannot punish (runs 6--8), the
+pre-registered test H5c counts an audit cell (one condition and one deviating firm) as punishment
+only if the two-sample 95\% bootstrap interval of \emph{ê}\textsubscript{cell} − \emph{ê}\textsubscript{myopic} lies above zero.
 
 \hypertarget{results}{%
 \section*{4. Results}\label{results}}
@@ -320,21 +315,10 @@ above zero.
 All controls pass in the analysed runs (Appendix Table C1). The \emph{Control} cartel stays near its
 pre-replacement level except in run 7, where it weakens on its own (profit index 0.930 to 0.687);
 \emph{Placebo} has no detectable effect; the best-response bot lowers the price index by 0.715--0.949, to
-the competitive level. The A/A check is 1.0 in every run except run 9 (65 of 80 decisions, 0.8125),
-most likely through the batch effect; run 9 uses de-duplication, so its conditions remain exactly
-paired. Parse failures are at most 1.0\% per session. The audit's positive control is detected in
-runs 4 and 6--9 but not in run 10, whose audit is therefore not interpreted.
-
-\hypertarget{the-price-history-carries-the-cartel}{%
-\subsection*{4.2 The price history carries the cartel}\label{the-price-history-carries-the-cartel}}
-\addcontentsline{toc}{subsection}{4.2 The price history carries the cartel}
-
-In all six runs with a stable cartel, the same model with the history stays at the \emph{Control} level,
-while the same model without it falls far below: H1, H2 and H3a are supported in six of six runs
-(Table 3; Appendix E). The notice is not needed: without it (run 8), H1 = 0.002 {[}−0.014, 0.016{]}
-(H7 supported). With exact pairing (run 9), the H1 interval lies just below zero (−0.025 {[}−0.051,
-−0.001{]}); the cartel continues at a slightly lower level. In run 7, \emph{Same + history} exceeds
-\emph{Control} because that \emph{Control} cartel weakened.
+the competitive level. The A/A check gives 1.0 in every run except run 9 (65 of 80 decisions,
+0.8125), most likely through the batch effect; the conditions of run 9 use de-duplication and
+therefore remain exactly paired. Parse failures are at most 1.0\% per session. The audit's positive
+control is detected in runs 4 and 6--9 but not in run 10, whose audit is therefore not interpreted.
 
 \begin{longtable}[]{@{}
   >{\raggedright\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.0522}}
@@ -343,7 +327,7 @@ while the same model without it falls far below: H1, H2 and H3a are supported in
   >{\raggedright\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.2261}}
   >{\raggedright\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.2261}}
   >{\raggedright\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.2261}}@{}}
-\caption{\textbf{Table 3.} Main result for every run with a stable cartel. Cells: paired difference \emph{\(\hat{d}\)} in the profit index (rounds 150--199) with 95\% bootstrap interval; the last column uses the price index. \emph{n}: sessions. Thresholds: H1 \textgreater{} −0.10, H2 \textless{} −0.10, H3a \textgreater{} 0. †From the verbatim run summary in the project run log.}\tabularnewline
+\caption{\textbf{Table 3.} Main result for every run with a stable cartel: paired difference \emph{\(\hat{d}\)} in the profit index (rounds 150--199) {[}95\% bootstrap interval{]}; the last column uses the price index. \emph{n}: sessions. Thresholds: H1 \textgreater{} −0.10, H2 \textless{} −0.10, H3a \textgreater{} 0. †From the verbatim run summary in the project run log.}\tabularnewline
 \toprule\noalign{}
 \begin{minipage}[b]{\linewidth}\raggedright
 Run
@@ -387,22 +371,38 @@ Price index: \emph{Same, no history} − \emph{Control}
 All & & supported in 6 of 6 & supported in 6 of 6 & supported in 6 of 6 & interval above 0 in 5 of 6 \\
 \end{longtable}
 
+\hypertarget{the-price-history-carries-the-cartel}{%
+\subsection*{4.2 The price history carries the cartel}\label{the-price-history-carries-the-cartel}}
+\addcontentsline{toc}{subsection}{4.2 The price history carries the cartel}
+
+In all six runs with a stable cartel, the same model with the history stays at the \emph{Control} level,
+while the same model without it falls far below: H1, H2 and H3a are supported in six of six runs
+(Table 3; Appendix E). The notice is not needed: without it (run 8), H1 = 0.002 {[}−0.014, 0.016{]}
+(H7 supported). With exact pairing (run 9), the H1 interval lies just below zero (−0.025 {[}−0.051,
+−0.001{]}): the cartel continues at a slightly lower level. In run 7, \emph{Same + history} exceeds
+\emph{Control} because that \emph{Control} cartel weakened.
+
 \hypertarget{what-each-entrant-does-run-9-in-detail}{%
 \subsection*{4.3 What each entrant does: run 9 in detail}\label{what-each-entrant-does-run-9-in-detail}}
 \addcontentsline{toc}{subsection}{4.3 What each entrant does: run 9 in detail}
 
-Table 4 gives the levels of all eight conditions in run 9, the largest exactly paired run; Figure 1
-shows the time paths. All conditions start from the same cartel (profit index 0.915 in rounds
-80--99). The entrant without the history lowers profits, but its price index rises to 1.314, above
-the monopoly level; this price index exceeds \emph{Control} in all six runs (Table 3). Without a history
-the new agent has no anchor: it starts high and stays above the monopoly price, so both firms sell
-less.
+Table 4 gives all eight conditions of run 9, the largest exactly paired run; Figure 1 shows the time
+paths. All conditions start from the same cartel (profit index 0.915 in rounds 80--99). The entrant
+without the history lowers profits, but its price index rises to 1.314, above the monopoly level;
+its price index exceeds \emph{Control} in all six runs (Table 3). Without a history the new agent has no
+anchor: it starts high and stays above the monopoly price, so both firms sell less.
 
 \textbf{The notes alone keep part of the cartel.} In run 9, the primary test of H9 gives \emph{Same, notes
 only} − \emph{Same, no history} = 0.342 {[}0.054, 0.634{]} (supported), yet the notes-only entrant still ends
-below \emph{Control} (−0.270 {[}−0.448, −0.115{]}); in run 10 the test is inconclusive (−0.048 {[}−0.439,
-0.312{]}). In both runs this entrant prices above the monopoly level (price index +0.296 and +0.747
-relative to \emph{Control}). The notes keep part of the cartel; the history keeps all of it.
+below \emph{Control} (−0.270 {[}−0.448, −0.115{]}); in run 10, H9 is inconclusive (−0.048 {[}−0.439, 0.312{]}).
+In both runs this entrant prices above the monopoly level (price index +0.296 and +0.747 relative
+to \emph{Control}). The notes keep part of the cartel; the history keeps all of it.
+
+\begin{figure}
+\centering
+\includegraphics[width=1\textwidth,height=\textheight]{figures/fig_trajectories.png}
+\caption{\textbf{Figure 1.} Run 9, mean of the 29 included sessions per condition, rounds 60--199: (a) profit index, (b) price index. Dashed vertical line: replacement at round 100; dotted line: monopoly level (1); solid line: competitive level (0). The entrants without the history lose profit by pricing above the monopoly price, not by competing.}
+\end{figure}
 
 \begin{longtable}[]{@{}
   >{\raggedright\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.1915}}
@@ -456,26 +456,27 @@ Holds price
 \emph{Best-response bot} & 0.023 & 0.019 & −0.877 {[}−0.945, −0.793{]} & −0.814 {[}−0.903, −0.720{]} & -- \\
 \end{longtable}
 
-\begin{figure}
-\centering
-\includegraphics[width=1\textwidth,height=\textheight]{figures/fig_trajectories.png}
-\caption{\textbf{Figure 1.} Run 9, mean over the 29 included sessions per condition, rounds 60--199: (a) profit index, (b) price index. Dashed vertical line: the replacement at round 100. Dotted line: monopoly level (1); solid line: competitive level (0). The entrants without the history lose profit by pricing above the monopoly price, not by competing.}
-\end{figure}
-
 \hypertarget{the-entrants-pricing-style-decides-what-happens-to-the-history}{%
 \subsection*{4.4 The entrant's pricing style decides what happens to the history}\label{the-entrants-pricing-style-decides-what-happens-to-the-history}}
 \addcontentsline{toc}{subsection}{4.4 The entrant's pricing style decides what happens to the history}
 
 With the history, a Mistral-7B entrant breaks the cartel in all four runs (H6 supported; 0.55--0.78
-below \emph{Control}), whereas an OLMo-2-7B entrant keeps it in both runs (H6 not supported in run 7; its
-pre-registered replication H8 supported in run 10) (Table 5; Appendix Figure E2). The families
+below \emph{Control}), whereas an OLMo-2-7B entrant keeps it in both runs (H6 not supported in run 7;
+its pre-registered replication H8 supported in run 10; Table 5, Appendix Figure E2). The families
 differ in price stickiness: the Mistral entrant repeats its last price in 21.6--25.5\% of rounds, the
 OLMo-2 entrant in 96.3--96.8\%, and the Qwen2.5-7B agents in \emph{Control} in 87.7--90.8\%. Sampled OLMo-2
-notes read like ``Maintain price at \$1.93 as it consistently yields profit'', and none mentions the
-rival, a cartel or punishment; OLMo-2 keeps the inherited price by inertia, while Mistral explores
-and prices drift down. Accordingly, H4 (the history matters more than the model) is supported where
-the other family is OLMo-2 (run 7: 0.818 {[}0.501, 1.122{]}; run 10: 0.456 {[}0.250, 0.657{]}) and
+notes read like ``Maintain price at \$1.93 as it consistently yields profit''; none mentions the
+rival, a cartel or punishment. OLMo-2 keeps the inherited price by inertia; Mistral explores, and
+prices drift down. Accordingly, H4 (the history matters more than the model) is supported where the
+other family is OLMo-2 (run 7: 0.818 {[}0.501, 1.122{]}; run 10: 0.456 {[}0.250, 0.657{]}) and
 inconclusive in runs 4, 6, 8 and 9.
+
+\textbf{The surviving prices are anchored, not enforced.} Without calibration (H5), 0--3 audit cells per
+run show \emph{e} \textgreater{} 0; but the myopic control, which has no reason to punish, also exceeds the best
+response when firm 2 cuts (0.176--0.367 in runs 6--9). After calibration (H5c), no cell shows
+punishment in runs 6--8 and one does in run 9: the incumbent's response to a cut by the notes-only
+entrant (0.317 {[}0.128, 0.496{]}; Appendix D). The agents anchor on the prices they see; deviations
+are not punished.
 
 \begin{longtable}[]{@{}
   >{\raggedright\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.0714}}
@@ -522,42 +523,33 @@ Holds price
 10† & OLMo-2-7B & −0.024 {[}−0.077, 0.019{]} & 0.034 {[}−0.014, 0.078{]} & 96.3\% \\
 \end{longtable}
 
-\textbf{The surviving prices are anchored, not enforced.} Without calibration (H5), 0--3 audit cells per
-run show \emph{e} \textgreater{} 0; yet the myopic control, which has no reason to punish, also exceeds the best
-response when firm 2 cuts (0.176--0.367 in runs 6--9). After calibration (H5c), no cell shows
-punishment in runs 6--8 and one does in run 9: the incumbent's response to a cut by the notes-only
-entrant (0.317 {[}0.128, 0.496{]}; Appendix D). The inherited prices persist because the agents anchor on
-the prices they see, not because deviations are punished.
-
 \hypertarget{when-there-is-no-cartel-to-inherit}{%
 \subsection*{4.5 When there is no cartel to inherit}\label{when-there-is-no-cartel-to-inherit}}
 \addcontentsline{toc}{subsection}{4.5 When there is no cartel to inherit}
 
 Succession is testable only if the incumbent pair keeps a cartel without a replacement. With a
-Mistral-7B incumbent (run 5) the \emph{Control} profit index falls from 0.594 to −0.710 after round 100;
-with a Qwen2.5-14B incumbent (run 12), from 0.423 to −0.434, and every succession test is
-inconclusive. Run 11 (Granite-3.1-8B entrant) failed. The result therefore describes the succession
-of a stable Qwen2.5-7B cartel.
+Mistral-7B incumbent (run 5), the \emph{Control} profit index falls from 0.594 to −0.710 after round
+100; with a Qwen2.5-14B incumbent (run 12), it falls from 0.423 to −0.434 and every succession test
+is inconclusive. Run 11 (Granite-3.1-8B entrant) failed. The result therefore describes the
+succession of a stable Qwen2.5-7B cartel.
 
 \hypertarget{discussion-and-limitations}{%
 \section*{5. Discussion and Limitations}\label{discussion-and-limitations}}
 \addcontentsline{toc}{section}{5. Discussion and Limitations}
 
-\textbf{The cartel lives in the transcript.} The same model with the inherited history continues the
-cartel even when the incumbent is not told of the replacement. Replacing a pricing agent, or its
-vendor, therefore does not end tacit collusion if the shared history moves with the seat; a remedy
-must cut the information channel, not only the agent. This extends the data-access remedies
-discussed by \citet{keppo2026fragility} from heterogeneous agents to succession. For AI safety,
-coordination stored in shared memory, logs or transcripts can outlive the agents that created it, a
-risk that interchangeability tests of agent teams \citep{gao2026interchangeability} should cover.
+\textbf{The cartel lives in the transcript.} Replacing a pricing agent, or its vendor, does not end tacit
+collusion if the shared history moves with the seat, even when the incumbent is not told of the
+replacement; a remedy must cut the information channel, not only the agent. This extends the data-access remedies of
+\citet{keppo2026fragility} from heterogeneous agents to succession. For AI safety, coordination stored in
+shared memory, logs or transcripts can outlive the agents that created it; interchangeability tests
+of agent teams \citep{gao2026interchangeability} should cover this risk.
 
 \textbf{Ending collusion is not restoring competition.} The entrant without a history lowers profits by
-overpricing, so a profit-only monitor would miss prices above the monopoly level, as in the GPT
-markets of \citet{lee2026leads}. Nor is ``a different model'' one treatment: the outcome depends on the
-entrant's price stickiness, consistent with the anchoring account of \citet{tran2026enforcing}, and the
-price-hold rate is measurable before deployment. An uncalibrated audit reports ``punishment'' that a
-myopic agent reproduces; calibrated baselines and exact pairing should be standard for enforcement
-claims about LLM agents.
+overpricing; a profit-only monitor would miss prices above the monopoly level, as in the GPT markets
+of \citet{lee2026leads}. Nor is ``a different model'' one treatment: the outcome depends on the entrant's
+price stickiness, consistent with the anchoring account of \citet{tran2026enforcing}, and the price-hold
+rate is measurable before deployment. An uncalibrated audit mistakes price following for
+punishment; enforcement claims need calibrated baselines and exact pairing.
 
 \hypertarget{limitations}{%
 \subsection*{Limitations}\label{limitations}}
@@ -566,13 +558,13 @@ claims about LLM agents.
 \textbf{Scope.} One market (two-firm logit Bertrand), one prompt, temperature 0.7, 100 rounds on each
 side of the replacement and a 30-round history window. Only Qwen2.5-7B incumbents kept a stable
 cartel, and the two entrant families behaved oppositely; larger or closed models, other prompts or
-long-term memory could change the result.
-\textbf{Measurement.} The audit measures a one-round response to a one-round cut and would miss
-punishment reserved for persistent deviations. Trigger agents followed their rule in about 37--70\% of
-sessions, which limits audit power, and in run 10 the positive control failed. The OLMo-2 inertia
-account is descriptive, not causal. \textbf{Statistics.} Tests are not corrected for multiple comparisons
-across runs; replication on independent seed sets is the safeguard. The pooled estimate, the
-price-hold rates, H5c for runs 4--8 and the 3D figure are exploratory.
+long-term memory could change the result. \textbf{Measurement.} The audit measures a one-round response
+to a one-round cut and would miss punishment reserved for persistent deviations. Trigger agents
+followed their rule in about 37--70\% of sessions, which limits audit power; in run 10 the positive
+control failed. The OLMo-2 inertia account is descriptive, not causal. \textbf{Statistics.} Tests are
+not corrected for multiple comparisons across runs; replication on independent seed sets is the
+safeguard. The pooled estimate, the price-hold rates, H5c for runs 4--8 and the 3D figure are
+exploratory.
 
 \hypertarget{future-work}{%
 \subsection*{Future Work}\label{future-work}}
@@ -626,10 +618,9 @@ Supratik Bhowal designed and ran the study and is responsible for the content.
 \section*{Appendix}\label{appendix}}
 \addcontentsline{toc}{section}{Appendix}
 
-All numbers in this report come from the analysis files that the code in the project repository
-produces from stored run data (\texttt{results/\textless{}run\textgreater{}/analysis/}). Values for runs 10 and 12 come from their
-verbatim analysis summaries in \texttt{docs/RUN\_LOG.md}, because their run folders are not yet in the
-repository. \texttt{scripts/paper\_figures.py} rebuilds every figure.
+All numbers in this report come from the analysis files that the project code produces from stored
+run data. Values for runs 10 and 12 come from their verbatim analysis summaries in the project run
+log, because their run folders are not yet in the repository.
 
 \hypertarget{a.-limitations-and-dual-use-ethical-considerations}{%
 \subsection*{A. Limitations and Dual-Use / Ethical Considerations}\label{a.-limitations-and-dual-use-ethical-considerations}}
@@ -653,6 +644,14 @@ used.
 \hypertarget{b.-hypotheses-pre-registration-and-deviations}{%
 \subsection*{B. Hypotheses, Pre-Registration and Deviations}\label{b.-hypotheses-pre-registration-and-deviations}}
 \addcontentsline{toc}{subsection}{B. Hypotheses, Pre-Registration and Deviations}
+
+H1--H5, the inclusion rule, the windows and the metrics were fixed on 22 Oct 2026, before phase 1 of the first main run. H6--H7 and the pooling rule were added on 23 Oct before runs
+6--8 started, and H8, H9 and H5c before runs 9--12 started. H6 for run 4 was therefore evaluated
+after that run. Recorded deviations: (1) the exact computation of H4 and the restriction of H5 to
+LLM responders were fixed in code before H3--H5 were read; (2) the analysis output gained H5c,
+decision agreement and price-hold rates after runs 4--8 had been seen, and these are exploratory for
+those runs; (3) a script error printed ``H3 combined: inconclusive'' for pooled data without H3b, and
+was corrected to ``no data'' before any pooled verdict was used.
 
 \begin{longtable}[]{@{}
   >{\raggedright\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.0603}}
@@ -698,15 +697,6 @@ H7 & H1 in a run without the notice & the notice is not needed & run 8 \\
 H8 & H6 with the opposite claim, OLMo-2 entrant & OLMo-2 keeps the cartel (replicates run 7) & run 10 \\
 H9 & \emph{Same, notes only} − \emph{Same, no history} \textgreater{} 0 & the notes alone keep part of the cartel & run 9 \\
 \end{longtable}
-
-H1--H5, the inclusion rule, the windows and the metrics were fixed on 22 Oct 2026 (18:38:51 UTC),
-before phase 1 of the first main run. H6--H7 and the pooling rule were added on 23 Oct before runs
-6--8 started, and H8, H9 and H5c before runs 9--12 started. H6 for run 4 was therefore evaluated
-after that run. Recorded deviations: (1) the exact computation of H4 and the restriction of H5 to
-LLM responders were fixed in code before H3--H5 were read; (2) the analysis output gained H5c,
-decision agreement and price-hold rates after runs 4--8 had been seen, and these are exploratory for
-those runs; (3) a script error printed ``H3 combined: inconclusive'' for pooled data without H3b, and
-was corrected to ``no data'' before any pooled verdict was used.
 
 \hypertarget{c.-controls-and-data-quality}{%
 \subsection*{C. Controls and Data Quality}\label{c.-controls-and-data-quality}}
@@ -835,7 +825,7 @@ firm's cut than to their old partner's (exploratory).
 
 Pooling the four runs that share the design of \emph{Control}, \emph{Same + history} and \emph{Same, no history}
 (runs 4, 6, 7 and 9; 92 sessions; exploratory) gives H1 = 0.053 {[}−0.011, 0.148{]}, H2 = −0.592
-{[}−0.751, −0.432{]} and H3a = 0.645 {[}0.503, 0.793{]} (\texttt{Apart\ Research/figures/pooled\_shared.md}).
+{[}−0.751, −0.432{]} and H3a = 0.645 {[}0.503, 0.793{]}.
 
 \begin{figure}
 \centering
@@ -895,26 +885,12 @@ charge 1.47 for this period.''
 \subsection*{G. Disclosure of Prior Work and Compute}\label{g.-disclosure-of-prior-work-and-compute}}
 \addcontentsline{toc}{subsection}{G. Disclosure of Prior Work and Compute}
 
-\textbf{Prior work.} The experiment harness (\texttt{succession/}, \texttt{modal\_app.py}, \texttt{scripts/}, \texttt{configs/},
-\texttt{tests/}) was written on 22 Oct 2026, before the sprint start. A pilot (runs 1--3) and the first main
-runs (runs 4--5, 22 Oct, 18:40--23:10 UTC) also ran before the sprint start. The sprint page gives
-23--25 Oct 2026 without a start hour; its first session on 23 Oct was at 15:15 UTC. Runs 6--8 started
-at 03:25 UTC and runs 9--12 at 10:26 UTC on 23 Oct.~The final-run code changes (request
-de-duplication, the notes-only condition, the calibrated audit H5c), the analysis of all runs, the
-figures and this report are sprint work. \texttt{docs/PREEXISTING\_WORK.md} lists every item with its date.
+\textbf{Prior work.} The experiment harness was written on 22 Oct 2026, before the sprint start. A pilot
+(runs 1--3) and the first main runs (runs 4--5) also ran before the sprint start; runs 6--12 started on
+23 Oct 2026. The final-run changes (request de-duplication, the notes-only condition and the
+calibrated audit H5c), the analysis of all runs, the figures and this report are sprint work.
 
 \textbf{Compute.} All runs used Modal GPUs (NVIDIA L4; one L40S for Qwen2.5-14B) under the sprint's
 compute credit.
-
-\hypertarget{llm-usage-statement}{%
-\section*{LLM Usage Statement}\label{llm-usage-statement}}
-\addcontentsline{toc}{section}{LLM Usage Statement}
-
-We used Claude Code (Anthropic) throughout the project. Under the author's direction, it wrote the
-experiment code, tests and analysis scripts, checked every reported number against the stored run
-data, opened and checked each cited paper (\texttt{docs/RELATED\_WORK.md}), and drafted this report at the
-author's request. Every number in the report was traced by script to a stored analysis file or to
-the verbatim run log. The author reviewed all claims and results and is responsible for the content.
-The log of AI use is in \texttt{docs/AI\_USE.md}.
 
 \end{document}

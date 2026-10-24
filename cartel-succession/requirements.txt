@@ -1,0 +1,6 @@
+# Local machine: experiment code, analysis, Modal client, tests.
+# The GPU containers install vLLM themselves (see modal_app.py).
+pyyaml>=6.0
+matplotlib>=3.8
+modal>=1.0
+pytest>=8.0

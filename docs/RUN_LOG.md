@@ -2187,3 +2187,18 @@ H5c cells, excess response minus the myopic control (pre-registered for the fina
   `docs/RESULTS.md` or this log. Main text, Code and Data and Author Contributions end on page 8.
 - Slides restyled: white background, Times New Roman, three colours (charcoal text, light gray
   structure, royal-blue accent); slide text unchanged.
+
+## Report layout revision and code-only copy (23 Oct, evening)
+
+- The Word re-save on `main` had one text edit: a line break after "Who Carries the Cartel?" in
+  the title. `report.md` now holds the title as two lines. Slide 1 no longer names IEM Kolkata.
+- Each top-level section (1–6, Code and Data, Author Contributions, References, Appendix) has about
+  one blank line more space before it (Heading 1: 24 pt before, was 10 pt).
+- Text shortened in the Introduction, Related Work and Discussion; Methods and Results keep all
+  numbers. Section 3.3 now explains the A/A check. Tables 3 and 5 and Figure 1 moved, so no page has
+  a large gap. Main text, Code and Data and Author Contributions end on page 8 (LibreOffice export,
+  37 pt left); references start on page 9; 13 pages in total.
+- Removed at the author's request: the LLM Usage Statement, clock times, and code and doc paths in
+  the appendix. No number changed.
+- New `cartel-succession/`: code, configs, tests, `docs/RESEARCH_BRIEF.md` and
+  `docs/RELATED_WORK.md`, written by `scripts/make_public_copy.py`; 72 tests pass inside the copy.

@@ -31,6 +31,7 @@ tests/               pytest suite; runs with the mock backend, no GPU
 docs/                brief, pre-registration, design, Modal guide, related work, disclosures
 paper/               report outline only; the authors write the report text
 Apart Research/      sprint submission: report.md (source) -> report.docx/.pdf + main3.tex, slides, image
+cartel-succession/   code-only copy for showing the project (scripts/make_public_copy.py writes it; do not edit by hand)
 results/             run data (git-ignored except .gitkeep)
 ```
 

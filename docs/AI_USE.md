@@ -16,7 +16,8 @@ The sprint allows AI tools. The team is responsible for everything in the report
 Rules for the report:
 
 - The author writes the report text. Exception (23 Oct 2026): the author asked Claude Code to draft
-  the report. The report discloses this, and the author reviews and owns every statement.
+  the report. The author reviews and owns every statement. On 23 Oct 2026 the author removed the
+  LLM Usage Statement from the report; this file is the record of AI use.
 - AI tools may check reasoning, find errors, and propose edits.
 - Every number comes from `results/<run>/analysis/`. Every reference is in `docs/RELATED_WORK.md`
   with a "Checked" entry.

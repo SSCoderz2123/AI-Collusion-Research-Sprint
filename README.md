@@ -9,6 +9,8 @@ Apart Research AI Collusion Research Sprint, 23–25 Oct 2026. Track 1 (Markets 
 > See `docs/PREEXISTING_WORK.md` and `docs/AI_USE.md`.
 >
 > **Submission:** the report, slides and project image are in [`Apart Research/`](Apart%20Research/README.md).
+> A code-only copy (code, configs, tests, research brief and related work) is in `cartel-succession/`;
+> `python scripts/make_public_copy.py` rebuilds it after a code change.
 
 ## Question
 
