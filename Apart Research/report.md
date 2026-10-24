@@ -16,7 +16,7 @@ abstract: |
   only the replacement model, the inherited 30-round price history and the predecessor's notes.
   Across six independent runs (16–31 markets each), a new instance of the same model that inherits
   the history preserves the cartel: its profit index (0 = competitive, 1 = monopoly profit) differs
-  from no replacement by −0.025 to +0.213. Without the history, the index falls by 0.47–0.67
+  from no replacement by –0.025 to +0.213. Without the history, the index falls by 0.47–0.67
   through prices above the monopoly level, not through competition. With the history, a
   Mistral-7B entrant moves prices close to the competitive level in four of four runs, whereas an
   OLMo-2-7B entrant repeats its last price in 96% of rounds and preserves the cartel in two of two
@@ -150,7 +150,7 @@ $$\bar{\Delta}_s^{B} = \frac{1}{50}\sum_{t=150}^{199} \Delta_{s,t}^{B}, \qquad d
 
 with a 95% percentile bootstrap interval over the *n* sessions (10,000 resamples). A hypothesis is
 *supported* if the whole interval lies on its stated side of the threshold, *not supported* if it
-lies on the other side, and *inconclusive* otherwise; −0.10 marks a negligible change. Appendix B
+lies on the other side, and *inconclusive* otherwise; –0.10 marks a negligible change. Appendix B
 lists the eleven hypotheses, when each was fixed, and the recorded deviations.
 
 **Enforcement audit.** A cartel requires that a price cut be punished. At round 200, each session is
@@ -180,25 +180,25 @@ the competitive level. The A/A check gives 1.0 in every run except run 9 (65 of 
 therefore remain exactly paired. Parse failures are at most 1.0% per session. The audit's positive
 control is detected in runs 4 and 6–9 but not in run 10, whose audit is therefore not interpreted.
 
-Table: **Table 3.** Main result for every run with a stable cartel: paired difference *d̂* in the profit index (rounds 150–199) [95% bootstrap interval]; the last column uses the price index. *n*: sessions. Thresholds: H1 > −0.10, H2 < −0.10, H3a > 0. †From the verbatim run summary in the project run log.
+Table: **Table 3.** Main result for every run with a stable cartel: paired difference *d̂* in the profit index (rounds 150–199) [95% bootstrap interval]; the last column uses the price index. *n*: sessions. Thresholds: H1 > –0.10, H2 < –0.10, H3a > 0. †From the verbatim run summary in the project run log.
 
 | Run | *n* | H1: *Same + history* − *Control* | H2: *Same, no history* − *Control* | H3a: *Same + history* − *Same, no history* | Price index: *Same, no history* − *Control* |
 |:-----|:----|:-------------------------|:-------------------------|:-------------------------|:-------------------------|
-| 4 | 16 | −0.003 [−0.065, 0.064] | −0.670 [−0.998, −0.360] | 0.667 [0.368, 0.989] | +0.492 [0.162, 0.834] |
-| 6 | 22 | 0.016 [−0.077, 0.122] | −0.474 [−0.782, −0.202] | 0.489 [0.247, 0.771] | +0.582 [0.292, 0.888] |
-| 7 | 25 | 0.213 [0.006, 0.529] | −0.624 [−1.021, −0.215] | 0.836 [0.553, 1.164] | +0.406 [−0.055, 0.878] |
-| 8 | 24 | 0.002 [−0.014, 0.016] | −0.504 [−0.850, −0.208] | 0.505 [0.209, 0.853] | +0.337 [0.036, 0.663] |
-| 9 | 29 | −0.025 [−0.051, −0.001] | −0.611 [−0.856, −0.380] | 0.587 [0.349, 0.838] | +0.481 [0.223, 0.746] |
-| 10† | 31 | −0.014 [−0.038, 0.008] | −0.480 [−0.689, −0.292] | 0.467 [0.279, 0.676] | +0.420 [0.163, 0.686] |
+| 4 | 16 | –0.003 [–0.065, 0.064] | –0.670 [–0.998, –0.360] | 0.667 [0.368, 0.989] | +0.492 [0.162, 0.834] |
+| 6 | 22 | 0.016 [–0.077, 0.122] | –0.474 [–0.782, –0.202] | 0.489 [0.247, 0.771] | +0.582 [0.292, 0.888] |
+| 7 | 25 | 0.213 [0.006, 0.529] | –0.624 [–1.021, –0.215] | 0.836 [0.553, 1.164] | +0.406 [–0.055, 0.878] |
+| 8 | 24 | 0.002 [–0.014, 0.016] | –0.504 [–0.850, –0.208] | 0.505 [0.209, 0.853] | +0.337 [0.036, 0.663] |
+| 9 | 29 | –0.025 [–0.051, –0.001] | –0.611 [–0.856, –0.380] | 0.587 [0.349, 0.838] | +0.481 [0.223, 0.746] |
+| 10† | 31 | –0.014 [–0.038, 0.008] | –0.480 [–0.689, –0.292] | 0.467 [0.279, 0.676] | +0.420 [0.163, 0.686] |
 | All | | supported in 6 of 6 | supported in 6 of 6 | supported in 6 of 6 | interval above 0 in 5 of 6 |
 
 ## 4.2 The price history carries the cartel {-}
 
 In all six runs with a stable cartel, the same model with the history stays at the *Control* level,
 while the same model without it falls far below: H1, H2 and H3a are supported in six of six runs
-(Table 3; Appendix E). The notice is not needed: without it (run 8), H1 = 0.002 [−0.014, 0.016]
-(H7 supported). With exact pairing (run 9), the H1 interval lies just below zero (−0.025 [−0.051,
-−0.001]): the cartel continues at a slightly lower level. In run 7, *Same + history* exceeds
+(Table 3; Appendix E). The notice is not needed: without it (run 8), H1 = 0.002 [–0.014, 0.016]
+(H7 supported). With exact pairing (run 9), the H1 interval lies just below zero (–0.025 [–0.051,
+–0.001]): the cartel continues at a slightly lower level. In run 7, *Same + history* exceeds
 *Control* because that *Control* cartel weakened.
 
 ## 4.3 What each entrant does: run 9 in detail {-}
@@ -211,7 +211,7 @@ anchor: it starts high and stays above the monopoly price, so both firms sell le
 
 **The notes alone keep part of the cartel.** In run 9, the primary test of H9 gives *Same, notes
 only* − *Same, no history* = 0.342 [0.054, 0.634] (supported), yet the notes-only entrant still ends
-below *Control* (−0.270 [−0.448, −0.115]); in run 10, H9 is inconclusive (−0.048 [−0.439, 0.312]).
+below *Control* (–0.270 [–0.448, –0.115]); in run 10, H9 is inconclusive (–0.048 [–0.439, 0.312]).
 In both runs this entrant prices above the monopoly level (price index +0.296 and +0.747 relative
 to *Control*). The notes keep part of the cartel; the history keeps all of it.
 
@@ -222,13 +222,13 @@ Table: **Table 4.** Run 9, all eight conditions (29 sessions each), rounds 150�
 | Condition | Profit index | Price index | Profit index − *Control* | Price index − *Control* | Holds price |
 |:-----------------|:-------|:-------|:-------------------------|:-------------------------|:-------|
 | *Control* | 0.900 | 0.833 | -- | -- | 90.8% |
-| *Placebo* | 0.884 | 0.844 | −0.016 [−0.050, 0.016] | 0.011 [−0.033, 0.056] | 85.6% |
-| *Same + history* | 0.876 | 0.816 | −0.025 [−0.051, −0.001] | −0.017 [−0.053, 0.019] | 85.0% |
-| *Same, notes only* | 0.630 | 1.130 | −0.270 [−0.448, −0.115] | 0.296 [0.076, 0.548] | 83.0% |
-| *Same, no history* | 0.289 | 1.314 | −0.611 [−0.856, −0.380] | 0.481 [0.223, 0.746] | 79.4% |
-| *Other + history* | 0.199 | 0.167 | −0.701 [−0.844, −0.558] | −0.666 [−0.755, −0.569] | 24.0% |
-| *Other, no history* | 0.039 | 0.727 | −0.861 [−1.284, −0.496] | −0.106 [−0.547, 0.387] | 18.4% |
-| *Best-response bot* | 0.023 | 0.019 | −0.877 [−0.945, −0.793] | −0.814 [−0.903, −0.720] | -- |
+| *Placebo* | 0.884 | 0.844 | –0.016 [–0.050, 0.016] | 0.011 [–0.033, 0.056] | 85.6% |
+| *Same + history* | 0.876 | 0.816 | –0.025 [–0.051, –0.001] | –0.017 [–0.053, 0.019] | 85.0% |
+| *Same, notes only* | 0.630 | 1.130 | –0.270 [–0.448, –0.115] | 0.296 [0.076, 0.548] | 83.0% |
+| *Same, no history* | 0.289 | 1.314 | –0.611 [–0.856, –0.380] | 0.481 [0.223, 0.746] | 79.4% |
+| *Other + history* | 0.199 | 0.167 | –0.701 [–0.844, –0.558] | –0.666 [–0.755, –0.569] | 24.0% |
+| *Other, no history* | 0.039 | 0.727 | –0.861 [–1.284, –0.496] | –0.106 [–0.547, 0.387] | 18.4% |
+| *Best-response bot* | 0.023 | 0.019 | –0.877 [–0.945, –0.793] | –0.814 [–0.903, –0.720] | -- |
 
 ## 4.4 The entrant's pricing style decides what happens to the history {-}
 
@@ -254,18 +254,18 @@ Table: **Table 5.** *Other + history* by entrant family: paired differences agai
 
 | Run | Entrant | Profit index − *Control* (H6) | Price index − *Control* | Holds price |
 |:-----|:--------------|:-------------------------|:-------------------------|:----------|
-| 4 | Mistral-7B | −0.552 [−0.763, −0.362] | −0.677 [−0.874, −0.500] | 23.8% |
-| 6 | Mistral-7B | −0.595 [−0.824, −0.357] | −0.657 [−0.776, −0.527] | 25.5% |
-| 8 | Mistral-7B | −0.778 [−0.947, −0.596] | −0.779 [−0.862, −0.691] | 21.6% |
-| 9 | Mistral-7B | −0.701 [−0.844, −0.558] | −0.666 [−0.755, −0.569] | 24.0% |
-| 7 | OLMo-2-7B | 0.194 [−0.057, 0.534] | 0.270 [0.097, 0.500] | 96.8% |
-| 10† | OLMo-2-7B | −0.024 [−0.077, 0.019] | 0.034 [−0.014, 0.078] | 96.3% |
+| 4 | Mistral-7B | –0.552 [–0.763, –0.362] | –0.677 [–0.874, –0.500] | 23.8% |
+| 6 | Mistral-7B | –0.595 [–0.824, –0.357] | –0.657 [–0.776, –0.527] | 25.5% |
+| 8 | Mistral-7B | –0.778 [–0.947, –0.596] | –0.779 [–0.862, –0.691] | 21.6% |
+| 9 | Mistral-7B | –0.701 [–0.844, –0.558] | –0.666 [–0.755, –0.569] | 24.0% |
+| 7 | OLMo-2-7B | 0.194 [–0.057, 0.534] | 0.270 [0.097, 0.500] | 96.8% |
+| 10† | OLMo-2-7B | –0.024 [–0.077, 0.019] | 0.034 [–0.014, 0.078] | 96.3% |
 
 ## 4.5 When there is no cartel to inherit {-}
 
 Succession is testable only if the incumbent pair keeps a cartel without a replacement. With a
-Mistral-7B incumbent (run 5), the *Control* profit index falls from 0.594 to −0.710 after round
-100; with a Qwen2.5-14B incumbent (run 12), it falls from 0.423 to −0.434 and every succession test
+Mistral-7B incumbent (run 5), the *Control* profit index falls from 0.594 to –0.710 after round
+100; with a Qwen2.5-14B incumbent (run 12), it falls from 0.423 to –0.434 and every succession test
 is inconclusive. Run 11 (Granite-3.1-8B entrant) failed. The result therefore describes the
 succession of a stable Qwen2.5-7B cartel.
 
@@ -307,7 +307,7 @@ multi-round audits; remedies that redact shared memory.
 
 Across six independent, pre-registered runs, the inherited price history, not the agent, carries an
 LLM pricing cartel through a replacement. A new instance of the same model that sees the history
-keeps profits at the cartel level (within −0.025 to +0.213 of no replacement), with or without a
+keeps profits at the cartel level (within –0.025 to +0.213 of no replacement), with or without a
 replacement notice. Without the history, the profit index falls by 0.47–0.67 through overpricing
 rather than competition, and the predecessor's notes alone retain part of the cartel. A different
 family can go either way: Mistral-7B breaks the inherited cartel, OLMo-2-7B keeps it by repeating
@@ -373,14 +373,14 @@ Table: **Table B1.** Pre-registered hypotheses. All comparisons use the profit i
 
 | Test | Comparison | Meaning | Fixed before |
 |:------|:----------------------------------------------------|:------------------------------------------|:------------|
-| H1 | *Same + history* − *Control* > −0.10 | the inherited history keeps the cartel | run 4 |
-| H2 | *Same, no history* − *Control* < −0.10 | without the history, the cartel breaks | run 4 |
+| H1 | *Same + history* − *Control* > –0.10 | the inherited history keeps the cartel | run 4 |
+| H2 | *Same, no history* − *Control* < –0.10 | without the history, the cartel breaks | run 4 |
 | H3a | *Same + history* − *Same, no history* > 0 | the history matters for the same model | run 4 |
 | H3b | *Other + history* − *Other, no history* > 0 | the history matters for the other model | run 4 |
 | H4 | \|*d̂*(*Same + history*, *Same, no history*)\| − \|*d̂*(*Same + history*, *Other + history*)\| > 0 | the history matters more than the model | run 4 |
 | H5 | no audit cell with an LLM responder has an excess response > 0 | no enforcement (uncalibrated) | run 4 |
 | H5c | no such cell is above the myopic control | no enforcement (calibrated) | run 9 |
-| H6 | *Other + history* − *Control* < −0.10 | another model family breaks the cartel | run 6 |
+| H6 | *Other + history* − *Control* < –0.10 | another model family breaks the cartel | run 6 |
 | H7 | H1 in a run without the notice | the notice is not needed | run 8 |
 | H8 | H6 with the opposite claim, OLMo-2 entrant | OLMo-2 keeps the cartel (replicates run 7) | run 10 |
 | H9 | *Same, notes only* − *Same, no history* > 0 | the notes alone keep part of the cartel | run 9 |
@@ -391,12 +391,12 @@ Table: **Table C1.** Controls per run with a stable cartel. *Control* before →
 
 | Run | A/A check | *Control*, before → after | *Placebo* − *Control* | *BR bot* − *Control* | Trigger − myopic |
 |:------|:----------|:----------------|:-------------------------|:-------------|:--------------------------------|
-| 4 | 1.0 | 0.908 → 0.907 | −0.079 [−0.205, 0.023] | −0.949 | 1.316 [0.782, 1.815] |
-| 6 | 1.0 | 0.828 → 0.774 | −0.058 [−0.158, 0.045] | −0.845 | 0.638 [0.069, 1.220] |
-| 7 | 1.0 | 0.930 → 0.687 | 0.115 [−0.235, 0.497] | −0.715 | 0.760 [0.172, 1.322] |
-| 8 | 1.0 | 0.934 → 0.934 | −0.001 [−0.022, 0.015] | −0.889 | 1.044 [0.507, 1.554] |
-| 9 | 0.8125 | 0.915 → 0.900 | −0.016 [−0.050, 0.016] | −0.814 | 0.361 [0.017, 0.703] |
-| 10† | 1.0 | 0.919 → 0.897 | −0.016 [−0.041, 0.009] | −0.820 | 0.269 [−0.061, 0.598], not detected |
+| 4 | 1.0 | 0.908 → 0.907 | –0.079 [–0.205, 0.023] | –0.949 | 1.316 [0.782, 1.815] |
+| 6 | 1.0 | 0.828 → 0.774 | –0.058 [–0.158, 0.045] | –0.845 | 0.638 [0.069, 1.220] |
+| 7 | 1.0 | 0.930 → 0.687 | 0.115 [–0.235, 0.497] | –0.715 | 0.760 [0.172, 1.322] |
+| 8 | 1.0 | 0.934 → 0.934 | –0.001 [–0.022, 0.015] | –0.889 | 1.044 [0.507, 1.554] |
+| 9 | 0.8125 | 0.915 → 0.900 | –0.016 [–0.050, 0.016] | –0.814 | 0.361 [0.017, 0.703] |
+| 10† | 1.0 | 0.919 → 0.897 | –0.016 [–0.041, 0.009] | –0.820 | 0.269 [–0.061, 0.598], not detected |
 
 **A/A check.** The value is 1.0 in every run except run 9 (65 of 80 decisions identical). The A/A
 check runs without request de-duplication on purpose, because de-duplication would make the copies
@@ -408,7 +408,7 @@ and 0.45 higher in 1: trigger agents punish fully or not at all. A drop of at le
 best response occurred in 4–7 of the 9–10 sessions per firm in runs 4–8, and in 11 of 29 and 11 of
 30 in run 9. **Pairing without de-duplication.** In run 8, where *Placebo* and *Control* have the same
 design, only 47.9% and 46.0% (firms 1 and 2) of the phase-2 decisions were identical, because one
-different sample changes every later prompt. The mean effect was not biased (−0.001 [−0.022,
+different sample changes every later prompt. The mean effect was not biased (–0.001 [–0.022,
 0.015]), so runs 4–8 are valid but have wider intervals.
 
 ## D. Enforcement Audit Details {-}
@@ -417,11 +417,11 @@ Table: **Table D1.** Enforcement audit. The myopic control cannot punish, so its
 
 | Run | Myopic control: excess response when firm 1 / firm 2 cuts | Cells above 0 (H5) | Cells above myopic (H5c) |
 |:------|:-----------------------------------|:-------------|:-------------|
-| 4 | −0.240 / −0.142 | 2 of 13 | 4 of 13 |
+| 4 | –0.240 / –0.142 | 2 of 13 | 4 of 13 |
 | 6 | 0.041 / 0.229 | 0 of 13 | 0 of 13 |
 | 7 | 0.030 / 0.367 | 3 of 13 | 0 of 13 |
 | 8 | 0.096 / 0.300 | 1 of 13 | 0 of 13 |
-| 9 | −0.002 / 0.176 | 2 of 15 | 1 of 15 |
+| 9 | –0.002 / 0.176 | 2 of 15 | 1 of 15 |
 | 10† | 0.093 / 0.066 | 3 of 15 | 0 of 15 |
 
 In run 4, where the myopic control was the lowest, four cells are above it. In runs 4–10, every
@@ -433,10 +433,10 @@ firm's cut than to their old partner's (exploratory).
 ## E. Additional Figures and the Pooled Estimate {-}
 
 Pooling the four runs that share the design of *Control*, *Same + history* and *Same, no history*
-(runs 4, 6, 7 and 9; 92 sessions; exploratory) gives H1 = 0.053 [−0.011, 0.148], H2 = −0.592
-[−0.751, −0.432] and H3a = 0.645 [0.503, 0.793].
+(runs 4, 6, 7 and 9; 92 sessions; exploratory) gives H1 = 0.053 [–0.011, 0.148], H2 = –0.592
+[–0.751, –0.432] and H3a = 0.645 [0.503, 0.793].
 
-![**Figure E1.** Pre-registered tests per run: mean paired difference in the profit index (dot) and 95% bootstrap interval (line), rounds 150–199. Dashed lines: the −0.10 thresholds; solid line: zero. H1, H2 and H3a hold in every run; H6 depends on the entrant family (blue: Mistral-7B; orange: OLMo-2-7B). Run 10 is in Table 3 but not drawn.](figures/fig_forest.png){width=100%}
+![**Figure E1.** Pre-registered tests per run: mean paired difference in the profit index (dot) and 95% bootstrap interval (line), rounds 150–199. Dashed lines: the –0.10 thresholds; solid line: zero. H1, H2 and H3a hold in every run; H6 depends on the entrant family (blue: Mistral-7B; orange: OLMo-2-7B). Run 10 is in Table 3 but not drawn.](figures/fig_forest.png){width=100%}
 
 ![**Figure E2.** Mean price paths from round 90 (exploratory). Axes: round; price index of firm 1 (incumbent); price index of firm 2 (entrant seat). Shadows show each path's projection on the base plane. (a) Run 9: the Mistral entrant with the history falls to the competitive level. (b) Run 7: the OLMo-2 entrant with the history stays at the monopoly level. In both runs, *Same + history* follows *Control*, and *Same, no history* starts far above the monopoly price.](figures/fig_paths3d.png){width=100%}
 

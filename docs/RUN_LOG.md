@@ -2220,3 +2220,7 @@ H5c cells, excess response minus the myopic control (pre-registered for the fina
   Table B1; Appendix G again states that the harness and runs 1–5 predate the sprint (required by the
   sprint rules, and Table 2 refers to it).
 - `report.md` and `main3.tex` synced. `report.pdf` re-exported: main text ends on page 8; 14 pages.
+
+## Negative numbers use en dashes (24 Oct)
+
+- At the author's request, every minus sign before a number in `report.docx` (text and tables) is now an en dash (–); 90 changes. Minus signs between condition names and inside the equation images are unchanged. `report.md`, `main3.tex` and `report.pdf` synced.
