@@ -325,7 +325,7 @@ collusion must govern the information agents inherit, not only the choice of age
 
 # Code and Data {-}
 
-- **Code, data, slides:**
+- **Code:** <https://github.com/SupratikB23/LLM-Cartel-Succession>
 
 # Author Contributions {-}
 
@@ -482,14 +482,15 @@ charge 1.47 for this period."
 
 ## G. Disclosure of Prior Work and Compute {-}
 
-**Prior work.** All experimentations and runs were written and completed by 23 October 2026. The
-final-run changes (request de-duplication, the notes-only condition and the calibrated audit H5c),
+**Prior work.** All experiments and runs were completed by 23 October 2026. The experiment harness,
+a pilot (runs 1–3) and the first main runs (runs 4–5) date from 22 October 2026, before the sprint
+start. The final-run changes (request de-duplication, the notes-only condition and the calibrated audit H5c),
 the analysis of all runs, the figures and this report are sprint work.
 
 **Compute.** All runs used Modal GPUs (NVIDIA L4; L40S for Qwen2.5-14B) under the sprint's
 compute credit.
 
-# LLM Usage {-}
+## H. LLM Usage {-}
 
 Claude assisted with implementation, debugging, and drafting. Functionality was verified through
 simulation.

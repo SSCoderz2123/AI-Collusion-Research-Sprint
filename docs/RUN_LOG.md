@@ -2210,3 +2210,13 @@ H5c cells, excess response minus the myopic control (pre-registered for the fina
   are kept and copied into `report.md` and `main3.tex`; `report.docx` was not rebuilt.
 - Added a final "LLM Usage" section at the author's request (text supplied by the author).
   `report.pdf` re-exported: main text still ends on page 8; 13 pages.
+
+## Final check of the author's report.docx (24 Oct)
+
+- Author edits kept: code link to `SupratikB23/LLM-Cartel-Succession`, Chicago-style reference
+  list, "H. LLM Usage", blank lines between appendix sections.
+- Fixed in place (no rebuild): Fish et al. reference had a spurious "7, no. 2 ... : 5"; Denicolò
+  accent; page range dash; title case of three reference titles; en dashes used as minus signs in
+  Table B1; Appendix G again states that the harness and runs 1–5 predate the sprint (required by the
+  sprint rules, and Table 2 refers to it).
+- `report.md` and `main3.tex` synced. `report.pdf` re-exported: main text ends on page 8; 14 pages.
