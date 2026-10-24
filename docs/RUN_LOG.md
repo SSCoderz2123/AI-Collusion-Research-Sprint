@@ -2224,3 +2224,14 @@ H5c cells, excess response minus the myopic control (pre-registered for the fina
 ## Negative numbers use en dashes (24 Oct)
 
 - At the author's request, every minus sign before a number in `report.docx` (text and tables) is now an en dash (–); 90 changes. Minus signs between condition names and inside the equation images are unchanged. `report.md`, `main3.tex` and `report.pdf` synced.
+
+## Native equations, new slide theme and project image (24 Oct)
+
+- `report.docx` (author's latest file, edited in place): the four equation images are now native
+  Word equations (OMML), converted from the same LaTeX with pandoc, centred with the number at the
+  right margin. The four images were removed from the package. No other text changed; the file passes
+  OOXML validation. `report.md` and `report.pdf` stay deleted, as the author left them.
+- Slides: warm theme (cream background, navy text, teal and terracotta accents, pastel cards; Times
+  New Roman). Numbers rechecked against the report; code link now `SupratikB23/LLM-Cartel-Succession`;
+  negative numbers in the notes use an en dash.
+- Project image redrawn as an infographic in the same palette (steps, key numbers, run-9 chart).

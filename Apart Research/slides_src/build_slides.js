@@ -1,27 +1,31 @@
 // Build "Apart Research/slides.pptx" (10 slides, 16:9).
 //   cd "Apart Research/slides_src" && npm install && npm run build
 // Every number on the slides comes from the report (Tables 3-5, Appendix C and D), which traces to
-// results/<run>/analysis/ and docs/RUN_LOG.md.
+// results/<run>/analysis/ and docs/RUN_LOG.md. Negative numbers use an en dash (–), as in the report.
 const path = require("path");
 const pptxgen = require("pptxgenjs");
 
 const OUT = path.join(__dirname, "..", "slides.pptx");
 const FIG = path.join(__dirname, "..", "figures");
-// Minimalist research theme: white background, Times New Roman, three colours.
-//   primary (text, ~60%): charcoal; secondary (structure, ~30%): light grays; accent (~10%): royal blue,
-//   used only for key numbers and the highlighted data series.
+// Warm research theme: cream background, navy text, Times New Roman. Teal is the main accent (key
+// numbers, the highlighted data series); terracotta marks the second highlight. Cards use soft pastels.
 const HEAD = "Times New Roman";
 const BODY = "Times New Roman";
-const ACCENT = "1F5FBF";
+const ACCENT = "1F6F8B"; // teal
+const ACCENT2 = "C8553D"; // terracotta
 const COL = {
-  ink: "2B2F36", // primary: all main text
-  ink2: "2B2F36",
-  paper: "FFFFFF", // background; also text on accent or charcoal shapes
-  tint: "F3F4F6", // secondary: card fill
-  muted: "6B7280", // secondary: captions, footer
-  soft: "D1D5DB", // secondary: lines, borders
-  bar: "B8BEC7", // secondary: chart bars that are not highlighted
+  ink: "1E2A44", // navy: all main text
+  ink2: "2F3B55",
+  bg: "F6F1E8", // slide background (cream)
+  paper: "FFFFFF", // text on coloured shapes; figure backing
+  tint: "FFFBF4", // card fill
+  edge: "E7DCCB", // card border
+  muted: "626B7F", // captions, footer
+  soft: "D9CFBF", // lines
+  bar: "AEB8C6", // chart bars that are not highlighted
 };
+const PASTEL = ["DCEBF0", "F8E1D7", "E4EEDF", "E8E3F2"]; // sky, peach, sage, lavender
+const BADGE = [ACCENT, ACCENT2, "5E8C61", "6A5A9C"];
 
 const pres = new pptxgen();
 pres.layout = "LAYOUT_WIDE"; // 13.33 x 7.5 in
@@ -32,8 +36,10 @@ pres.theme = { headFontFace: HEAD, bodyFontFace: BODY };
 const FOOTER = "Who Carries the Cartel?  ·  AI Collusion Research Sprint 2026  ·  Track 1 (Q1.2)";
 pres.defineSlideMaster({
   title: "CONTENT",
-  background: { color: COL.paper },
+  background: { color: COL.bg },
   objects: [
+    { rect: { x: 0, y: 0, w: 13.33, h: 0.12, fill: { color: ACCENT } } },
+    { rect: { x: 0.6, y: 1.25, w: 1.2, h: 0.06, fill: { color: ACCENT2 } } },
     { text: { text: FOOTER, options: { x: 0.6, y: 7.0, w: 9, h: 0.3, fontSize: 10, color: COL.muted, fontFace: BODY } } },
     {
       placeholder: {
@@ -46,8 +52,10 @@ pres.defineSlideMaster({
 });
 pres.defineSlideMaster({
   title: "TITLE",
-  background: { color: COL.paper }, // title and closing slides: no footer
+  background: { color: COL.bg }, // title and closing slides: no footer
   objects: [
+    { rect: { x: 0, y: 0, w: 0.28, h: 7.5, fill: { color: ACCENT } } },
+    { rect: { x: 0.28, y: 0, w: 0.08, h: 7.5, fill: { color: ACCENT2 } } },
     {
       placeholder: {
         options: { name: "title", type: "title", x: 0.6, y: 0.35, w: 12.1, h: 0.9, fontSize: 30, bold: true, color: COL.ink, fontFace: HEAD, valign: "middle", align: "left" },
@@ -63,7 +71,10 @@ function text(slide, value, opts) {
 }
 
 function card(slide, x, y, w, h, fill) {
-  slide.addShape(pres.shapes.ROUNDED_RECTANGLE, { x, y, w, h, rectRadius: 0.12, fill: { color: fill || COL.tint }, line: { color: fill || COL.tint } });
+  slide.addShape(pres.shapes.ROUNDED_RECTANGLE, {
+    x, y, w, h, rectRadius: 0.14, fill: { color: fill || COL.tint }, line: { color: COL.edge, width: 1 },
+    shadow: { type: "outer", color: "BFB3A0", opacity: 0.25, blur: 6, offset: 2, angle: 90 },
+  });
 }
 
 function numberBadge(slide, x, y, n, color) {
@@ -116,8 +127,8 @@ function numberBadge(slide, x, y, n, color) {
   ];
   items.forEach(([head, body, color], i) => {
     const y = 1.6 + i * 1.6;
-    card(s, 6.8, y, 5.9, 1.35);
-    numberBadge(s, 7.05, y + 0.4, i + 1, color);
+    card(s, 6.8, y, 5.9, 1.35, PASTEL[i]);
+    numberBadge(s, 7.05, y + 0.4, i + 1, BADGE[i]);
     text(s, head, { x: 7.85, y: y + 0.22, w: 4.6, h: 0.45, fontSize: 20, bold: true, fontFace: HEAD });
     text(s, body, { x: 7.85, y: y + 0.7, w: 4.6, h: 0.5, fontSize: 15, color: COL.muted });
   });
@@ -170,8 +181,8 @@ function numberBadge(slide, x, y, n, color) {
   ];
   steps.forEach(([head, body], i) => {
     const x = 0.6 + i * 3.1;
-    card(s, x, 1.5, 2.9, 1.9);
-    numberBadge(s, x + 0.2, 1.7, i + 1, COL.ink2);
+    card(s, x, 1.5, 2.9, 1.9, PASTEL[i]);
+    numberBadge(s, x + 0.2, 1.7, i + 1, BADGE[i]);
     text(s, head, { x: x + 0.9, y: 1.78, w: 1.9, h: 0.4, fontSize: 17, bold: true, fontFace: HEAD });
     text(s, body, { x: x + 0.2, y: 2.4, w: 2.55, h: 1.0, fontSize: 14, color: COL.muted });
   });
@@ -190,7 +201,7 @@ function numberBadge(slide, x, y, n, color) {
     const row = Math.floor(i / 4);
     const x = 0.6 + col * 3.1;
     const y = 3.75 + row * 1.5;
-    s.addShape(pres.shapes.ROUNDED_RECTANGLE, { x, y, w: 2.9, h: 1.3, rectRadius: 0.1, fill: { color: COL.paper }, line: { color: COL.soft, width: 1 } });
+    s.addShape(pres.shapes.ROUNDED_RECTANGLE, { x, y, w: 2.9, h: 1.3, rectRadius: 0.1, fill: { color: COL.tint }, line: { color: i === 2 ? ACCENT : COL.edge, width: i === 2 ? 2 : 1 } });
     text(s, head, { x: x + 0.2, y: y + 0.15, w: 2.5, h: 0.4, fontSize: 16, bold: true, color: COL.ink, fontFace: HEAD });
     text(s, body, { x: x + 0.2, y: y + 0.58, w: 2.5, h: 0.7, fontSize: 14, color: COL.muted });
   });
@@ -205,11 +216,11 @@ function numberBadge(slide, x, y, n, color) {
   const values = [0.9, 0.884, 0.876, 0.63, 0.289, 0.199, 0.039, 0.023];
   s.addChart(pres.charts.BAR, [{ name: "Profit index, rounds 150–199", labels, values }], {
     x: 0.6, y: 1.45, w: 7.6, h: 5.3, barDir: "bar", catAxisOrientation: "maxMin",
-    chartColors: [COL.ink, COL.bar, ACCENT, COL.bar, COL.bar, COL.bar, COL.bar, COL.bar],
+    chartColors: [COL.ink, COL.bar, ACCENT, ACCENT2, COL.bar, COL.bar, COL.bar, COL.bar],
     showValue: true, dataLabelPosition: "outEnd", dataLabelFormatCode: "0.000", dataLabelFontSize: 13, dataLabelColor: COL.ink, dataLabelFontFace: "+mn-lt",
     valAxisMinVal: 0, valAxisMaxVal: 1, valAxisLabelFormatCode: "0.0", valAxisLabelFontSize: 12, catAxisLabelFontSize: 14,
     valAxisLabelColor: COL.muted, catAxisLabelColor: COL.ink, catAxisLabelFontFace: "+mn-lt", valAxisLabelFontFace: "+mn-lt",
-    valGridLine: { color: "E5E7EB", size: 0.75 }, catGridLine: { style: "none" }, showLegend: false,
+    valGridLine: { color: COL.edge, size: 0.75 }, catGridLine: { style: "none" }, showLegend: false,
     showTitle: true, title: "Run 9: profit index after the replacement (29 markets)", titleFontSize: 15, titleColor: COL.ink, titleFontFace: "+mn-lt",
   });
   card(s, 8.6, 1.6, 4.1, 2.3);
@@ -218,13 +229,14 @@ function numberBadge(slide, x, y, n, color) {
   card(s, 8.6, 4.15, 4.1, 2.55);
   text(s, "No notice needed", { x: 8.85, y: 4.35, w: 3.7, h: 0.45, fontSize: 18, bold: true, fontFace: HEAD });
   text(s, "In the run without a replacement notice the effect is the same (H1: 0.002). The old notes alone keep part of the cartel (H9: +0.342 over no history).", { x: 8.85, y: 4.85, w: 3.7, h: 1.8, fontSize: 15, color: COL.ink2 });
-  s.addNotes("Profit index 0 = competitive, 1 = monopoly. 'Same + history' differs from no replacement by between -0.025 and +0.213 across the six runs.");
+  s.addNotes("Profit index 0 = competitive, 1 = monopoly. 'Same + history' differs from no replacement by between –0.025 and +0.213 across the six runs.");
 }
 
 // 6. Result 2 ------------------------------------------------------------------------------------
 {
   const s = pres.addSlide({ masterName: "CONTENT" });
   s.addText("Result 2: without the history, prices overshoot", { placeholder: "title" });
+  card(s, 0.5, 1.4, 8.6, 3.22, COL.paper);
   s.addImage({ path: path.join(FIG, "fig_trajectories.png"), x: 0.6, y: 1.5, w: 8.4, h: 3.02 });
   text(s, "Run 9, mean over 29 markets per condition. Left: profit index. Right: price index. Dashed line: the replacement at round 100.", { x: 0.6, y: 4.65, w: 8.4, h: 0.6, fontSize: 13, color: COL.muted });
   card(s, 9.4, 1.5, 3.3, 5.2);
@@ -244,12 +256,12 @@ function numberBadge(slide, x, y, n, color) {
   const s = pres.addSlide({ masterName: "CONTENT" });
   s.addText("Result 3: the new model's pricing style decides the outcome", { placeholder: "title" });
   const cols = [
-    ["Mistral-7B entrant", "21.6–25.5%", "of rounds it repeats its last price", "Breaks the inherited cartel in 4 of 4 runs: profit index 0.55–0.78 below no replacement. It explores, and prices drift down.", COL.ink],
-    ["OLMo-2-7B entrant", "96.3–96.8%", "of rounds it repeats its last price", "Keeps the inherited cartel in 2 of 2 runs. Typical note: “Maintain price at $1.93 as it consistently yields profit.”", ACCENT],
+    ["Mistral-7B entrant", "21.6–25.5%", "of rounds it repeats its last price", "Breaks the inherited cartel in 4 of 4 runs: profit index 0.55–0.78 below no replacement. It explores, and prices drift down.", ACCENT],
+    ["OLMo-2-7B entrant", "96.3–96.8%", "of rounds it repeats its last price", "Keeps the inherited cartel in 2 of 2 runs. Typical note: “Maintain price at $1.93 as it consistently yields profit.”", ACCENT2],
   ];
   cols.forEach(([head, big, small, body, color], i) => {
     const x = 0.6 + i * 6.2;
-    card(s, x, 1.55, 5.9, 4.6);
+    card(s, x, 1.55, 5.9, 4.6, PASTEL[i]);
     text(s, head, { x: x + 0.3, y: 1.8, w: 5.3, h: 0.5, fontSize: 22, bold: true, fontFace: HEAD });
     text(s, big, { x: x + 0.3, y: 2.45, w: 5.3, h: 0.95, fontSize: 44, bold: true, color, fontFace: HEAD });
     text(s, small, { x: x + 0.3, y: 3.4, w: 5.3, h: 0.4, fontSize: 15, color: COL.muted });
@@ -270,8 +282,8 @@ function numberBadge(slide, x, y, n, color) {
   ];
   steps.forEach(([head, body], i) => {
     const y = 1.55 + i * 1.6;
-    card(s, 0.6, y, 6.4, 1.4);
-    numberBadge(s, 0.85, y + 0.42, i + 1, COL.ink2);
+    card(s, 0.6, y, 6.4, 1.4, PASTEL[i]);
+    numberBadge(s, 0.85, y + 0.42, i + 1, BADGE[i]);
     text(s, head, { x: 1.65, y: y + 0.18, w: 5.2, h: 0.4, fontSize: 18, bold: true, fontFace: HEAD });
     text(s, body, { x: 1.65, y: y + 0.6, w: 5.2, h: 0.75, fontSize: 14, color: COL.muted });
   });
@@ -300,8 +312,8 @@ function numberBadge(slide, x, y, n, color) {
     const row = Math.floor(i / 2);
     const x = 0.6 + col * 6.2;
     const y = 1.6 + row * 2.6;
-    card(s, x, y, 5.9, 2.3);
-    text(s, head, { x: x + 0.3, y: y + 0.25, w: 5.3, h: 0.45, fontSize: 20, bold: true, color: ACCENT, fontFace: HEAD });
+    card(s, x, y, 5.9, 2.3, PASTEL[i]);
+    text(s, head, { x: x + 0.3, y: y + 0.25, w: 5.3, h: 0.45, fontSize: 20, bold: true, color: BADGE[i], fontFace: HEAD });
     text(s, body, { x: x + 0.3, y: y + 0.8, w: 5.3, h: 1.4, fontSize: 16, color: COL.ink });
   });
   s.addNotes("The unit of analysis moves from the agent to the agent and its context.");
@@ -334,8 +346,8 @@ function numberBadge(slide, x, y, n, color) {
     ],
     { x: 7.2, y: 2.4, w: 5.2, h: 2.2, fontSize: 15, color: COL.ink2, paraSpaceAfter: 8 },
   );
-  text(s, "Code, data and report:", { x: 7.2, y: 4.75, w: 5.2, h: 0.4, fontSize: 15, bold: true, color: COL.ink });
-  text(s, [{ text: "github.com/SSCoderz2123/AI-Collusion-Research-Sprint", options: { hyperlink: { url: "https://github.com/SSCoderz2123/AI-Collusion-Research-Sprint" } } }], { x: 7.2, y: 5.15, w: 5.3, h: 0.4, fontSize: 14, color: ACCENT });
+  text(s, "Code:", { x: 7.2, y: 4.75, w: 5.2, h: 0.4, fontSize: 15, bold: true, color: COL.ink });
+  text(s, [{ text: "github.com/SupratikB23/LLM-Cartel-Succession", options: { hyperlink: { url: "https://github.com/SupratikB23/LLM-Cartel-Succession" } } }], { x: 7.2, y: 5.15, w: 5.3, h: 0.4, fontSize: 14, color: ACCENT });
   s.addNotes("All numbers come from stored run data through the analysis code in the repository. The report lists every run, null results and failures.");
 }
 
