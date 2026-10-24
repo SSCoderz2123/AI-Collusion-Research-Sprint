@@ -76,7 +76,7 @@ function numberBadge(slide, x, y, n, color) {
   const s = pres.addSlide({ masterName: "TITLE" });
   text(s, "AI COLLUSION RESEARCH SPRINT 2026  ·  TRACK 1: MARKETS AND COLLUSION  ·  QUESTION 1.2", { x: 0.6, y: 0.7, w: 12, h: 0.4, fontSize: 13, color: COL.muted, bold: true });
   text(s, "Who Carries the Cartel?", { x: 0.6, y: 1.5, w: 12, h: 1.2, fontSize: 54, bold: true, color: COL.ink, fontFace: HEAD });
-  text(s, "LLM price collusion survives agent replacement through the inherited price history", { x: 0.6, y: 2.75, w: 11, h: 0.9, fontSize: 24, color: COL.muted });
+  text(s, "LLM price collusion survives agent replacement through inherited price history", { x: 0.6, y: 2.75, w: 11, h: 0.9, fontSize: 24, color: COL.muted });
   const stats = [
     ["6 of 6", "runs: the same model with the old price history keeps the cartel"],
     ["0.47–0.67", "profit-index loss without the history, by overpricing"],

@@ -6,7 +6,7 @@ Apart Research AI Collusion Research Sprint, 23–25 Oct 2026.
 
 ## Project title
 
-**Who Carries the Cartel? LLM Price Collusion Survives Agent Replacement Through the Inherited
+**Who Carries the Cartel? LLM Price Collusion Survives Agent Replacement Through Inherited
 Price History**
 
 ## Project summary
